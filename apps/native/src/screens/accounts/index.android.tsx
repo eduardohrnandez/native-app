@@ -1,5 +1,5 @@
+import ArrowDataTransferHorizontalIcon from "@app/icons/arrow-data-transfer-horizontal-icon";
 import type { MenuComponentRef } from "@expo/ui/community/menu";
-import ArrowDataTransferHorizontalIcon from "@hugeicons-pro/core-stroke-rounded/ArrowDataTransferHorizontalIcon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { toAccountKind } from "@outlayr/money/account-kind";
 import { isMultiCurrency } from "@outlayr/money/account-overview";

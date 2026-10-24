@@ -1,3 +1,5 @@
+import MinusSignIcon from "@app/icons/minus-sign-icon";
+import PlusSignIcon from "@app/icons/plus-sign-icon";
 import { BottomSheetModal, BottomSheetScrollView } from "@expo/ui/community/bottom-sheet";
 import {
     Checkbox,
@@ -6,8 +8,6 @@ import {
     Text as ComposeText,
 } from "@expo/ui/jetpack-compose";
 import { fillMaxWidth } from "@expo/ui/jetpack-compose/modifiers";
-import MinusSignIcon from "@hugeicons-pro/core-stroke-rounded/MinusSignIcon";
-import PlusSignIcon from "@hugeicons-pro/core-stroke-rounded/PlusSignIcon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import type { IconSvgElement } from "@hugeicons/react-native";
 import { Pressable, View } from "react-native";

@@ -1,4 +1,4 @@
-import PlusSignIcon from "@hugeicons-pro/core-stroke-rounded/PlusSignIcon";
+import PlusSignIcon from "@app/icons/plus-sign-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

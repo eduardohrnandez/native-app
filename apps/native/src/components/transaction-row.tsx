@@ -1,5 +1,5 @@
-import PercentCircleSolidIcon from "@hugeicons-pro/core-solid-rounded/PercentCircleIcon";
-import RefreshIcon from "@hugeicons-pro/core-stroke-rounded/RefreshIcon";
+import PercentCircleSolidIcon from "@app/icons/percent-circle-icon";
+import RefreshIcon from "@app/icons/refresh-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { isFuture } from "@outlayr/money/calendar";
 import { utcDateString } from "@outlayr/money/dates";

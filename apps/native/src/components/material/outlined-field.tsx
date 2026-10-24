@@ -1,4 +1,4 @@
-import ArrowDown01Icon from "@hugeicons-pro/core-solid-rounded/ArrowDown01Icon";
+import ArrowDown01Icon from "@app/icons/arrow-down01-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useEffect, useState } from "react";
 import type { ComponentProps, ReactNode, Ref } from "react";

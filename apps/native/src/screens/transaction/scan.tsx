@@ -1,5 +1,5 @@
-import Camera01Icon from "@hugeicons-pro/core-stroke-rounded/Camera01Icon";
-import Image01Icon from "@hugeicons-pro/core-stroke-rounded/Image01Icon";
+import Camera01Icon from "@app/icons/camera01-icon";
+import Image01Icon from "@app/icons/image01-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { addDays, startOfDay } from "@outlayr/money/calendar";
 import type { RateTable } from "@outlayr/money/valuation";

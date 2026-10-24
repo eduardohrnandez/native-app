@@ -1,4 +1,4 @@
-import ArrowDown01Icon from "@hugeicons-pro/core-stroke-rounded/ArrowDown01Icon";
+import ArrowDown01Icon from "@app/icons/arrow-down01-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import type { ReactNode } from "react";
 import { Pressable, View } from "react-native";

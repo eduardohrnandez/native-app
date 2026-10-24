@@ -1,5 +1,5 @@
-import ViewIcon from "@hugeicons-pro/core-stroke-rounded/ViewIcon";
-import ViewOffSlashIcon from "@hugeicons-pro/core-stroke-rounded/ViewOffSlashIcon";
+import ViewIcon from "@app/icons/view-icon";
+import ViewOffSlashIcon from "@app/icons/view-off-slash-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { use } from "react";
 import { Pressable, View } from "react-native";

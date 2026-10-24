@@ -1,4 +1,4 @@
-import DragDropVerticalIcon from "@hugeicons-pro/core-stroke-rounded/DragDropVerticalIcon";
+import DragDropVerticalIcon from "@app/icons/drag-drop-vertical-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";

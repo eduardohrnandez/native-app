@@ -1,4 +1,4 @@
-import Image01Icon from "@hugeicons-pro/core-stroke-rounded/Image01Icon";
+import Image01Icon from "@app/icons/image01-icon";
 import { useRouter } from "expo-router";
 import { Button } from "panelui-native/components/button";
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";

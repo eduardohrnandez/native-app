@@ -1,7 +1,7 @@
+import MinusSignIcon from "@app/icons/minus-sign-icon";
+import PlusSignIcon from "@app/icons/plus-sign-icon";
+import Tick02Icon from "@app/icons/tick02-icon";
 import { BottomSheetModal, BottomSheetScrollView } from "@expo/ui/community/bottom-sheet";
-import MinusSignIcon from "@hugeicons-pro/core-stroke-rounded/MinusSignIcon";
-import PlusSignIcon from "@hugeicons-pro/core-stroke-rounded/PlusSignIcon";
-import Tick02Icon from "@hugeicons-pro/core-stroke-rounded/Tick02Icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { Pressable, useWindowDimensions, View } from "react-native";
 import Animated from "react-native-reanimated";

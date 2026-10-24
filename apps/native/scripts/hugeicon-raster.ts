@@ -52,10 +52,11 @@ export function rasterize(svg: string, basePath: string, points: number) {
 }
 
 export async function loadIcon(weight: IconWeight, name: string): Promise<SvgElement[]> {
-    const module = await import(`@hugeicons-pro/core-${weight}-rounded/${name}`);
-    const elements = module.default as SvgElement[] | undefined;
+    // The free set only ships the stroke weight, so a solid entry falls back to its outline.
+    const icons: Record<string, unknown> = await import("@hugeicons/core-free-icons");
+    const elements = icons[name] as SvgElement[] | undefined;
     if (!Array.isArray(elements)) {
-        throw new TypeError(`@hugeicons-pro/core-${weight}-rounded/${name} has no icon data`);
+        throw new TypeError(`@hugeicons/core-free-icons has no ${name} (${weight} requested)`);
     }
     return elements;
 }

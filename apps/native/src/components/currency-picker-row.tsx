@@ -1,7 +1,6 @@
+import StarSolidIcon from "@app/icons/star-icon";
+import Tick02Icon from "@app/icons/tick02-icon";
 import type { MenuAction, NativeActionEvent } from "@expo/ui/community/menu";
-import StarSolidIcon from "@hugeicons-pro/core-solid-rounded/StarIcon";
-import StarIcon from "@hugeicons-pro/core-stroke-rounded/StarIcon";
-import Tick02Icon from "@hugeicons-pro/core-stroke-rounded/Tick02Icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import type { IconSvgElement } from "@hugeicons/react-native";
 import { CURRENCY_META } from "@outlayr/money/catalog";
@@ -244,7 +243,7 @@ export function CurrencyRow({
                     : t(favourite ? "settings.currency.unfavourite" : "settings.currency.favourite", { code })
             }
             fillClassName={laneFill}
-            icon={favourite || refuses ? StarIcon : StarSolidIcon}
+            icon={favourite || refuses ? StarSolidIcon : StarSolidIcon}
             iconColor={refuses ? colors.muted : "#ffffff"}
             label={
                 refuses

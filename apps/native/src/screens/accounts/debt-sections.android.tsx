@@ -1,5 +1,5 @@
-import ArrowDown01Icon from "@hugeicons-pro/core-stroke-rounded/ArrowDown01Icon";
-import ArrowUp01Icon from "@hugeicons-pro/core-stroke-rounded/ArrowUp01Icon";
+import ArrowDown01Icon from "@app/icons/arrow-down01-icon";
+import ArrowUp01Icon from "@app/icons/arrow-up01-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useRouter } from "expo-router";
 import { memo, use, useCallback, useState } from "react";

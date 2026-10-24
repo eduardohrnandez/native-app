@@ -1,4 +1,4 @@
-import Archive02Icon from "@hugeicons-pro/core-solid-rounded/Archive02Icon";
+import Archive02Icon from "@app/icons/archive02-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useWindowDimensions, View } from "react-native";
 

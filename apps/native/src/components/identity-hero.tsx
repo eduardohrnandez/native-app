@@ -1,5 +1,5 @@
-import Cancel01Icon from "@hugeicons-pro/core-stroke-rounded/Cancel01Icon";
-import PlusSignIcon from "@hugeicons-pro/core-stroke-rounded/PlusSignIcon";
+import Cancel01Icon from "@app/icons/cancel01-icon";
+import PlusSignIcon from "@app/icons/plus-sign-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { Image } from "expo-image";
 import { useEffect, useEffectEvent, useId, useRef } from "react";

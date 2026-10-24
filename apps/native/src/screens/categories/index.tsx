@@ -1,3 +1,4 @@
+import PlusSignIcon from "@app/icons/plus-sign-icon";
 import { Host } from "@expo/ui";
 import {
     Button,
@@ -32,7 +33,6 @@ import {
     opacity,
     padding,
 } from "@expo/ui/swift-ui/modifiers";
-import PlusSignIcon from "@hugeicons-pro/core-stroke-rounded/PlusSignIcon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { Stack, useRouter } from "expo-router";
 import { useMemo } from "react";

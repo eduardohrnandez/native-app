@@ -20,6 +20,7 @@
         "test": "intlayer build && jest"
     },
     "dependencies": {
+        "@app/icons": "workspace:*",
         "@better-auth/expo": "catalog:",
         "@convex-dev/agent": "catalog:",
         "@convex-dev/better-auth": "catalog:",
@@ -122,10 +123,6 @@
         "serve-sim": "^0.1.48",
         "tsx": "^4.23.15",
         "typescript": "catalog:"
-    },
-    "optionalDependencies": {
-        "@hugeicons-pro/core-solid-rounded": "^4.3.4",
-        "@hugeicons-pro/core-stroke-rounded": "^4.3.4"
     },
     "expo": {
         "autolinking": {

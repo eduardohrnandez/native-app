@@ -1,5 +1,5 @@
+import Delete02Icon from "@app/icons/delete02-icon";
 import type { BottomSheetModal } from "@expo/ui/community/bottom-sheet";
-import Delete02Icon from "@hugeicons-pro/core-stroke-rounded/Delete02Icon";
 import { isPerson, toAccountKind } from "@outlayr/money/account-kind";
 import type { AccountKind } from "@outlayr/money/account-kind";
 import { useForm, useSelector } from "@tanstack/react-form";

@@ -1,4 +1,4 @@
-import Calendar03Icon from "@hugeicons-pro/core-stroke-rounded/Calendar03Icon";
+import Calendar03Icon from "@app/icons/calendar03-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useState } from "react";
 import { Pressable } from "react-native";

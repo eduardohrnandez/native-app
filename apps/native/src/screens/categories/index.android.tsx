@@ -1,6 +1,6 @@
+import PlusSignCircleIcon from "@app/icons/plus-sign-circle-icon";
+import PlusSignIcon from "@app/icons/plus-sign-icon";
 import type { MenuComponentRef } from "@expo/ui/community/menu";
-import PlusSignCircleIcon from "@hugeicons-pro/core-solid-rounded/PlusSignCircleIcon";
-import PlusSignIcon from "@hugeicons-pro/core-stroke-rounded/PlusSignIcon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { Stack, useRouter } from "expo-router";
 import { useMemo, useRef } from "react";

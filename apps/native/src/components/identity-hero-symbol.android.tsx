@@ -1,5 +1,5 @@
-import SparkleIcon from "@hugeicons-pro/core-solid-rounded/SparkleIcon";
-import Image01Icon from "@hugeicons-pro/core-stroke-rounded/Image01Icon";
+import Image01Icon from "@app/icons/image01-icon";
+import SparkleIcon from "@app/icons/sparkle-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { View } from "react-native";
 

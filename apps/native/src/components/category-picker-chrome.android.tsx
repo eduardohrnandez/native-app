@@ -1,5 +1,5 @@
-import ArrowRight01Icon from "@hugeicons-pro/core-stroke-rounded/ArrowRight01Icon";
-import Tick02Icon from "@hugeicons-pro/core-stroke-rounded/Tick02Icon";
+import ArrowRight01Icon from "@app/icons/arrow-right01-icon";
+import Tick02Icon from "@app/icons/tick02-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { memo } from "react";
 import type { ReactNode } from "react";

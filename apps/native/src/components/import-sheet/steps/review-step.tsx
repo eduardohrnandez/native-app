@@ -1,5 +1,5 @@
-import CheckSolid from "@hugeicons-pro/core-solid-rounded/CheckmarkCircle02Icon";
-import CircleIcon from "@hugeicons-pro/core-stroke-rounded/CircleIcon";
+import CheckSolid from "@app/icons/checkmark-circle02-icon";
+import CircleIcon from "@app/icons/circle-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { SectionList } from "@legendapp/list/section-list";
 import { currencyTotals } from "@outlayr/money/currency-totals";

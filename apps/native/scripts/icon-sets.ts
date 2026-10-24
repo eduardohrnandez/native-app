@@ -1,7 +1,7 @@
 import type { IconWeight } from "./hugeicon-raster";
 
 export interface IconEntry {
-    /** Export name in `@hugeicons-pro/core-<weight>-rounded`. */
+    /** Export name in `@hugeicons/core-free-icons`. */
     icon: string;
     slug: string;
     weight?: IconWeight;

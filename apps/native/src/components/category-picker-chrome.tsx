@@ -1,6 +1,6 @@
-import ArrowRight01Icon from "@hugeicons-pro/core-stroke-rounded/ArrowRight01Icon";
-import Cancel01Icon from "@hugeicons-pro/core-stroke-rounded/Cancel01Icon";
-import Tick02Icon from "@hugeicons-pro/core-stroke-rounded/Tick02Icon";
+import ArrowRight01Icon from "@app/icons/arrow-right01-icon";
+import Cancel01Icon from "@app/icons/cancel01-icon";
+import Tick02Icon from "@app/icons/tick02-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { Button } from "panelui-native/components/button";
 import { memo } from "react";

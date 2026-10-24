@@ -1,10 +1,10 @@
-import ArrowDataTransferHorizontalIcon from "@hugeicons-pro/core-stroke-rounded/ArrowDataTransferHorizontalIcon";
-import Cancel01Icon from "@hugeicons-pro/core-stroke-rounded/Cancel01Icon";
-import FileImportIcon from "@hugeicons-pro/core-stroke-rounded/FileImportIcon";
-import Mic01Icon from "@hugeicons-pro/core-stroke-rounded/Mic01Icon";
-import PlusSignIcon from "@hugeicons-pro/core-stroke-rounded/PlusSignIcon";
-import ReceiptDollarIcon from "@hugeicons-pro/core-stroke-rounded/ReceiptDollarIcon";
-import ScanIcon from "@hugeicons-pro/core-stroke-rounded/ScanIcon";
+import ArrowDataTransferHorizontalIcon from "@app/icons/arrow-data-transfer-horizontal-icon";
+import Cancel01Icon from "@app/icons/cancel01-icon";
+import FileImportIcon from "@app/icons/file-import-icon";
+import Mic01Icon from "@app/icons/mic01-icon";
+import PlusSignIcon from "@app/icons/plus-sign-icon";
+import ReceiptDollarIcon from "@app/icons/receipt-dollar-icon";
+import ScanIcon from "@app/icons/scan-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import type { IconSvgElement } from "@hugeicons/react-native";
 import { router, useFocusEffect } from "expo-router";

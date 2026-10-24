@@ -1,7 +1,7 @@
+import Cancel01Icon from "@app/icons/cancel01-icon";
+import PlusSignIcon from "@app/icons/plus-sign-icon";
+import Search01Icon from "@app/icons/search01-icon";
 import { BottomSheetModal, BottomSheetScrollView } from "@expo/ui/community/bottom-sheet";
-import Cancel01Icon from "@hugeicons-pro/core-stroke-rounded/Cancel01Icon";
-import PlusSignIcon from "@hugeicons-pro/core-stroke-rounded/PlusSignIcon";
-import Search01Icon from "@hugeicons-pro/core-stroke-rounded/Search01Icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { InputGroup } from "panelui-native/components/input-group";
 import { useCallback, useMemo, useRef, useState } from "react";

@@ -12,3 +12,6 @@ debe publicarse también su código fuente bajo la misma licencia.
 No se incluyen el sitio web, los videos ni el editor de capturas de Outlayr (`apps/web`, `apps/clips`,
 `apps/screenshots`). El nombre, el logo y los recursos de marca de Outlayr no son parte de la licencia
 del código y se irán reemplazando por los de este proyecto.
+
+Los íconos vienen del set gratuito de Hugeicons (licencia MIT, ver `packages/icons/LICENSE-hugeicons.md`),
+copiados uno por uno en `packages/icons`. El original usaba Hugeicons Pro, que requiere licencia de pago.

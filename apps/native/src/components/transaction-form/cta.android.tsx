@@ -1,5 +1,5 @@
-import Delete02Icon from "@hugeicons-pro/core-stroke-rounded/Delete02Icon";
-import Search01Icon from "@hugeicons-pro/core-stroke-rounded/Search01Icon";
+import Delete02Icon from "@app/icons/delete02-icon";
+import Search01Icon from "@app/icons/search01-icon";
 import { Stack } from "expo-router";
 import { memo, useCallback, useLayoutEffect, useRef } from "react";
 import { Pressable } from "react-native";

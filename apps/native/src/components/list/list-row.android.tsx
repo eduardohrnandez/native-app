@@ -1,5 +1,5 @@
+import ArrowRight01Icon from "@app/icons/arrow-right01-icon";
 import { RadioButton, Switch } from "@expo/ui/jetpack-compose";
-import ArrowRight01Icon from "@hugeicons-pro/core-stroke-rounded/ArrowRight01Icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import type { ComponentProps, ReactNode } from "react";
 import { View } from "react-native";

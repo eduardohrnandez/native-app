@@ -1,4 +1,4 @@
-import Mail01Icon from "@hugeicons-pro/core-stroke-rounded/Mail01Icon";
+import Mail01Icon from "@app/icons/mail01-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useTheme } from "panelui-native/theme";
 import { Pressable } from "react-native";

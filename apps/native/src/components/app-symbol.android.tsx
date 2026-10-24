@@ -1,10 +1,10 @@
-import AddCircleSolidIcon from "@hugeicons-pro/core-solid-rounded/AddCircleIcon";
-import AlertCircleSolidIcon from "@hugeicons-pro/core-solid-rounded/AlertCircleIcon";
-import CheckmarkCircle02SolidIcon from "@hugeicons-pro/core-solid-rounded/CheckmarkCircle02Icon";
-import Cancel01Icon from "@hugeicons-pro/core-stroke-rounded/Cancel01Icon";
-import CircleIcon from "@hugeicons-pro/core-stroke-rounded/CircleIcon";
-import Search01Icon from "@hugeicons-pro/core-stroke-rounded/Search01Icon";
-import StarIcon from "@hugeicons-pro/core-stroke-rounded/StarIcon";
+import AddCircleSolidIcon from "@app/icons/add-circle-icon";
+import AlertCircleSolidIcon from "@app/icons/alert-circle-icon";
+import Cancel01Icon from "@app/icons/cancel01-icon";
+import CheckmarkCircle02SolidIcon from "@app/icons/checkmark-circle02-icon";
+import CircleIcon from "@app/icons/circle-icon";
+import Search01Icon from "@app/icons/search01-icon";
+import StarIcon from "@app/icons/star-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import type { IconSvgElement } from "@hugeicons/react-native";
 

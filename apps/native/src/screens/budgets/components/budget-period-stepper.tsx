@@ -1,5 +1,5 @@
-import ArrowLeft01Icon from "@hugeicons-pro/core-stroke-rounded/ArrowLeft01Icon";
-import ArrowRight01Icon from "@hugeicons-pro/core-stroke-rounded/ArrowRight01Icon";
+import ArrowLeft01Icon from "@app/icons/arrow-left01-icon";
+import ArrowRight01Icon from "@app/icons/arrow-right01-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import type { BudgetWindow } from "@outlayr/money/budget-window";
 import type { ReactNode } from "react";

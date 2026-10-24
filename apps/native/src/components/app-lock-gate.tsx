@@ -1,4 +1,4 @@
-import SquareLock02Icon from "@hugeicons-pro/core-solid-rounded/SquareLock02Icon";
+import SquareLock02Icon from "@app/icons/square-lock02-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { createContext, use, useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";

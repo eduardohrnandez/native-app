@@ -1,5 +1,5 @@
-import Alert02Icon from "@hugeicons-pro/core-solid-rounded/Alert02Icon";
-import Delete02Icon from "@hugeicons-pro/core-solid-rounded/Delete02Icon";
+import Alert02Icon from "@app/icons/alert02-icon";
+import Delete02Icon from "@app/icons/delete02-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import type { IconSvgElement } from "@hugeicons/react-native";
 import { GlassContainer, GlassView, isLiquidGlassAvailable } from "expo-glass-effect";

@@ -1,5 +1,5 @@
-import CheckmarkCircle02Icon from "@hugeicons-pro/core-solid-rounded/CheckmarkCircle02Icon";
-import Delete02Icon from "@hugeicons-pro/core-stroke-rounded/Delete02Icon";
+import CheckmarkCircle02Icon from "@app/icons/checkmark-circle02-icon";
+import Delete02Icon from "@app/icons/delete02-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useForm, useSelector } from "@tanstack/react-form";
 import { and, eq, isNull } from "drizzle-orm";

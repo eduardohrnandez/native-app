@@ -1,5 +1,5 @@
-import ArrowDown01Icon from "@hugeicons-pro/core-solid-rounded/ArrowDown01Icon";
-import Cancel01Icon from "@hugeicons-pro/core-stroke-rounded/Cancel01Icon";
+import ArrowDown01Icon from "@app/icons/arrow-down01-icon";
+import Cancel01Icon from "@app/icons/cancel01-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { Pressable, View } from "react-native";
 

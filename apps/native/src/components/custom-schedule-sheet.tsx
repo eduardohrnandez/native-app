@@ -1,7 +1,7 @@
-import Cancel01Icon from "@hugeicons-pro/core-stroke-rounded/Cancel01Icon";
-import CheckIcon from "@hugeicons-pro/core-stroke-rounded/CheckIcon";
-import MinusSignIcon from "@hugeicons-pro/core-stroke-rounded/MinusSignIcon";
-import PlusSignIcon from "@hugeicons-pro/core-stroke-rounded/PlusSignIcon";
+import Cancel01Icon from "@app/icons/cancel01-icon";
+import CheckIcon from "@app/icons/check-icon";
+import MinusSignIcon from "@app/icons/minus-sign-icon";
+import PlusSignIcon from "@app/icons/plus-sign-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { MAX_INTERVAL, RECURRING_TYPE, SELECTABLE_RECURRING_TYPES, schedulePreview } from "@outlayr/money/recurrence";
 import type { ScheduledCharge } from "@outlayr/money/recurrence";

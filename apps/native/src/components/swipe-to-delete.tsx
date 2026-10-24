@@ -1,4 +1,4 @@
-import Delete02Icon from "@hugeicons-pro/core-stroke-rounded/Delete02Icon";
+import Delete02Icon from "@app/icons/delete02-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useRef } from "react";
 import type { ReactNode } from "react";

@@ -1,8 +1,8 @@
+import CancelCircleIcon from "@app/icons/cancel-circle-icon";
+import Image01Icon from "@app/icons/image01-icon";
+import Search01Icon from "@app/icons/search01-icon";
 import { SegmentedButton, SingleChoiceSegmentedButtonRow, Text as ComposeText } from "@expo/ui/jetpack-compose";
 import { fillMaxWidth } from "@expo/ui/jetpack-compose/modifiers";
-import CancelCircleIcon from "@hugeicons-pro/core-solid-rounded/CancelCircleIcon";
-import Image01Icon from "@hugeicons-pro/core-stroke-rounded/Image01Icon";
-import Search01Icon from "@hugeicons-pro/core-stroke-rounded/Search01Icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { Image } from "expo-image";
 import { launchImageLibraryAsync } from "expo-image-picker";

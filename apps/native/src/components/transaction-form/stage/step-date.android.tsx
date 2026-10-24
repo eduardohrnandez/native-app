@@ -1,5 +1,5 @@
+import Clock01Icon from "@app/icons/clock01-icon";
 import { DateTimePicker, TimePickerDialog } from "@expo/ui/jetpack-compose";
-import Clock01Icon from "@hugeicons-pro/core-stroke-rounded/Clock01Icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useState } from "react";
 import { Pressable, View } from "react-native";
