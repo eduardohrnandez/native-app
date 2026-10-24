@@ -8,7 +8,7 @@ import { dirname, resolve } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import { parseArgs } from "node:util";
 
-const APP = "com.tryoutlayr.app";
+const APP = "com.finta.app";
 const SNAPSHOT = "perf-seeded";
 const READY_TEXT = "Hide amounts";
 const MAX_ATTEMPTS = 5;
@@ -211,7 +211,7 @@ async function startOn(port: number) {
             "-a",
             "android.intent.action.VIEW",
             "-d",
-            `exp+outlayr://expo-development-client/?url=${url}`,
+            `exp+finta://expo-development-client/?url=${url}`,
             APP
         );
         // oxlint-disable-next-line no-await-in-loop -- each launch waits for the previous one to attach

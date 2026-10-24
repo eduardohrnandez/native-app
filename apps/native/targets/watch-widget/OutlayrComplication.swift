@@ -55,7 +55,7 @@ struct ComplicationSnapshot: Decodable {
         return budget
     }
 
-    static let appGroup = "group.com.tryoutlayr.app"
+    static let appGroup = "group.com.finta.app"
     static let key = "watchSnapshot"
 
     static func load() -> ComplicationSnapshot? {

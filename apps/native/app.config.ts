@@ -9,11 +9,12 @@ const isProduction = buildProfile === "production";
 // Set by `.github/workflows/eas-build.yml`. Local builds fall back to Expo's 1.
 const buildNumber = process.env.BUILD_NUMBER;
 
-const PROJECT_ID = "f076a9e9-ec12-464d-85eb-772c4d0efce5";
+// Set after `eas init` on your own Expo account; Outlayr's project and OTA server are not ours to use.
+const PROJECT_ID = process.env.EAS_PROJECT_ID;
 
-const UPDATES_URL = "https://ota.hephaestus.sh/manifest";
+const APP_ID = "com.finta.app";
 
-const APP_GROUP = "group.com.tryoutlayr.app";
+const APP_GROUP = `group.${APP_ID}`;
 
 const IOS_DEPLOYMENT_TARGET = "18.0";
 
@@ -126,28 +127,28 @@ type QuickAction = AndroidShortcut & { readonly iosIcon: string };
 const QUICK_ACTIONS = [
     {
         glyph: "add",
-        href: "outlayr://new",
+        href: "finta://new",
         id: "log-expense",
         iosIcon: "symbol:plus.circle.fill",
         title: { en: "Log Expense", es: "Registrar gasto" },
     },
     {
         glyph: "income",
-        href: "outlayr://new?income=1",
+        href: "finta://new?income=1",
         id: "log-income",
         iosIcon: "symbol:arrow.down.circle.fill",
         title: { en: "Log Income", es: "Registrar ingreso" },
     },
     {
         glyph: "search",
-        href: "outlayr://search",
+        href: "finta://search",
         id: "search",
         iosIcon: "symbol:magnifyingglass",
         title: { en: "Search Entries", es: "Buscar" },
     },
     {
         glyph: "budgets",
-        href: "outlayr://budgets",
+        href: "finta://budgets",
         id: "budgets",
         iosIcon: "symbol:chart.pie.fill",
         title: { en: "Budgets", es: "Presupuestos" },
@@ -170,7 +171,7 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => ({
     ...config,
     android: {
         adaptiveIcon: {
-            backgroundColor: "#f2f0ea",
+            backgroundColor: "#1c1d1f",
             foregroundImage: "./assets/images/adaptive-icon.png",
             monochromeImage: "./assets/images/adaptive-icon-monochrome.png",
         },
@@ -183,7 +184,7 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => ({
             "android.permission.READ_MEDIA_VIDEO",
             "com.google.android.c2dm.permission.RECEIVE",
         ],
-        package: "com.tryoutlayr.app",
+        package: APP_ID,
         versionCode: buildNumber ? Number(buildNumber) : undefined,
     },
     experiments: {
@@ -195,21 +196,18 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => ({
     },
     extra: {
         appGroup: APP_GROUP,
-        eas: {
-            projectId: PROJECT_ID,
-        },
-        primaryAppIcon: isProduction ? "Outlayr" : "OutlayrTesting",
+        eas: PROJECT_ID ? { projectId: PROJECT_ID } : {},
+        primaryAppIcon: isProduction ? "Finta" : "FintaTesting",
         whatsNew: process.env.UPDATE_MESSAGE ?? null,
     },
     ios: {
-        appleTeamId: "8ZB3YXDU7V",
         buildNumber,
-        bundleIdentifier: "com.tryoutlayr.app",
+        bundleIdentifier: APP_ID,
         deploymentTarget: IOS_DEPLOYMENT_TARGET,
         entitlements: {
             "com.apple.security.application-groups": [APP_GROUP],
         },
-        icon: isProduction ? "./assets/Outlayr.icon" : "./assets/OutlayrTesting.icon",
+        icon: isProduction ? "./assets/Finta.icon" : "./assets/FintaTesting.icon",
         infoPlist: {
             ITSAppUsesNonExemptEncryption: false,
         },
@@ -218,8 +216,7 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => ({
     locales: {
         es: "./locales/es.json",
     },
-    name: "Outlayr",
-    owner: "danestves-llc",
+    name: "Finta",
     platforms: ["ios", "android"],
     plugins: [
         "expo-router",
@@ -284,15 +281,15 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => ({
         [
             "expo-image-picker",
             {
-                cameraPermission: "Outlayr uses the camera to scan a receipt. The photo goes to Anthropic to read it.",
+                cameraPermission: "Finta uses the camera to scan a receipt. The photo goes to Anthropic to read it.",
                 photosPermission:
-                    "Outlayr uses your photos to set a custom logo for a transaction or to scan a receipt, which sends that photo to Anthropic to read it.",
+                    "Finta uses your photos to set a custom logo for a transaction or to scan a receipt, which sends that photo to Anthropic to read it.",
             },
         ],
         [
             "expo-local-authentication",
             {
-                faceIDPermission: "Outlayr uses Face ID to unlock your ledger.",
+                faceIDPermission: "Finta uses Face ID to unlock your ledger.",
             },
         ],
         [
@@ -301,7 +298,7 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => ({
                 // The default adds the `audio` background mode, which App Review rejects as unused (2.5.4).
                 enableBackgroundPlayback: false,
                 microphonePermission:
-                    "Outlayr listens while you speak an entry. The recording goes to ElevenLabs to write it down for you.",
+                    "Finta listens while you speak an entry. The recording goes to ElevenLabs to write it down for you.",
                 recordAudioAndroid: true,
             },
         ],
@@ -309,7 +306,7 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => ({
             "expo-notifications",
             {
                 // Android's status bar draws only the alpha, so the asset is the mark in white.
-                color: "#c2371b",
+                color: "#c6f432",
                 icon: "./assets/images/notification-icon.png",
             },
         ],
@@ -335,16 +332,9 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => ({
     // Fingerprint, not appVersion: config plugins change native code without a version bump,
     // and an update served to a binary with a different native side crashes at launch.
     runtimeVersion: { policy: "fingerprint" },
-    scheme: "outlayr",
-    slug: "outlayr",
-    updates: buildProfile
-        ? {
-              codeSigningCertificate: "./certs/certificate.pem",
-              codeSigningMetadata: { alg: "rsa-v1_5-sha256", keyid: "main" },
-              requestHeaders: { "expo-app-id": PROJECT_ID, "expo-channel-name": buildProfile },
-              url: UPDATES_URL,
-          }
-        : { url: UPDATES_URL },
+    scheme: "finta",
+    slug: "finta",
+    updates: { enabled: false },
     userInterfaceStyle: "automatic",
     version: process.env.APP_VERSION ?? "1.0.0",
 });

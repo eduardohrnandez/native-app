@@ -18,7 +18,7 @@ jest.mock("expo-intent-launcher", () => {
     };
 });
 jest.mock("expo-linking", () => ({ openSettings: () => mockOpenSettings() }));
-jest.mock("expo-application", () => ({ applicationId: "com.tryoutlayr.app" }));
+jest.mock("expo-application", () => ({ applicationId: "com.finta.app" }));
 
 const mockApi = jest.spyOn(Platform, "Version", "get");
 
@@ -43,7 +43,7 @@ describe("system language settings on Android", () => {
 
         await waitFor(() => {
             expect(mockStartActivity).toHaveBeenCalledWith("android.settings.APP_LOCALE_SETTINGS", {
-                data: "package:com.tryoutlayr.app",
+                data: "package:com.finta.app",
             });
         });
         expect(mockOpenSettings).not.toHaveBeenCalled();

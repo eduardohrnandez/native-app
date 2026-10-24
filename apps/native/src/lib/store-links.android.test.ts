@@ -17,7 +17,7 @@ describe("openStoreReview on Android", () => {
 
         await openStoreReview();
 
-        expect(openURL).toHaveBeenLastCalledWith("https://play.google.com/store/apps/details?id=com.tryoutlayr.app");
+        expect(openURL).toHaveBeenLastCalledWith("https://play.google.com/store/apps/details?id=com.finta.app");
     });
 
     it("announces the trip to the app lock", async () => {

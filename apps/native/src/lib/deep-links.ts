@@ -1,20 +1,20 @@
 /**
  * Widgets, App Intents and quick actions hard-code these outside the JS bundle, so they can't be `Href`-checked.
- * The `outlayr://` names are a stable public vocabulary: moving a screen must not break an installed widget.
+ * The `finta://` names are a stable public vocabulary: moving a screen must not break an installed widget.
  */
 
 export const DEEP_LINKS = {
-    budgets: "outlayr://budgets",
-    insights: "outlayr://insights",
-    log: "outlayr://log",
-    newExpense: "outlayr://new",
-    newIncome: "outlayr://new?income=1",
-    overallBudget: "outlayr://budgets/overall",
-    search: "outlayr://search",
+    budgets: "finta://budgets",
+    insights: "finta://insights",
+    log: "finta://log",
+    newExpense: "finta://new",
+    newIncome: "finta://new?income=1",
+    overallBudget: "finta://budgets/overall",
+    search: "finta://search",
 } as const;
 
 export function transactionLink(id: string): string {
-    return `outlayr://transaction/${id}`;
+    return `finta://transaction/${id}`;
 }
 
 export function budgetLink(id: string): string {
@@ -41,7 +41,7 @@ const HOSTS = new Map<string, string>([
 
 const ID_HOSTS = new Set(["budgets", "transaction"]);
 
-/** `/transactions/[id]` has no index, so a bare `outlayr://transaction` would otherwise reach `+not-found`. */
+/** `/transactions/[id]` has no index, so a bare `finta://transaction` would otherwise reach `+not-found`. */
 const ID_HOST_SECTION = new Map<string, string>([["transaction", "/"]]);
 
 const SCHEME_PREFIX = /^[a-zA-Z][\w+.-]*:\/\//;

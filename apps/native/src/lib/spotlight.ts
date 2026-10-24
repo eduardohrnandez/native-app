@@ -24,7 +24,7 @@ const BUDGET_DOMAIN = "budgets";
 const TRANSACTION_LIMIT = 500;
 
 /**
- * Each `uniqueIdentifier` IS its `outlayr://` link: expo-core-spotlight opens it as a URL on tap. Failures are
+ * Each `uniqueIdentifier` IS its `finta://` link: expo-core-spotlight opens it as a URL on tap. Failures are
  * swallowed so a failed index never takes down the write that triggered it.
  */
 export async function indexSpotlight(db: SpendDb, now = new Date()) {

@@ -369,7 +369,7 @@ function AppIconRow() {
 function supportDiagnostics(version: string, build: string): SupportDiagnostics {
     return {
         appBuild: build,
-        appName: Constants.expoConfig?.name ?? "Outlayr",
+        appName: Constants.expoConfig?.name ?? "Finta",
         appVersion: version,
         deviceName: Constants.deviceName ?? "",
         osName: Platform.select({ android: "Android", ios: "iOS" }) ?? Platform.OS,

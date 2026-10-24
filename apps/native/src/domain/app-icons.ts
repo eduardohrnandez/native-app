@@ -53,7 +53,7 @@ export function appIconLabel(active: string | null): TranslationKey {
 }
 
 /** Pinned against `app.config.ts` by `app-icons.test.ts`, so it cannot drift from the build's `extra`. */
-export const RELEASE_PRIMARY_ICON = "Outlayr";
+export const RELEASE_PRIMARY_ICON = "Finta";
 
 /**
  * A Debug build's primary is the blueprint icon and iOS reports `null` for either, so the Default row reads

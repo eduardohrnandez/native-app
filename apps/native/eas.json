@@ -35,6 +35,14 @@
             "android": {
                 "resourceClass": "large"
             }
+        },
+        "apk": {
+            "extends": "preview",
+            "distribution": "internal",
+            "channel": "preview",
+            "android": {
+                "buildType": "apk"
+            }
         }
     },
     "submit": {
@@ -42,10 +50,6 @@
             "android": {
                 "track": "internal",
                 "releaseStatus": "draft"
-            },
-            "ios": {
-                "appleTeamId": "8ZB3YXDU7V",
-                "ascAppId": "6801652978"
             }
         }
     }

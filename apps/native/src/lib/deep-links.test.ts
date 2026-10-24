@@ -24,21 +24,21 @@ describe("resolveDeepLink", () => {
     });
 
     it("degrades a host with no id to its section rather than to not-found", () => {
-        expect(resolveDeepLink("outlayr://transaction")).toBe("/");
+        expect(resolveDeepLink("finta://transaction")).toBe("/");
     });
 
     it("still answers the retired Swift hosts", () => {
-        expect(resolveDeepLink("outlayr://newExpense")).toBe("/transactions/create");
-        expect(resolveDeepLink("outlayr://budget")).toBe("/budgets");
-        expect(resolveDeepLink("outlayr://transactions")).toBe("/");
+        expect(resolveDeepLink("finta://newExpense")).toBe("/transactions/create");
+        expect(resolveDeepLink("finta://budget")).toBe("/budgets");
+        expect(resolveDeepLink("finta://transactions")).toBe("/");
     });
 
     it("is case-insensitive on the host, as URLs are", () => {
-        expect(resolveDeepLink("outlayr://Budgets")).toBe("/budgets");
+        expect(resolveDeepLink("finta://Budgets")).toBe("/budgets");
     });
 
     it("declines anything outside the contract so ordinary paths pass through", () => {
-        expect(resolveDeepLink("outlayr://")).toBeNull();
+        expect(resolveDeepLink("finta://")).toBeNull();
         expect(resolveDeepLink("/settings/currency")).toBeNull();
         expect(resolveDeepLink("exp://192.168.1.4:8081")).toBeNull();
     });
@@ -63,7 +63,7 @@ describe("redirectLaunchPath", () => {
 
     it("drains a launch that carried no deep link", () => {
         const [drain, calls] = drainSpy();
-        expect(redirectLaunchPath({ initial: true, path: "outlayr:///" }, drain)).toBe("outlayr:///");
+        expect(redirectLaunchPath({ initial: true, path: "finta:///" }, drain)).toBe("finta:///");
         expect(calls.count).toBe(1);
     });
 

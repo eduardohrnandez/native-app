@@ -8,7 +8,7 @@ import WidgetKit
 final class PhoneLink: NSObject, WCSessionDelegate {
     static let shared = PhoneLink()
 
-    static let appGroup = "group.com.tryoutlayr.app"
+    static let appGroup = "group.com.finta.app"
     static let snapshotKey = "watchSnapshot"
     static let unsyncedKey = "unsyncedWrites"
 

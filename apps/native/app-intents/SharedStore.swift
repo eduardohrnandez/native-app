@@ -6,7 +6,7 @@ import UserNotifications
 /// `app.config.ts`; if the two ever disagree the container resolves to nil,
 /// which is why `store` is failable rather than force-unwrapped.
 enum SharedStore {
-    static let appGroup = "group.com.tryoutlayr.app"
+    static let appGroup = "group.com.finta.app"
 
     /// Where the app leaves the figures the read-only intents report.
     static let snapshotKey = "intentSnapshot"

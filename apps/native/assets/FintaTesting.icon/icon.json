@@ -1,0 +1,50 @@
+{
+  "fill-specializations": [
+    {
+      "value": {
+        "solid": "srgb:0.10980,0.11373,0.12157,1.00000"
+      }
+    },
+    {
+      "appearance": "dark",
+      "value": {
+        "solid": "srgb:0.10980,0.11373,0.12157,1.00000"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "blur-material": 0.5,
+      "layers": [
+        {
+          "image-name": "finta-mark.svg",
+          "name": "logo",
+          "position": {
+            "scale": 1.0,
+            "translation-in-points": [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "lighting": "combined",
+      "name": "group",
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.6
+      },
+      "specular": true,
+      "translucency": {
+        "enabled": true,
+        "value": 0.25
+      }
+    }
+  ],
+  "supported-platforms": {
+    "circles": [
+      "watchOS"
+    ],
+    "squares": "shared"
+  }
+}

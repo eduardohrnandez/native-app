@@ -122,11 +122,11 @@ describe("resolving what iOS reports", () => {
 
 describe("describing the Default row", () => {
     it("claims the paper mark in a build that stamps it", () => {
-        expect(defaultRowDetail("Outlayr")).toBe("appIcon.default.detail");
+        expect(defaultRowDetail("Finta")).toBe("appIcon.default.detail");
     });
 
     it("does not claim it in a build that stamps the blueprint icon", () => {
-        expect(defaultRowDetail("OutlayrTesting")).toBe("appIcon.default.detailDev");
+        expect(defaultRowDetail("FintaTesting")).toBe("appIcon.default.detailDev");
     });
 
     it("does not claim it where the build named no primary at all", () => {
