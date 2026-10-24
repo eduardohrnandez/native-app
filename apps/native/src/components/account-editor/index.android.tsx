@@ -24,6 +24,7 @@ import type { Account } from "@/data/accounts-core";
 import { useGlobalCurrency } from "@/data/app-meta";
 import { useDeferredDelete } from "@/data/use-deferred-delete";
 import type { Database } from "@/db/client";
+import { suggestInstitutions } from "@/domain/institution-map";
 import { formatAmount, minorUnitsFor, roundToMinorUnits } from "@/domain/money";
 import { numberToNumpad, numpadToNumber } from "@/domain/numpad";
 import { useAccountIdentity } from "@/hooks/use-account-identity";
@@ -41,6 +42,8 @@ import type { AccountEditorProps } from "./index";
 
 type IdentitySource = "initial" | "suggested" | "user";
 
+// Enough to pick from while typing; with nothing typed the row lists every bank of the currency.
+const NAME_SUGGESTION_LIMIT = 8;
 const HERO_TOP = 8;
 
 export default function AccountEditor(props: AccountEditorProps) {
@@ -263,6 +266,7 @@ function AccountEditorReady(props: AccountEditorProps & { db: Database }) {
     };
 
     const canSave = name.trim() !== "" && !isSubmitting;
+    const nameSuggestions = person ? [] : suggestInstitutions(name, currency, NAME_SUGGESTION_LIMIT);
     const tint = draft.photoColor ?? draft.color ?? colors.foreground;
 
     // While the picker is up, a tap that reaches this sheet past it must not save, delete, or open a second picker.
@@ -361,6 +365,7 @@ function AccountEditorReady(props: AccountEditorProps & { db: Database }) {
                         negative={negative}
                         onBalancePress={openBalancePad}
                         onCurrencyPress={openCurrencyPicker}
+                        nameSuggestions={nameSuggestions}
                         onNameChange={onNameChange}
                         onSubmitName={() => pressSubmit(form)}
                         onToggleLiability={

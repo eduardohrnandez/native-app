@@ -63,6 +63,7 @@ import type { FeeDraft } from "@/domain/card-fee";
 import { computeCurtainHues } from "@/domain/curtain-hues";
 import { formatSentenceDate } from "@/domain/dates";
 import type { InstallmentSeed } from "@/domain/installment-scan";
+import { resolveInstitutionDomain } from "@/domain/institution-map";
 import { merchantKey } from "@/domain/merchant-resolver";
 import { suggestMerchants } from "@/domain/merchant-suggest";
 import { formatAmount, minorUnitsFor, numberLocale, roundToMinorUnits, symbolIsShared } from "@/domain/money";
@@ -1534,6 +1535,8 @@ export function TransactionForm({
         recallMerchant: recallBookMerchant,
         regionCode,
         remoteEnabled: remoteEnrichment,
+        // Merchants first; a bank or payment app ("Zelle", "Cashea") still brings its logo.
+        resolveDomain: resolveInstitutionDomain,
         resolveHistory,
         resolveLocal,
     });

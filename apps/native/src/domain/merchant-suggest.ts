@@ -1,3 +1,4 @@
+import { institutionLabels } from "./institution-map";
 import { MERCHANTS } from "./merchant-map";
 import { merchantKey } from "./merchant-resolver";
 
@@ -24,6 +25,16 @@ export function suggestMerchants(query: string, limit: number, exclude: readonly
             continue;
         }
         ranked.push({ label: entry.label, length: canonical.length });
+    }
+    // Banks and payment apps name entries too: "Zelle" for money in, "Cashea" for a purchase.
+    for (const { label, patterns } of institutionLabels()) {
+        const [canonical] = patterns;
+        if (canonical === undefined || skip.has(canonical) || ranked.some((entry) => entry.label === label)) {
+            continue;
+        }
+        if (patterns.some((pattern) => pattern.startsWith(key))) {
+            ranked.push({ label, length: canonical.length });
+        }
     }
     ranked.sort((a, b) => a.length - b.length);
     return ranked.slice(0, limit).map((entry) => entry.label);

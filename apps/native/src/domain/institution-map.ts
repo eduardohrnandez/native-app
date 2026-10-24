@@ -58,6 +58,30 @@ interface InstitutionEntry {
     readonly label: string;
     /** Already in `merchantKey` form; a pattern matches its token sequence anywhere in the name. */
     readonly patterns: readonly string[];
+    /** Currencies these accounts are usually held in; an account in one of them is offered these first. */
+    readonly currencies?: readonly string[];
+}
+
+/**
+ * Names to offer while an account is being named: with nothing typed, every institution held in its currency;
+ * once typed, any whose name starts with it, those first.
+ */
+export function suggestInstitutions(query: string, currency: string, limit: number): string[] {
+    const key = merchantKey(query);
+    const code = currency.toUpperCase();
+    const local = (entry: InstitutionEntry) => entry.currencies?.includes(code) === true;
+    if (key.length === 0) {
+        return INSTITUTIONS.filter(local).map((entry) => entry.label);
+    }
+    const matches = INSTITUTIONS.filter(
+        (entry) =>
+            merchantKey(entry.label) !== key &&
+            (merchantKey(entry.label).startsWith(key) || entry.patterns.some((pattern) => pattern.startsWith(key)))
+    );
+    return matches
+        .toSorted((a, b) => Number(local(b)) - Number(local(a)))
+        .slice(0, limit)
+        .map((entry) => entry.label);
 }
 
 const INSTITUTIONS: readonly InstitutionEntry[] = [
@@ -125,20 +149,20 @@ const INSTITUTIONS: readonly InstitutionEntry[] = [
     { domain: "sezzle.com", id: "sezzle", installmentsIn: ["US", "CA"], label: "Sezzle", patterns: ["sezzle"] },
     { domain: "splitit.com", id: "splitit", label: "Splitit", patterns: ["splitit", "split it"] },
 
-    { domain: "paypal.com", id: "paypal", label: "PayPal", patterns: ["paypal"] },
+    { domain: "paypal.com", id: "paypal", currencies: ["USD"], label: "PayPal", patterns: ["paypal"] },
     { domain: "venmo.com", id: "venmo", label: "Venmo", patterns: ["venmo"] },
     // "cash app", never bare "cash": plain cash is not a company.
     { domain: "cash.app", id: "cash-app", label: "Cash App", patterns: ["cash app", "cashapp"] },
-    { domain: "zellepay.com", id: "zelle", label: "Zelle", patterns: ["zelle"] },
+    { domain: "zellepay.com", id: "zelle", currencies: ["USD"], label: "Zelle", patterns: ["zelle"] },
     { domain: "wise.com", id: "wise", label: "Wise", patterns: ["wise", "transferwise"] },
     { domain: "revolut.com", id: "revolut", label: "Revolut", patterns: ["revolut"] },
     { domain: "payoneer.com", id: "payoneer", label: "Payoneer", patterns: ["payoneer"] },
     { domain: "stripe.com", id: "stripe", label: "Stripe", patterns: ["stripe"] },
     { domain: "coinbase.com", id: "coinbase", label: "Coinbase", patterns: ["coinbase"] },
-    { domain: "binance.com", id: "binance", label: "Binance", patterns: ["binance"] },
+    { domain: "binance.com", id: "binance", currencies: ["USD"], label: "Binance", patterns: ["binance"] },
     { domain: "robinhood.com", id: "robinhood", label: "Robinhood", patterns: ["robinhood"] },
-    { domain: "airtm.com", id: "airtm", label: "Airtm", patterns: ["airtm"] },
-    { domain: "zinli.com", id: "zinli", label: "Zinli", patterns: ["zinli"] },
+    { domain: "airtm.com", id: "airtm", currencies: ["USD"], label: "Airtm", patterns: ["airtm"] },
+    { domain: "zinli.com", id: "zinli", currencies: ["USD"], label: "Zinli", patterns: ["zinli"] },
 
     { domain: "n26.com", id: "n26", label: "N26", patterns: ["n26"] },
     { domain: "monzo.com", id: "monzo", label: "Monzo", patterns: ["monzo"] },
@@ -277,39 +301,167 @@ const INSTITUTIONS: readonly InstitutionEntry[] = [
         patterns: ["sistecredito", "siste credito"],
     },
 
-    { domain: "banesco.com", id: "banesco", label: "Banesco", patterns: ["banesco"] },
+    // Domains from each bank's own site as listed by Asobanca and SUDEBAN's bank codes (2026).
+    {
+        domain: "bancodevenezuela.com",
+        id: "banco-de-venezuela",
+        label: "Banco de Venezuela",
+        patterns: ["banco de venezuela", "bdv"],
+        currencies: ["VES"],
+    },
+    { domain: "banesco.com", id: "banesco", label: "Banesco", patterns: ["banesco"], currencies: ["VES"] },
     {
         domain: "mercantilbanco.com",
         id: "mercantil",
-        label: "Banco Mercantil",
+        label: "Mercantil",
         patterns: ["mercantil", "banco mercantil"],
-    },
-    {
-        domain: "bnc.com.ve",
-        id: "bnc",
-        label: "BNC",
-        patterns: ["bnc", "banco nacional de credito"],
+        currencies: ["VES"],
     },
     {
         domain: "provincial.com",
         id: "provincial",
         label: "BBVA Provincial",
         patterns: ["bbva provincial", "provincial"],
+        currencies: ["VES"],
     },
     {
-        domain: "bdv.com.ve",
-        id: "banco-de-venezuela",
-        label: "Banco de Venezuela",
-        patterns: ["banco de venezuela", "bdv"],
+        domain: "bncenlinea.com",
+        id: "bnc",
+        label: "BNC",
+        patterns: ["bnc", "banco nacional de credito"],
+        currencies: ["VES"],
     },
-    { domain: "bancamiga.com", id: "bancamiga", label: "Bancamiga", patterns: ["bancamiga"] },
-    { domain: "banplus.com", id: "banplus", label: "Banplus", patterns: ["banplus"] },
-    { domain: "100banco.com", id: "100-banco", label: "100% Banco", patterns: ["100 banco"] },
-    { domain: "cashea.app", id: "cashea", installmentsIn: ["VE"], label: "Cashea", patterns: ["cashea"] },
-    { domain: "krece.app", id: "krece", installmentsIn: ["VE"], label: "Krece", patterns: ["krece"] },
-    { domain: "lysto.app", id: "lysto", installmentsIn: ["VE"], label: "Lysto", patterns: ["lysto"] },
-    { domain: "chollo.app", id: "chollo", installmentsIn: ["VE"], label: "Chollo", patterns: ["chollo"] },
+    { domain: "bancamiga.com", id: "bancamiga", label: "Bancamiga", patterns: ["bancamiga"], currencies: ["VES"] },
+    { domain: "banplus.com", id: "banplus", label: "Banplus", patterns: ["banplus"], currencies: ["VES"] },
+    {
+        domain: "bancaribe.com.ve",
+        id: "bancaribe",
+        label: "Bancaribe",
+        patterns: ["bancaribe", "banco del caribe"],
+        currencies: ["VES"],
+    },
+    {
+        domain: "bancoexterior.com",
+        id: "exterior",
+        label: "Banco Exterior",
+        patterns: ["banco exterior"],
+        currencies: ["VES"],
+    },
+    {
+        domain: "bfc.com.ve",
+        id: "bfc",
+        label: "BFC Banco Fondo Común",
+        patterns: ["bfc", "fondo comun", "banco fondo comun"],
+        currencies: ["VES"],
+    },
+    { domain: "bancoactivo.com", id: "activo", label: "Banco Activo", patterns: ["banco activo"], currencies: ["VES"] },
+    { domain: "bancoplaza.com", id: "plaza", label: "Banco Plaza", patterns: ["banco plaza"], currencies: ["VES"] },
+    { domain: "sofitasa.com", id: "sofitasa", label: "Sofitasa", patterns: ["sofitasa"], currencies: ["VES"] },
+    {
+        domain: "venezolano.com",
+        id: "venezolano-de-credito",
+        label: "Venezolano de Crédito",
+        patterns: ["venezolano de credito", "banco venezolano de credito"],
+        currencies: ["VES"],
+    },
+    {
+        domain: "100x100banco.com",
+        id: "100-banco",
+        label: "100% Banco",
+        patterns: ["100 banco", "100x100 banco"],
+        currencies: ["VES"],
+    },
+    {
+        domain: "bancocaroni.com.ve",
+        id: "caroni",
+        label: "Banco Caroní",
+        patterns: ["banco caroni"],
+        currencies: ["VES"],
+    },
+    {
+        domain: "delsur.com.ve",
+        id: "del-sur",
+        label: "Del Sur",
+        patterns: ["delsur", "del sur banco", "banco del sur"],
+        currencies: ["VES"],
+    },
+    {
+        domain: "bt.com.ve",
+        id: "tesoro",
+        label: "Banco del Tesoro",
+        patterns: ["banco del tesoro", "banco tesoro"],
+        currencies: ["VES"],
+    },
+    // Bicentenario became the Banco Digital de los Trabajadores and kept its bank code.
+    {
+        domain: "bdt.com.ve",
+        id: "bdt",
+        label: "Banco Digital de los Trabajadores",
+        patterns: ["bdt", "banco digital de los trabajadores", "bicentenario"],
+        currencies: ["VES"],
+    },
+    { domain: "banfanb.com.ve", id: "banfanb", label: "BANFANB", patterns: ["banfanb"], currencies: ["VES"] },
+    { domain: "bancrecer.com.ve", id: "bancrecer", label: "Bancrecer", patterns: ["bancrecer"], currencies: ["VES"] },
+    { domain: "bangente.com.ve", id: "bangente", label: "Bangente", patterns: ["bangente"], currencies: ["VES"] },
+    {
+        domain: "n58bancodigital.com",
+        id: "n58",
+        label: "N58 Banco Digital",
+        patterns: ["n58", "n58 banco digital"],
+        currencies: ["VES"],
+    },
+    {
+        domain: "r4conecta.io",
+        id: "r4",
+        label: "R4 Banco Microfinanciero",
+        patterns: ["r4 banco", "r4 conecta"],
+        currencies: ["VES"],
+    },
+    // Panamanian, but where many Venezuelans keep their dollars.
+    {
+        domain: "towerbank.com",
+        id: "towerbank",
+        label: "Towerbank",
+        patterns: ["towerbank", "tower bank"],
+        currencies: ["USD"],
+    },
+    {
+        domain: "cashea.app",
+        id: "cashea",
+        installmentsIn: ["VE"],
+        currencies: ["VES", "USD"],
+        label: "Cashea",
+        patterns: ["cashea"],
+    },
+    {
+        domain: "krece.app",
+        id: "krece",
+        installmentsIn: ["VE"],
+        currencies: ["VES", "USD"],
+        label: "Krece",
+        patterns: ["krece"],
+    },
+    {
+        domain: "lysto.app",
+        id: "lysto",
+        installmentsIn: ["VE"],
+        currencies: ["VES", "USD"],
+        label: "Lysto",
+        patterns: ["lysto"],
+    },
+    {
+        domain: "chollo.app",
+        id: "chollo",
+        installmentsIn: ["VE"],
+        currencies: ["VES", "USD"],
+        label: "Chollo",
+        patterns: ["chollo"],
+    },
 ] as const;
+
+export function institutionLabels(): readonly Pick<InstitutionEntry, "label" | "patterns">[] {
+    return INSTITUTIONS;
+}
 
 export type InstallmentApp = Pick<InstitutionEntry, "domain" | "id" | "label"> & { readonly currency: string };
 

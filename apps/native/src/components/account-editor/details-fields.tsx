@@ -1,15 +1,17 @@
 import type { Ref } from "react";
-import { Pressable, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import type { TextInputInstance } from "react-native";
 
 import { OutlinedSelectField, OutlinedTextField } from "@/components/material/outlined-field";
 import { SwitchRow } from "@/components/material/switch-row";
 import { Text } from "@/components/text";
+import { StageOption } from "@/components/transaction-form/stage/stage-option";
 import { withAlpha } from "@/theme/shade";
 import { useMaterialColors } from "@/theme/use-material-colors";
 
 const SIGN_TARGET = 48;
 const PRESSED_ALPHA = 0.1;
+const NO_SUGGESTIONS: readonly string[] = [];
 
 interface AccountDetailsFieldsProps {
     balanceEditA11y: string;
@@ -29,6 +31,8 @@ interface AccountDetailsFieldsProps {
     onBalancePress: () => void;
     onCurrencyPress: () => void;
     onNameChange: (name: string) => void;
+    /** Banks and apps to fill the name with; empty hides the row. */
+    nameSuggestions?: readonly string[];
     onSubmitName: () => void;
     /** Omitted for a person, which hides the row. */
     onToggleLiability?: (next: boolean) => void;
@@ -52,6 +56,7 @@ export function AccountDetailsFields({
     onBalancePress,
     onCurrencyPress,
     onNameChange,
+    nameSuggestions = NO_SUGGESTIONS,
     onSubmitName,
     onToggleLiability,
     onToggleSign,
@@ -69,6 +74,20 @@ export function AccountDetailsFields({
                 returnKeyType="done"
                 value={name}
             />
+
+            {nameSuggestions.length === 0 ? null : (
+                <ScrollView
+                    contentContainerClassName="gap-2"
+                    horizontal
+                    keyboardShouldPersistTaps="handled"
+                    showsHorizontalScrollIndicator={false}
+                    testID="account-name-suggestions"
+                >
+                    {nameSuggestions.map((label) => (
+                        <StageOption key={label} label={label} onPress={() => onNameChange(label)} />
+                    ))}
+                </ScrollView>
+            )}
 
             <OutlinedSelectField
                 accessibilityValue={currencyCode}

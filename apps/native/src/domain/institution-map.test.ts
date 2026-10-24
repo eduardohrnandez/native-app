@@ -5,6 +5,7 @@ import {
     installmentAppsIn,
     installmentRegion,
     searchInstallmentApps,
+    suggestInstitutions,
     isInstallmentAppAccount,
     resolveInstitutionDomain,
 } from "./institution-map";
@@ -14,7 +15,7 @@ describe("resolveInstitutionDomain", () => {
     it("folds punctuation and accents the way merchantKey does", () => {
         expect(resolveInstitutionDomain(merchantKey("U.S. Bank"))).toBe("usbank.com");
         expect(resolveInstitutionDomain(merchantKey("Itaú"))).toBe("itau.com.br");
-        expect(resolveInstitutionDomain(merchantKey("100% Banco"))).toBe("100banco.com");
+        expect(resolveInstitutionDomain(merchantKey("100% Banco"))).toBe("100x100banco.com");
     });
 
     it("matches an institution named inside a longer account name", () => {
@@ -94,5 +95,39 @@ describe("isInstallmentAppAccount", () => {
         expect(isInstallmentAppAccount({ kind: "liability", name: "Cashea USD" })).toBe(true);
         expect(isInstallmentAppAccount({ kind: "asset", name: "Klarna" })).toBe(false);
         expect(isInstallmentAppAccount({ kind: "liability", name: "Chase Sapphire" })).toBe(false);
+    });
+});
+
+describe("suggestInstitutions", () => {
+    it("lists every Venezuelan bank for a bolívar account before anything is typed", () => {
+        const names = suggestInstitutions("", "VES", 8);
+        expect(names).toContain("Banesco");
+        expect(names).toContain("Banco de Venezuela");
+        expect(names).not.toContain("Chase");
+        expect(names.length).toBeGreaterThan(8);
+    });
+
+    it("offers the dollar apps, not the bolívar banks, for an empty dollar account", () => {
+        const names = suggestInstitutions("", "USD", 8);
+        expect(names).toContain("Zelle");
+        expect(names).toContain("Towerbank");
+        expect(names).not.toContain("Banesco");
+    });
+
+    it("puts the currency's own banks first once a name is typed", () => {
+        expect(suggestInstitutions("ban", "VES", 3)[0]).not.toBe("Bank of America");
+        expect(suggestInstitutions("tower", "USD", 8)).toStrictEqual(["Towerbank"]);
+    });
+
+    it("stops offering a name once it is typed in full", () => {
+        expect(suggestInstitutions("Banesco", "VES", 8)).not.toContain("Banesco");
+    });
+});
+
+describe("venezuelan bank names", () => {
+    it("brand the bank's own domain, and a shop that only shares a word stays unbranded", () => {
+        expect(resolveInstitutionDomain(merchantKey("Bicentenario"))).toBe("bdt.com.ve");
+        expect(resolveInstitutionDomain(merchantKey("Pago móvil BNC"))).toBe("bncenlinea.com");
+        expect(resolveInstitutionDomain(merchantKey("Farmacia del Sur"))).toBeNull();
     });
 });

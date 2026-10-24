@@ -34,3 +34,10 @@ describe("suggesting a curated merchant from a prefix", () => {
         expect(suggestMerchants("netf", 4, ["NETFLIX "])).toStrictEqual([]);
     });
 });
+
+describe("suggesting a bank or payment app as an entry name", () => {
+    it("offers Zelle and Cashea, which name money in and purchases", () => {
+        expect(suggestMerchants("zel", 5)).toContain("Zelle");
+        expect(suggestMerchants("cash", 5)).toContain("Cashea");
+    });
+});
