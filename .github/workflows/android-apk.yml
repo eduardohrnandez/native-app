@@ -10,8 +10,17 @@ permissions:
 jobs:
     apk:
         runs-on: ubuntu-latest
-        timeout-minutes: 90
+        timeout-minutes: 120
         steps:
+            # The first build died with the runner out of memory: extra swap keeps R8 and the native compiles alive.
+            - name: Add swap
+              run: |
+                  sudo fallocate -l 8G /swap-extra
+                  sudo chmod 600 /swap-extra
+                  sudo mkswap /swap-extra
+                  sudo swapon /swap-extra
+                  free -h
+
             - uses: actions/checkout@v4
 
             - uses: actions/setup-node@v4
@@ -22,6 +31,9 @@ jobs:
               with:
                   distribution: temurin
                   java-version: 17
+
+            # Caches Gradle's downloads and build outputs so later builds only redo what changed.
+            - uses: gradle/actions/setup-gradle@v4
 
             - name: Install pnpm
               run: npm install -g pnpm@11.20.0
@@ -39,12 +51,23 @@ jobs:
                   CI: "1"
               run: pnpm exec expo prebuild --platform android --no-install --clean
 
-            # One ABI keeps the build inside a standard runner's memory; arm64 covers current phones.
+            # Later keys win in gradle.properties: fewer workers and no R8 shrinking keep memory inside the runner.
+            - name: Tune Gradle for the runner
+              working-directory: apps/native/android
+              run: |
+                  cat >> gradle.properties <<'PROPS'
+                  org.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8
+                  org.gradle.workers.max=2
+                  org.gradle.parallel=false
+                  kotlin.daemon.jvmargs=-Xmx1536m
+                  android.enableMinifyInReleaseBuilds=false
+                  android.enableShrinkResourcesInReleaseBuilds=false
+                  reactNativeArchitectures=arm64-v8a
+                  PROPS
+
             - name: Build the release APK
               working-directory: apps/native/android
-              env:
-                  GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g"
-              run: ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a --no-daemon
+              run: ./gradlew assembleRelease --max-workers=2
 
             - name: Publish the APK as a release
               env:
