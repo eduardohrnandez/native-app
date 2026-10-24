@@ -1,0 +1,56 @@
+name: Android APK
+
+# Builds an installable APK on GitHub's runners, without an Expo account or a local Android setup.
+on:
+    workflow_dispatch:
+
+permissions:
+    contents: write
+
+jobs:
+    apk:
+        runs-on: ubuntu-latest
+        timeout-minutes: 90
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+
+            - uses: actions/setup-java@v4
+              with:
+                  distribution: temurin
+                  java-version: 17
+
+            - name: Install pnpm
+              run: npm install -g pnpm@11.20.0
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Build translations
+              working-directory: apps/native
+              run: pnpm exec intlayer build
+
+            - name: Generate the Android project
+              working-directory: apps/native
+              env:
+                  CI: "1"
+              run: pnpm exec expo prebuild --platform android --no-install --clean
+
+            # One ABI keeps the build inside a standard runner's memory; arm64 covers current phones.
+            - name: Build the release APK
+              working-directory: apps/native/android
+              env:
+                  GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g"
+              run: ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a --no-daemon
+
+            - name: Publish the APK as a release
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  cp apps/native/android/app/build/outputs/apk/release/app-release.apk "finta-${{ github.run_number }}.apk"
+                  gh release create "apk-${{ github.run_number }}" "finta-${{ github.run_number }}.apk" \
+                    --prerelease --title "Finta APK #${{ github.run_number }}" \
+                    --notes "APK de prueba generado desde ${{ github.sha }}."
