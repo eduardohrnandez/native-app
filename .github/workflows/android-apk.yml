@@ -12,6 +12,9 @@ jobs:
         # Pinned: ubuntu-latest is moving to a new image this month, and 24.04 ships the Android SDK.
         runs-on: ubuntu-24.04
         timeout-minutes: 120
+        env:
+            # A publishable key, made to ship inside apps; logo.dev's free plan asks for the credit in Settings › About.
+            EXPO_PUBLIC_LOGO_DEV_TOKEN: pk_ds1RNpJiTl6tzoNqlO7qRg
         steps:
             # The runner died twice mid-build. Free the preinstalled toolchains this build never uses and put swap on
             # the larger /mnt disk, so neither memory nor the root disk runs out.
