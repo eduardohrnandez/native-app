@@ -61,25 +61,36 @@ jobs:
               run: pnpm exec expo prebuild --platform android --no-install --clean
 
             # Later keys win in gradle.properties: fewer workers and no R8 shrinking keep memory inside the runner.
+            # Public repos get 4 cores and 16 GB on this runner, so Gradle can use all of them.
             - name: Tune Gradle for the runner
               working-directory: apps/native/android
               run: |
                   cat >> gradle.properties <<'PROPS'
-                  org.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8
-                  org.gradle.workers.max=2
-                  org.gradle.parallel=false
-                  kotlin.daemon.jvmargs=-Xmx1536m
+                  org.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8
+                  org.gradle.parallel=true
+                  org.gradle.caching=true
+                  kotlin.daemon.jvmargs=-Xmx2g
                   android.enableMinifyInReleaseBuilds=false
                   android.enableShrinkResourcesInReleaseBuilds=false
                   reactNativeArchitectures=arm64-v8a
                   PROPS
 
+            # The native modules' C++ is most of the build and rarely changes between releases.
+            - name: Cache compiled C++
+              uses: hendrikmuhs/ccache-action@v1.2
+              with:
+                  key: android-arm64
+                  max-size: 2G
+
             - name: Build the release APK
               working-directory: apps/native/android
+              env:
+                  CMAKE_C_COMPILER_LAUNCHER: ccache
+                  CMAKE_CXX_COMPILER_LAUNCHER: ccache
               run: |
                   set -o pipefail
                   (while true; do sleep 120; echo "--- $(date -u +%T)"; df -h / | tail -1; free -m | head -2 | tail -1; done) &
-                  if ! ./gradlew assembleRelease --max-workers=2 2>&1 | tee "$RUNNER_TEMP/gradle.log"; then
+                  if ! ./gradlew assembleRelease 2>&1 | tee "$RUNNER_TEMP/gradle.log"; then
                     # Annotations are readable through the API even where the raw run log is not.
                     summary=$(grep -n -A 30 "What went wrong" "$RUNNER_TEMP/gradle.log" | head -n 60)
                     if [ -z "$summary" ]; then summary=$(tail -n 60 "$RUNNER_TEMP/gradle.log"); fi
