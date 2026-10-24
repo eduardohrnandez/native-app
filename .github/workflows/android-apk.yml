@@ -74,23 +74,16 @@ jobs:
               run: |
                   set -o pipefail
                   (while true; do sleep 120; echo "--- $(date -u +%T)"; df -h / | tail -1; free -m | head -2 | tail -1; done) &
-                  ./gradlew assembleRelease --max-workers=2 2>&1 | tee "$RUNNER_TEMP/gradle.log"
-
-            # The run log is not reachable from every place this is debugged from, so a failure leaves its tail in git.
-            - name: Save the build log on failure
-              if: failure()
-              env:
-                  GH_TOKEN: ${{ github.token }}
-              run: |
-                  tail -n 400 "$RUNNER_TEMP/gradle.log" > /tmp/gradle-tail.log || echo "no gradle log" > /tmp/gradle-tail.log
-                  git config user.name "github-actions"
-                  git config user.email "github-actions@users.noreply.github.com"
-                  git checkout --orphan "ci-logs-${{ github.run_number }}"
-                  git rm -rfq --cached .
-                  cp /tmp/gradle-tail.log gradle-tail.log
-                  git add gradle-tail.log
-                  git commit -qm "Build log tail for run ${{ github.run_number }}"
-                  git push -q origin "HEAD:refs/heads/ci-logs-${{ github.run_number }}"
+                  if ! ./gradlew assembleRelease --max-workers=2 2>&1 | tee "$RUNNER_TEMP/gradle.log"; then
+                    # Annotations are readable through the API even where the raw run log is not.
+                    summary=$(grep -n -A 30 "What went wrong" "$RUNNER_TEMP/gradle.log" | head -n 60)
+                    if [ -z "$summary" ]; then summary=$(tail -n 60 "$RUNNER_TEMP/gradle.log"); fi
+                    summary=${summary//'%'/'%25'}
+                    summary=${summary//$'\n'/'%0A'}
+                    summary=${summary//$'\r'/'%0D'}
+                    echo "::error title=Gradle build failed::${summary}"
+                    exit 1
+                  fi
 
             - name: Publish the APK as a release
               env:
