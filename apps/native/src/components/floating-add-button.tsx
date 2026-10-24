@@ -22,6 +22,7 @@ import { useDatabase } from "@/contexts/local-data-context";
 import { useBankAccounts } from "@/data/accounts";
 import { LARGEST_STANDARD_FONT_SCALE } from "@/hooks/use-accessibility-text-size";
 import { useTranslation } from "@/i18n/context";
+import { convex } from "@/lib/convex";
 import { importDraftStore } from "@/lib/import-draft-store";
 import { useHaptics } from "@/lib/use-haptics";
 import { useColors } from "@/theme/use-colors";
@@ -191,8 +192,13 @@ export function FloatingAddButton() {
                   },
               ]
             : []),
-        { href: "/transactions/voice", icon: Mic01Icon, key: "voice", label: t("log.add.voice") },
-        { href: "/transactions/scan", icon: ScanIcon, key: "scan", label: t("log.add.scan") },
+        // Voice and receipt capture run on the account service, which a build without one cannot reach.
+        ...(convex === null
+            ? []
+            : [
+                  { href: "/transactions/voice" as const, icon: Mic01Icon, key: "voice", label: t("log.add.voice") },
+                  { href: "/transactions/scan" as const, icon: ScanIcon, key: "scan", label: t("log.add.scan") },
+              ]),
         { href: null, icon: FileImportIcon, key: "import", label: t("log.add.import") },
     ];
     const width = labelWidth(fontScale, windowWidth);
