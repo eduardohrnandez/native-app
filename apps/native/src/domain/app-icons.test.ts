@@ -20,7 +20,7 @@ const ALTERNATE_ICON_NAMES = APP_ICONS.map((icon) => icon.name).filter((name) =>
 
 function declaredInAppConfig(): string[] {
     const source = readFileSync(join(nativeRoot, "app.config.ts"), "utf-8");
-    const block = /const ALTERNATE_ICONS = \[([\s\S]*?)\];/.exec(source);
+    const block = /const ALTERNATE_ICONS(?::[^=]+)? = \[([\s\S]*?)\];/.exec(source);
     if (!block) {
         throw new Error("app.config.ts no longer declares ALTERNATE_ICONS");
     }
@@ -116,7 +116,7 @@ describe("resolving what iOS reports", () => {
     });
 
     it("falls back to the default for a name this build no longer offers", () => {
-        expect(EN[appIconLabel("OutlayrRetired")]).toBe("Default");
+        expect(EN[appIconLabel("RetiredIcon")]).toBe("Default");
     });
 });
 
@@ -135,50 +135,50 @@ describe("describing the Default row", () => {
 });
 
 describe("choosing an icon", () => {
-    const ON_MONO: AppIconState = { active: "OutlayrMono", pending: null };
+    const ON_MONO: AppIconState = { active: "AltMono", pending: null };
 
     function tap(state: AppIconState, name: string | null): AppIconState {
         return appIconTransition(state, { kind: "tap", name });
     }
 
     it("moves the checkmark on tap, before the native call lands", () => {
-        const next = tap(ON_MONO, "OutlayrInk");
-        expect(next.active).toBe("OutlayrInk");
-        expect(next.pending).toStrictEqual({ name: "OutlayrInk" });
+        const next = tap(ON_MONO, "AltInk");
+        expect(next.active).toBe("AltInk");
+        expect(next.pending).toStrictEqual({ name: "AltInk" });
     });
 
     it("drops a tap while a change is in flight", () => {
-        const flying = tap(ON_MONO, "OutlayrInk");
-        expect(tap(flying, "OutlayrEmboss")).toBe(flying);
+        const flying = tap(ON_MONO, "AltInk");
+        expect(tap(flying, "AltEmboss")).toBe(flying);
     });
 
     it("treats a request for the primary as in flight too", () => {
         const flying = tap(ON_MONO, null);
         expect(flying).toStrictEqual({ active: null, pending: { name: null } });
-        expect(tap(flying, "OutlayrInk")).toBe(flying);
+        expect(tap(flying, "AltInk")).toBe(flying);
     });
 
     it("keeps the requested name once the change lands", () => {
-        const landed = appIconTransition(tap(ON_MONO, "OutlayrInk"), {
+        const landed = appIconTransition(tap(ON_MONO, "AltInk"), {
             kind: "resolved",
-            name: "OutlayrInk",
+            name: "AltInk",
         });
-        expect(landed).toStrictEqual({ active: "OutlayrInk", pending: null });
+        expect(landed).toStrictEqual({ active: "AltInk", pending: null });
     });
 
     it("restores the icon iOS reports when the change is refused", () => {
-        const refused = appIconTransition(tap(ON_MONO, "OutlayrInk"), {
+        const refused = appIconTransition(tap(ON_MONO, "AltInk"), {
             kind: "rejected",
-            reported: "OutlayrMono",
+            reported: "AltMono",
         });
-        expect(refused).toStrictEqual({ active: "OutlayrMono", pending: null });
+        expect(refused).toStrictEqual({ active: "AltMono", pending: null });
     });
 
     it("ignores a landing for a name that is no longer pending", () => {
-        const refused = appIconTransition(tap(ON_MONO, "OutlayrInk"), {
+        const refused = appIconTransition(tap(ON_MONO, "AltInk"), {
             kind: "rejected",
-            reported: "OutlayrMono",
+            reported: "AltMono",
         });
-        expect(appIconTransition(refused, { kind: "resolved", name: "OutlayrInk" })).toBe(refused);
+        expect(appIconTransition(refused, { kind: "resolved", name: "AltInk" })).toBe(refused);
     });
 });

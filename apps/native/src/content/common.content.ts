@@ -132,8 +132,8 @@ const common = {
             es: "Ayer",
         }),
         "error.boundary.body": t({
-            en: "Outlayr hit an unexpected error. Your data is untouched — try again.",
-            es: "Outlayr tuvo un error inesperado. Tus datos están intactos. Inténtalo de nuevo.",
+            en: "Finta hit an unexpected error. Your data is untouched — try again.",
+            es: "Finta tuvo un error inesperado. Tus datos están intactos. Inténtalo de nuevo.",
         }),
         "error.boundary.title": t({
             en: "Something Went Wrong",
@@ -244,8 +244,8 @@ const common = {
             es: "Volver al registro",
         }),
         "notFound.body": t({
-            en: "That link does not point anywhere in Outlayr. Your ledger is where you left it.",
-            es: "Ese enlace no lleva a ninguna parte en Outlayr. Tu registro sigue donde lo dejaste.",
+            en: "That link does not point anywhere in Finta. Your ledger is where you left it.",
+            es: "Ese enlace no lleva a ninguna parte en Finta. Tu registro sigue donde lo dejaste.",
         }),
         "notFound.navTitle": t({
             en: "Not Found",

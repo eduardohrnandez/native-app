@@ -38,7 +38,7 @@ describe("system language settings on Android", () => {
         expect(hasSystemLanguageSettings()).toBe(offered);
     });
 
-    it("opens Outlayr's own page under App languages", async () => {
+    it("opens Finta's own page under App languages", async () => {
         openLanguageSettings();
 
         await waitFor(() => {

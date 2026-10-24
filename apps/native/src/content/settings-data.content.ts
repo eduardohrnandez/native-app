@@ -8,8 +8,8 @@ const settingsData = {
             es: "Eliminada {date}",
         }),
         "settings.deleted.empty": t({
-            en: "Nothing has been deleted. Entries you delete arrive here and wait. Outlayr never throws one away.",
-            es: "No has eliminado nada. Las entradas que elimines llegan aquí y te esperan. Outlayr nunca descarta ninguna.",
+            en: "Nothing has been deleted. Entries you delete arrive here and wait. Finta never throws one away.",
+            es: "No has eliminado nada. Las entradas que elimines llegan aquí y te esperan. Finta nunca descarta ninguna.",
         }),
         "settings.deleted.failedBody": t({
             en: "It is still here and nothing was lost. Try restoring it again.",
@@ -108,8 +108,8 @@ const settingsData = {
             es: "Incluye cada registro, categoría y presupuesto completos, con todo lo que el CSV deja fuera. Es el archivo que usas para restaurar.",
         }),
         "settings.export.archiveShareTitle": t({
-            en: "Outlayr archive",
-            es: "Archivo de Outlayr",
+            en: "Finta archive",
+            es: "Archivo de Finta",
         }),
         "settings.export.archiveTitle": t({
             en: "Full archive",
@@ -120,8 +120,8 @@ const settingsData = {
             es: "Columnas",
         }),
         "settings.export.columnsNote": t({
-            en: "Dates are ISO 8601 instants and amounts are plain decimals with no grouping, so the file reads back into Outlayr (or into a spreadsheet) as the same figures.",
-            es: "Las fechas van en formato ISO 8601 y los montos como decimales simples sin separador de miles, así que el archivo se vuelve a leer en Outlayr (o en una hoja de cálculo) con las mismas cifras.",
+            en: "Dates are ISO 8601 instants and amounts are plain decimals with no grouping, so the file reads back into Finta (or into a spreadsheet) as the same figures.",
+            es: "Las fechas van en formato ISO 8601 y los montos como decimales simples sin separador de miles, así que el archivo se vuelve a leer en Finta (o en una hoja de cálculo) con las mismas cifras.",
         }),
         "settings.export.failedBody": t({
             en: "The file couldn't be written.",
@@ -216,8 +216,8 @@ const settingsData = {
             es: "No se pudo leer el archivo, o lo escribió una versión más reciente de la app.",
         }),
         "settings.restore.badArchiveTitle": t({
-            en: "That is not an Outlayr archive",
-            es: "Ese no es un archivo de Outlayr",
+            en: "That is not an Finta archive",
+            es: "Ese no es un archivo de Finta",
         }),
         "settings.restore.confirmAction": t({
             en: "Replace",

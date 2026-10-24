@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 
+import { FintaMark } from "@/components/finta-mark";
 import { FirstRun } from "@/components/first-run";
-import { OutlayrMark } from "@/components/outlayr-mark";
 import { flyleafDate } from "@/domain/flyleaf";
 import { useLanguage, useTranslation } from "@/i18n/context";
 
@@ -21,7 +21,7 @@ export function OnboardingWelcome() {
             eyebrow={t("onboarding.welcome.begun", {
                 date: flyleafDate(new Date(), language),
             })}
-            object={<OutlayrMark size={92} />}
+            object={<FintaMark size={92} />}
             title={t("onboarding.welcome.title")}
         />
     );

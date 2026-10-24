@@ -18,7 +18,7 @@ const APP_GROUP = `group.${APP_ID}`;
 
 const IOS_DEPLOYMENT_TARGET = "18.0";
 
-const ALTERNATE_ICONS = ["OutlayrInk", "OutlayrHairline", "OutlayrMono", "OutlayrEmboss"];
+const ALTERNATE_ICONS: string[] = [];
 
 const WIDGETS = [
     {

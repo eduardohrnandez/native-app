@@ -52,7 +52,7 @@ describe("useRelock on Android", () => {
         expect(relock).toHaveBeenCalledTimes(1);
     });
 
-    it("stays open across a trip Outlayr announced, then judges the next one on its own", async () => {
+    it("stays open across a trip Finta announced, then judges the next one on its own", async () => {
         const relock = await relockSpy();
 
         expectHandoff();
@@ -134,7 +134,7 @@ describe("useRelock on Android", () => {
 
         await openInAppBrowser("https://outlayr.app/privacy");
         changeTo("background");
-        // Home from the tab sends Outlayr nothing; the next event is the return.
+        // Home from the tab sends Finta nothing; the next event is the return.
         jest.advanceTimersByTime(3 * HOUR_MS);
         changeTo("active");
 

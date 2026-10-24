@@ -52,8 +52,8 @@ const importSheet = {
             es: "No se encontraron transacciones en este archivo",
         }),
         "import.errorTooFewColumnsBody": t({
-            en: "Outlayr needs at least a date, an amount, and a category or description column.",
-            es: "Outlayr necesita al menos una fecha, un monto y una columna de categoría o descripción.",
+            en: "Finta needs at least a date, an amount, and a category or description column.",
+            es: "Finta necesita al menos una fecha, un monto y una columna de categoría o descripción.",
         }),
         "import.errorTooFewColumnsTitle": t({
             en: "This file has fewer than 3 columns",

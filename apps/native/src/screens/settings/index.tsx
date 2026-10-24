@@ -1,8 +1,7 @@
-import Constants from "expo-constants";
 import { useRouter } from "expo-router";
 import type { Href } from "expo-router";
 import { useRef, useState } from "react";
-import { Linking, Platform } from "react-native";
+import { Platform } from "react-native";
 
 import { ImportSheet } from "@/components/import-sheet/import-sheet";
 import type { ImportSheetHandle } from "@/components/import-sheet/import-sheet";
@@ -38,21 +37,16 @@ import type { TranslationKey } from "@/i18n/catalog";
 import { useLanguage, useTranslation } from "@/i18n/context";
 import { languageLabel } from "@/i18n/languages";
 import { translateNow } from "@/i18n/runtime";
-import { expectHandoff, openInAppBrowser } from "@/lib/app-handoff";
+import { expectHandoff } from "@/lib/app-handoff";
 import { alternateIconsSupported, useAppIcon } from "@/lib/app-icon";
 import { requestUnlock } from "@/lib/app-lock";
 import { APP_BUILD, APP_VERSION } from "@/lib/app-version";
 import { useAuthSession } from "@/lib/auth-session";
 import { importDraftStore } from "@/lib/import-draft-store";
 import { hasSystemLanguageSettings, openLanguageSettings } from "@/lib/language-settings";
-import { legalUrl } from "@/lib/legal-url";
 import { notifyFailure } from "@/lib/notify";
-import { supportMailto } from "@/lib/support-mailto";
-import type { SupportDiagnostics } from "@/lib/support-mailto";
 import { THEME_OPTIONS } from "@/theme/theme-preference";
 import { useIsDark } from "@/theme/use-is-dark";
-
-const SUPPORT_EMAIL = "support@tryoutlayr.com";
 
 const DATA_LINKS = [
     { href: "/settings/export", icon: "FileExport", title: "settings.row.export" },
@@ -105,8 +99,6 @@ export function Settings() {
     const colorScheme = settings.number("colorScheme");
     const scheme = useIsDark() ? "dark" : "light";
 
-    const diagnostics = supportDiagnostics(APP_VERSION, APP_BUILD);
-
     const syncLabel = syncStatusLabel({
         enabled: sync.enabled,
         paused: syncPaused(sync.enabled, proEntitled),
@@ -116,7 +108,7 @@ export function Settings() {
     const syncValue = syncLabel.count === undefined ? t(syncLabel.key) : t(syncLabel.key, { count: syncLabel.count });
 
     return (
-        <SettingsScreen footer={`Outlayr ${APP_VERSION} (${APP_BUILD})`}>
+        <SettingsScreen footer={`Finta ${APP_VERSION} (${APP_BUILD})`}>
             <SettingsSection title={t("settings.section.account")}>
                 <AccountRow />
                 <LinkRow
@@ -324,24 +316,6 @@ export function Settings() {
 
             <SettingsSection title={t("settings.section.about")}>
                 <LinkRow
-                    icon="Mail01"
-                    onPress={() => {
-                        expectHandoff();
-                        Linking.openURL(supportMailto(SUPPORT_EMAIL, t("settings.support.subject"), diagnostics));
-                    }}
-                    title={t("settings.row.contactSupport")}
-                />
-                <LinkRow
-                    icon="SecurityCheck"
-                    onPress={() => openInAppBrowser(legalUrl("privacy", language))}
-                    title={t("settings.row.privacy")}
-                />
-                <LinkRow
-                    icon="LegalDocument01"
-                    onPress={() => openInAppBrowser(legalUrl("terms", language))}
-                    title={t("settings.row.terms")}
-                />
-                <LinkRow
                     icon="InformationCircle"
                     onPress={() => router.push("/settings/about")}
                     title={t("settings.row.about")}
@@ -364,15 +338,4 @@ function AppIconRow() {
             value={t(appIconLabel(active))}
         />
     );
-}
-
-function supportDiagnostics(version: string, build: string): SupportDiagnostics {
-    return {
-        appBuild: build,
-        appName: Constants.expoConfig?.name ?? "Finta",
-        appVersion: version,
-        deviceName: Constants.deviceName ?? "",
-        osName: Platform.select({ android: "Android", ios: "iOS" }) ?? Platform.OS,
-        osVersion: String(Platform.Version),
-    };
 }

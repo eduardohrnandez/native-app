@@ -80,12 +80,12 @@ const debts = {
             es: "En",
         }),
         "debts.field.before": t({
-            en: "None, it was before Outlayr",
-            es: "Ninguna, fue antes de Outlayr",
+            en: "None, it was before Finta",
+            es: "Ninguna, fue antes de Finta",
         }),
         "debts.field.outside": t({
-            en: "Outside Outlayr",
-            es: "Fuera de Outlayr",
+            en: "Outside Finta",
+            es: "Fuera de Finta",
         }),
         "debts.field.currency": t({
             en: "Currency",

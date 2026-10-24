@@ -220,7 +220,7 @@ async function balanceOf(id: string, now: Date): Promise<number> {
     return (await settledBalanceAt(db, account, { displayCurrency: "USD", rates: buildRateTable([]) }, now)).value;
 }
 
-/** The $100 order bought on Aug 1, before Outlayr: the upfront and the first `paid` cuotas settled outside it. */
+/** The $100 order bought on Aug 1, before Finta: the upfront and the first `paid` cuotas settled outside it. */
 async function startedBefore(paid: number): Promise<string> {
     const bought = new Date(2026, 7, 1, 12);
     const { planId } = await installmentsRepo.createOrder(db, {
@@ -248,7 +248,7 @@ async function startedBefore(paid: number): Promise<string> {
     return planId;
 }
 
-describe("payments made outside Outlayr", () => {
+describe("payments made outside Finta", () => {
     const tonight = new Date(2026, 9, 18, 23);
 
     it("starts an order part paid, owing only the rest, and a later payment continues from there", async () => {

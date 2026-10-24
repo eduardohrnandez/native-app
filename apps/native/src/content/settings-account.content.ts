@@ -44,16 +44,16 @@ const settingsAccount = {
             es: "Borrar dispositivo",
         }),
         "settings.account.eraseDeviceConfirmBody": t({
-            en: "This permanently removes your account and all erasable Outlayr data on this device.",
-            es: "Esto elimina de forma permanente tu cuenta y todos los datos borrables de Outlayr en este dispositivo.",
+            en: "This permanently removes your account and all erasable Finta data on this device.",
+            es: "Esto elimina de forma permanente tu cuenta y todos los datos borrables de Finta en este dispositivo.",
         }),
         "settings.account.eraseDeviceConfirmTitle": t({
             en: "Erase this device too?",
             es: "¿Borrar también este dispositivo?",
         }),
         "settings.account.eraseDeviceFooter": t({
-            en: "Erases Outlayr data on this device after your cloud account is deleted. System permissions and widget placement remain controlled by the OS.",
-            es: "Borra los datos de Outlayr de este dispositivo después de eliminar tu cuenta en la nube. Los permisos del sistema y la ubicación de los widgets siguen bajo control del sistema operativo.",
+            en: "Erases Finta data on this device after your cloud account is deleted. System permissions and widget placement remain controlled by the OS.",
+            es: "Borra los datos de Finta de este dispositivo después de eliminar tu cuenta en la nube. Los permisos del sistema y la ubicación de los widgets siguen bajo control del sistema operativo.",
         }),
         "settings.account.eraseDeviceSection": t({
             en: "Erase this device",
@@ -116,8 +116,8 @@ const settingsAccount = {
             es: "Sesi\u00F3n iniciada",
         }),
         "settings.account.signedOutDetail": t({
-            en: "Outlayr keeps your ledger on this device and behaves exactly the same signed out. An account lets you choose to sync it with your other devices.",
-            es: "Outlayr guarda tu registro en este dispositivo y funciona igual sin sesión. Con una cuenta, puedes sincronizarlo con tus otros dispositivos si quieres.",
+            en: "Finta keeps your ledger on this device and behaves exactly the same signed out. An account lets you choose to sync it with your other devices.",
+            es: "Finta guarda tu registro en este dispositivo y funciona igual sin sesión. Con una cuenta, puedes sincronizarlo con tus otros dispositivos si quieres.",
         }),
         "settings.account.signingOut": t({
             en: "Signing out\u2026",
@@ -156,8 +156,8 @@ const settingsAccount = {
             es: "Sincronización",
         }),
         "settings.sync.needsAccount": t({
-            en: "Sync needs an account to replicate to. Until you sign in your ledger stays on this device, which is all Outlayr ever needed to work.",
-            es: "Para sincronizar necesitas una cuenta. Hasta que inicies sesión, tu registro se queda en este dispositivo, y eso es todo lo que Outlayr necesita para funcionar.",
+            en: "Sync needs an account to replicate to. Until you sign in your ledger stays on this device, which is all Finta ever needed to work.",
+            es: "Para sincronizar necesitas una cuenta. Hasta que inicies sesión, tu registro se queda en este dispositivo, y eso es todo lo que Finta necesita para funcionar.",
         }),
         "settings.sync.never": t({
             en: "Not synced yet",
@@ -188,8 +188,8 @@ const settingsAccount = {
             es: "En pausa",
         }),
         "settings.sync.pausedDetail": t({
-            en: "Syncing needs Outlayr Pro. Your ledger is complete on this phone and keeps working; changes wait here until Pro is active again.",
-            es: "Sincronizar requiere Outlayr Pro. Tu registro está completo en este celular y sigue funcionando; los cambios esperan aquí hasta que Pro esté activo otra vez.",
+            en: "Syncing needs Finta Pro. Your ledger is complete on this phone and keeps working; changes wait here until Pro is active again.",
+            es: "Sincronizar requiere Finta Pro. Tu registro está completo en este celular y sigue funcionando; los cambios esperan aquí hasta que Pro esté activo otra vez.",
         }),
         "settings.sync.pending": t({
             en: "{count} waiting to sync",

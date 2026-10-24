@@ -32,8 +32,8 @@ const voice = {
             es: "Cerrar",
         }),
         "voice.failed.denied": t({
-            en: "Outlayr needs the microphone to hear you.",
-            es: "Outlayr necesita el micrófono para escucharte.",
+            en: "Finta needs the microphone to hear you.",
+            es: "Finta necesita el micrófono para escucharte.",
         }),
         "voice.failed.notConfigured": t({
             en: "Speaking an entry needs the cloud tier.",

@@ -11,6 +11,6 @@ struct OutlayrLogControl: ControlWidget {
             }
         }
         .displayName("Log expense")
-        .description("Opens Outlayr ready for an amount.")
+        .description("Opens Finta ready for an amount.")
     }
 }

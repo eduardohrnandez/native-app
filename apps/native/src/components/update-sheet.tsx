@@ -57,7 +57,7 @@ export function UpdateSheet() {
             setDismissedId(null);
             setState((current) => (current === "failed" ? "idle" : current));
             checkForUpdateAsync().catch((error) => {
-                console.warn("[outlayr] update check failed", error);
+                console.warn("[finta] update check failed", error);
             });
         });
         return () => subscription.remove();
@@ -82,7 +82,7 @@ export function UpdateSheet() {
             await flushDeletes();
             await reloadAsync();
         } catch (error) {
-            console.warn("[outlayr] update failed", error);
+            console.warn("[finta] update failed", error);
             setState("failed");
         }
     };

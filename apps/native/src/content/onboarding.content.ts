@@ -32,8 +32,8 @@ const onboarding = {
             es: "Selecciona una moneda",
         }),
         "onboarding.currency.saveFailed.body": t({
-            en: "Outlayr could not record your currency. Try again.",
-            es: "Outlayr no pudo registrar tu moneda. Inténtalo de nuevo.",
+            en: "Finta could not record your currency. Try again.",
+            es: "Finta no pudo registrar tu moneda. Inténtalo de nuevo.",
         }),
         "onboarding.currency.saveFailed.title": t({
             en: "Could not save",
@@ -60,8 +60,8 @@ const onboarding = {
             es: "Calificación",
         }),
         "onboarding.rating.title": t({
-            en: "Outlayr is made by one person",
-            es: "Outlayr lo hace una sola persona",
+            en: "Finta is made by one person",
+            es: "Finta lo hace una sola persona",
         }),
         "onboarding.rhythm.body": t({
             en: "One quiet nudge each evening. iOS isn't asked for permission until your first entry is saved.",
@@ -100,8 +100,8 @@ const onboarding = {
             es: "Comenzado el {date}",
         }),
         "onboarding.welcome.title": t({
-            en: "Welcome to Outlayr",
-            es: "Te damos la bienvenida a Outlayr",
+            en: "Welcome to Finta",
+            es: "Te damos la bienvenida a Finta",
         }),
     },
     key: "onboarding" as const,

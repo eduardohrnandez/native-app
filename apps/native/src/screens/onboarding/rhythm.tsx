@@ -1,9 +1,7 @@
-import { useRouter } from "expo-router";
-import { isAvailableAsync } from "expo-store-review";
 import { View } from "react-native";
 
+import { FintaMark } from "@/components/finta-mark";
 import { FirstRun } from "@/components/first-run";
-import { OutlayrMark } from "@/components/outlayr-mark";
 import { Text } from "@/components/text";
 import { cn } from "@/components/tw";
 import { useDatabase } from "@/contexts/local-data-context";
@@ -23,9 +21,9 @@ function MockNotification({ body, back }: { body: string; back?: boolean }) {
                 back && "-mb-10 scale-90 -rotate-1 opacity-55"
             )}
         >
-            <OutlayrMark size={26} />
+            <FintaMark size={26} />
             <View className="flex-1 gap-0.5">
-                <Text className="font-sans-semibold text-footnote text-fr-ink">Outlayr</Text>
+                <Text className="font-sans-semibold text-footnote text-fr-ink">Finta</Text>
                 <Text className="text-footnote text-fr-muted">{body}</Text>
             </View>
         </View>
@@ -34,22 +32,13 @@ function MockNotification({ body, back }: { body: string; back?: boolean }) {
 
 export function OnboardingRhythm() {
     const db = useDatabase();
-    const router = useRouter();
     const t = useTranslation();
 
+    // No store listing yet, so the rating step is skipped.
     const finish = () => {
-        isAvailableAsync()
-            .catch(() => false)
-            .then(async (rateable) => {
-                if (rateable) {
-                    router.push("/onboarding/rating");
-                    return;
-                }
-                await finishOnboarding(db);
-            })
-            .catch((cause: unknown) => {
-                console.error("Finishing onboarding failed", cause);
-            });
+        finishOnboarding(db).catch((cause: unknown) => {
+            console.error("Finishing onboarding failed", cause);
+        });
     };
 
     const remind = () => {

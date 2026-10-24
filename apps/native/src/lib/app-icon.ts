@@ -2,12 +2,12 @@ import { getAppIconName, setAlternateAppIcon, supportsAlternateIcons } from "exp
 import { useFocusEffect } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 
-import { appIconTransition } from "@/domain/app-icons";
+import { APP_ICONS, appIconTransition } from "@/domain/app-icons";
 import type { AppIconEvent, AppIconState } from "@/domain/app-icons";
 import { translateNow } from "@/i18n/runtime";
 import { notifyFailure } from "@/lib/notify";
 
-export const alternateIconsSupported: boolean = supportsAlternateIcons;
+export const alternateIconsSupported: boolean = supportsAlternateIcons && APP_ICONS.length > 1;
 
 /** iOS is the only record of which icon is on, so a setting can never disagree with the home screen. */
 function readAppIconName(): string | null {

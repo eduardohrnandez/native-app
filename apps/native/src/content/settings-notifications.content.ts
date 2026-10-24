@@ -12,12 +12,12 @@ const settingsNotifications = {
             es: "Hora personalizada",
         }),
         "settings.notifications.deniedBody": t({
-            en: "Outlayr cannot ask again once you have declined. Turn notifications on for Outlayr in iOS Settings and this switch will follow.",
-            es: "Como ya las rechazaste, Outlayr no puede volver a preguntarte. Activa las notificaciones de Outlayr en Configuración y este interruptor se actualizará solo.",
+            en: "Finta cannot ask again once you have declined. Turn notifications on for Finta in iOS Settings and this switch will follow.",
+            es: "Como ya las rechazaste, Finta no puede volver a preguntarte. Activa las notificaciones de Finta en Configuración y este interruptor se actualizará solo.",
         }),
         "settings.notifications.deniedBody.android": t({
-            en: "Outlayr cannot ask again once you have declined. Turn notifications on for Outlayr in your phone's settings and this switch will follow.",
-            es: "Como ya las rechazaste, Outlayr no puede volver a preguntarte. Activa las notificaciones de Outlayr en la configuración del celular y este interruptor se actualizará solo.",
+            en: "Finta cannot ask again once you have declined. Turn notifications on for Finta in your phone's settings and this switch will follow.",
+            es: "Como ya las rechazaste, Finta no puede volver a preguntarte. Activa las notificaciones de Finta en la configuración del celular y este interruptor se actualizará solo.",
         }),
         "settings.notifications.deniedTitle": t({
             en: "Notifications are off",

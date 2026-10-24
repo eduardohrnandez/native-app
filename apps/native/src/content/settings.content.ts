@@ -4,24 +4,20 @@ import type { Dictionary } from "intlayer";
 const settings = {
     content: {
         "settings.about.copyright": t({
-            en: "Copyright © 2022-2023 Rafael Soh and Dime contributors. Modifications copyright © 2026 Daniel Esteves.",
-            es: "Copyright © 2022-2023 Rafael Soh y colaboradores de Dime. Modificaciones copyright © 2026 Daniel Esteves.",
-        }),
-        "settings.about.dimeRepo": t({
-            en: "Dime (original project)",
-            es: "Dime (proyecto original)",
+            en: "Copyright © 2022-2023 Rafael Soh and Dime contributors. Modifications copyright © 2026 Daniel Esteves and Eduardo.",
+            es: "Copyright © 2022-2023 Rafael Soh y colaboradores de Dime. Modificaciones copyright © 2026 Daniel Esteves y Eduardo.",
         }),
         "settings.about.fork": t({
-            en: "Outlayr is a modified version of Dime, forked in 2026 and changed since.",
-            es: "Outlayr es una versión modificada de Dime: nació como fork en 2026 y ha cambiado desde entonces.",
+            en: "Finta is a modified version of GPL-3.0 open source software, changed since October 2026.",
+            es: "Finta es una versión modificada de software libre bajo GPL-3.0, con cambios desde octubre de 2026.",
         }),
         "settings.about.gplLink": t({
             en: "GPL-3.0 License",
             es: "Licencia GPL-3.0",
         }),
         "settings.about.intro": t({
-            en: "Outlayr is open source and free forever. It is built on the foundation of Dime, a beautiful expense tracker created by Rafael Soh, and is distributed under the GNU General Public License v3.0.",
-            es: "Outlayr es de código abierto y gratuito para siempre. Está basado en Dime, una hermosa app de gastos creada por Rafael Soh, y se distribuye bajo la GNU General Public License v3.0.",
+            en: "Finta helps you follow your money month by month and across the whole year. It is free software, distributed under the GNU General Public License v3.0.",
+            es: "Finta te ayuda a seguir tu dinero mes a mes y en todo el año. Es software libre y se distribuye bajo la GNU General Public License v3.0.",
         }),
         "settings.about.licenceHeading": t({
             en: "Licence",
@@ -39,21 +35,13 @@ const settings = {
             en: "Open source licenses",
             es: "Licencias de código abierto",
         }),
-        "settings.about.outlayr": t({
-            en: "Outlayr",
-            es: "Outlayr",
-        }),
-        "settings.about.outlayrRepo": t({
-            en: "Outlayr on GitHub",
-            es: "Outlayr en GitHub",
-        }),
         "settings.about.version": t({
             en: "Version {version}",
             es: "Versión {version}",
         }),
         "settings.about.warranty": t({
-            en: "Outlayr comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law. You may redistribute it under the terms of the GNU General Public License v3.0.",
-            es: "Outlayr se distribuye SIN NINGUNA GARANTÍA, en la medida permitida por la ley. Puedes redistribuirlo bajo los términos de la GNU General Public License v3.0.",
+            en: "Finta comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law. You may redistribute it under the terms of the GNU General Public License v3.0.",
+            es: "Finta se distribuye SIN NINGUNA GARANTÍA, en la medida permitida por la ley. Puedes redistribuirlo bajo los términos de la GNU General Public License v3.0.",
         }),
         "settings.appIcon.alertNote": t({
             en: "iOS confirms every change with an alert of its own.",
@@ -248,8 +236,8 @@ const settings = {
             es: "Laboratorio de funciones",
         }),
         "settings.row.followX": t({
-            en: "Follow Outlayr on X",
-            es: "Sigue a Outlayr en X",
+            en: "Follow Finta on X",
+            es: "Sigue a Finta en X",
         }),
         "settings.row.haptics": t({
             en: "Haptics",
@@ -300,8 +288,8 @@ const settings = {
             es: "Enviar datos a proveedores de IA",
         }),
         "settings.row.share": t({
-            en: "Share Outlayr",
-            es: "Compartir Outlayr",
+            en: "Share Finta",
+            es: "Compartir Finta",
         }),
         "settings.row.shareAnalytics": t({
             en: "Share analytics",
@@ -364,12 +352,12 @@ const settings = {
             es: "Dinero",
         }),
         "settings.share.message": t({
-            en: "Track your money with Outlayr. {url}",
-            es: "Controla tu dinero con Outlayr: {url}",
+            en: "Track your money with Finta. {url}",
+            es: "Controla tu dinero con Finta: {url}",
         }),
         "settings.support.subject": t({
-            en: "Outlayr feedback",
-            es: "Comentarios sobre Outlayr",
+            en: "Finta feedback",
+            es: "Comentarios sobre Finta",
         }),
         "settings.theme.ochre": t({
             en: "Ochre",

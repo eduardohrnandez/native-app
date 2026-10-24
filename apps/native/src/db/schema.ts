@@ -350,7 +350,7 @@ export const installments = sqliteTable(
 );
 
 /**
- * Paid outside Outlayr: nothing leaves an account, but it raises the order's liability balance
+ * Paid outside Finta: nothing leaves an account, but it raises the order's liability balance
  * (`outsidePaymentCells`). `amount` is in the account's currency; `amountUsd` is frozen at `date`.
  */
 export const outsidePayments = sqliteTable(

@@ -19,7 +19,7 @@ interface LanguageContextValue {
 
 const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
 
-/** The language is the device's: iOS owns it per app (Settings › Outlayr › Language), so nothing is stored here. */
+/** The language is the device's: iOS owns it per app (Settings › Finta › Language), so nothing is stored here. */
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
     const language = resolveLanguage(useDeviceLanguageTag());

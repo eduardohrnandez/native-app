@@ -12,8 +12,8 @@ const settingsWallet = {
             es: "Permitir acceso a notificaciones",
         }),
         "settings.wallet.allowAccessDetail": t({
-            en: "Android opens Settings. Outlayr only keeps notifications from apps you turn on here.",
-            es: "Android te lleva a Ajustes. Outlayr solo guarda las de apps que actives aquí.",
+            en: "Android opens Settings. Finta only keeps notifications from apps you turn on here.",
+            es: "Android te lleva a Ajustes. Finta solo guarda las de apps que actives aquí.",
         }),
         "settings.wallet.androidLead": t({
             en: "Every Google Wallet payment and every purchase your bank notifies you of lands on the Log, filed under the account it matches.",
@@ -24,8 +24,8 @@ const settingsWallet = {
             es: "Pagos con Apple Pay",
         }),
         "settings.wallet.automationDetail": t({
-            en: "Wallet trigger runs Outlayr - Apple Pay",
-            es: "El disparador de Wallet ejecuta Outlayr - Apple Pay",
+            en: "Wallet trigger runs Finta - Apple Pay",
+            es: "El disparador de Wallet ejecuta Finta - Apple Pay",
         }),
         "settings.wallet.automationDetailInline": t({
             en: "Wallet trigger runs Log a Wallet Transaction",
@@ -48,8 +48,8 @@ const settingsWallet = {
             es: "Notificaciones del banco",
         }),
         "settings.wallet.bankShortcutName": t({
-            en: "Outlayr - Bank Notifications",
-            es: "Outlayr - Bank Notifications",
+            en: "Finta - Bank Notifications",
+            es: "Finta - Bank Notifications",
         }),
         "settings.wallet.bankStep1": t({
             en: "Add Shortcut",
@@ -112,8 +112,8 @@ const settingsWallet = {
             es: "Siguiente, luego Nueva automatización en blanco",
         }),
         "settings.wallet.manualStep2": t({
-            en: "Add Action, search Outlayr",
-            es: "Agregar acción, busca Outlayr",
+            en: "Add Action, search Finta",
+            es: "Agregar acción, busca Finta",
         }),
         "settings.wallet.manualStep2Detail": t({
             en: "Pick Log a Wallet Transaction",
@@ -176,8 +176,8 @@ const settingsWallet = {
             es: "Configuración",
         }),
         "settings.wallet.shortcutName": t({
-            en: "Outlayr - Apple Pay",
-            es: "Outlayr - Apple Pay",
+            en: "Finta - Apple Pay",
+            es: "Finta - Apple Pay",
         }),
         "settings.wallet.show": t({
             en: "Show",
@@ -248,8 +248,8 @@ const settingsWallet = {
             es: "Una automatización compartida llega desactivada",
         }),
         "settings.wallet.v27Step2": t({
-            en: "Turn on Outlayr - Apple Pay",
-            es: "Activa Outlayr - Apple Pay",
+            en: "Turn on Finta - Apple Pay",
+            es: "Activa Finta - Apple Pay",
         }),
     },
     key: "settings-wallet" as const,

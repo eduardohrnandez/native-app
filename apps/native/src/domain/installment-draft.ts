@@ -35,7 +35,7 @@ export interface InstallmentDraft {
     edits: Readonly<Record<number, { amount?: number; dueDate?: Date }>>;
     every: EveryOption;
     firstDue: Date | null;
-    /** Cuotas 1..k paid before Outlayr; null while it is the ones already due. */
+    /** Cuotas 1..k paid before Finta; null while it is the ones already due. */
     paidBefore: number | null;
     upfront: { amount: number } | { share: number };
     upfrontAccountId: string | null;

@@ -142,7 +142,7 @@ export function useInstallmentOrder({
         ];
     };
 
-    /** Null when paid outside Outlayr; undefined while it cannot be converted. */
+    /** Null when paid outside Finta; undefined while it cannot be converted. */
     const upfrontSource = (plan: number): PaymentSource | null | undefined => {
         if (from === null) {
             return null;

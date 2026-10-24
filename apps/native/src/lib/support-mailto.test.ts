@@ -4,7 +4,7 @@ import { supportBody, supportMailto } from "./support-mailto";
 
 const INFO = {
     appBuild: "42",
-    appName: "Outlayr",
+    appName: "Finta",
     appVersion: "1.2.0",
     deviceName: "iPhone",
     osName: "iOS",

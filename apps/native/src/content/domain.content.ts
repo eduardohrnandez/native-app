@@ -5,8 +5,8 @@ const domain = {
     // oxlint-disable-next-line sort-keys -- the `dates.month.N` keys run in calendar order; sorting them alphabetically puts month 10 before month 9
     content: {
         "appIcon.default.detail": t({
-            en: "The Outlayr mark on paper. The icon the app ships with.",
-            es: "La marca de Outlayr sobre papel. El ícono con el que viene la app.",
+            en: "The Finta mark on paper. The icon the app ships with.",
+            es: "La marca de Finta sobre papel. El ícono con el que viene la app.",
         }),
         "appIcon.default.detailDev": t({
             en: "The blueprint mark. The icon this development build ships with.",

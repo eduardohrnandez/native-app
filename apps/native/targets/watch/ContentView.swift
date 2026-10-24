@@ -63,8 +63,8 @@ struct ContentView: View {
 struct WaitingView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Kicker("Outlayr")
-            Text("Open Outlayr on your iPhone")
+            Kicker("Finta")
+            Text("Open Finta on your iPhone")
                 .font(.system(size: 16))
                 .foregroundStyle(Grid.ink)
         }

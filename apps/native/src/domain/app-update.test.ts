@@ -12,7 +12,7 @@ function update(whatsNew?: string): UpdateInfo {
         manifest: {
             assets: [],
             createdAt: AT.toISOString(),
-            extra: { expoClient: { extra: { whatsNew }, name: "Outlayr", slug: "outlayr" } },
+            extra: { expoClient: { extra: { whatsNew }, name: "Finta", slug: "outlayr" } },
             id: "u-1",
             launchAsset: { url: "https://x" },
             metadata: {},

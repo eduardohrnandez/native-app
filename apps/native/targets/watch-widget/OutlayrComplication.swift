@@ -119,7 +119,7 @@ struct OutlayrComplication: Widget {
         StaticConfiguration(kind: kind, provider: ComplicationProvider()) { entry in
             ComplicationEntryView(entry: entry)
         }
-        .configurationDisplayName("Outlayr")
+        .configurationDisplayName("Finta")
         .description("Today's spend and what is left in your budget.")
         .supportedFamilies([.accessoryCircular, .accessoryRectangular, .accessoryCorner, .accessoryInline])
     }
@@ -151,7 +151,7 @@ struct OutlayrLogComplication: Widget {
             LogComplicationView()
         }
         .configurationDisplayName("Log expense")
-        .description("Opens Outlayr ready for an amount.")
+        .description("Opens Finta ready for an amount.")
         .supportedFamilies([.accessoryCircular, .accessoryCorner])
     }
 }

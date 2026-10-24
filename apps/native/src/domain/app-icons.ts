@@ -15,30 +15,6 @@ export const APP_ICONS = [
         name: null,
         slug: "default",
     },
-    {
-        detail: "appIcon.ink.detail",
-        label: "appIcon.ink.label",
-        name: "OutlayrInk",
-        slug: "ink",
-    },
-    {
-        detail: "appIcon.hairline.detail",
-        label: "appIcon.hairline.label",
-        name: "OutlayrHairline",
-        slug: "hairline",
-    },
-    {
-        detail: "appIcon.mono.detail",
-        label: "appIcon.mono.label",
-        name: "OutlayrMono",
-        slug: "mono",
-    },
-    {
-        detail: "appIcon.emboss.detail",
-        label: "appIcon.emboss.label",
-        name: "OutlayrEmboss",
-        slug: "emboss",
-    },
 ] as const satisfies readonly AppIconChoice[];
 
 /** Literal, so `app/settings/app-icon.tsx` fails to compile when a slug lacks a preview. */

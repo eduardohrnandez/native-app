@@ -3,8 +3,8 @@ import { useEffect, useRef } from "react";
 import { View } from "react-native";
 
 import { AppSymbol } from "@/components/app-symbol";
+import { FintaMark } from "@/components/finta-mark";
 import { FirstRun } from "@/components/first-run";
-import { OutlayrMark } from "@/components/outlayr-mark";
 import { useDatabase } from "@/contexts/local-data-context";
 import { finishOnboarding } from "@/data/onboarding-core";
 import { useTranslation } from "@/i18n/context";
@@ -43,7 +43,7 @@ export function OnboardingRating() {
             eyebrow={t("onboarding.rating.eyebrow")}
             object={
                 <View className="items-center gap-4">
-                    <OutlayrMark />
+                    <FintaMark />
                     <View className="flex-row gap-2">
                         {STARS.map((star) => (
                             <AppSymbol key={star} name="star" size={18} tintColor={colors.frMuted} />

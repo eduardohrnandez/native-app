@@ -3,10 +3,6 @@ import { useRouter } from "expo-router";
 import { View } from "react-native";
 
 import defaultPreview from "@/assets/images/app-icon-previews/default.png";
-import embossPreview from "@/assets/images/app-icon-previews/emboss.png";
-import hairlinePreview from "@/assets/images/app-icon-previews/hairline.png";
-import inkPreview from "@/assets/images/app-icon-previews/ink.png";
-import monoPreview from "@/assets/images/app-icon-previews/mono.png";
 import { ChoiceRow, SettingsSection } from "@/components/list/list-row";
 import { SettingsScreen } from "@/components/settings/settings-screen";
 import { Image } from "@/components/styled";
@@ -18,10 +14,6 @@ import { alternateIconsSupported, useAppIcon } from "@/lib/app-icon";
 
 const PREVIEW = {
     default: defaultPreview,
-    emboss: embossPreview,
-    hairline: hairlinePreview,
-    ink: inkPreview,
-    mono: monoPreview,
 } satisfies Record<AppIconSlug, number>;
 
 // SAFETY: `extra` is an open record, and absence folds into null on the same line.

@@ -332,8 +332,8 @@ const transaction = {
             es: "{count} años",
         }),
         "transaction.localData.body": t({
-            en: "Outlayr could not open your data. This is often temporary — try again first. Your ledger is still on this device.",
-            es: "Outlayr no pudo abrir tus datos. Suele ser algo temporal, así que inténtalo de nuevo. Tu registro sigue en este dispositivo.",
+            en: "Finta could not open your data. This is often temporary — try again first. Your ledger is still on this device.",
+            es: "Finta no pudo abrir tus datos. Suele ser algo temporal, así que inténtalo de nuevo. Tu registro sigue en este dispositivo.",
         }),
         "transaction.localData.retrying": t({
             en: "Trying…",
@@ -348,12 +348,12 @@ const transaction = {
             es: "Verificando…",
         }),
         "transaction.lock.prompt": t({
-            en: "Unlock Outlayr",
-            es: "Desbloquear Outlayr",
+            en: "Unlock Finta",
+            es: "Desbloquear Finta",
         }),
         "transaction.lock.title": t({
-            en: "Outlayr is Locked",
-            es: "Outlayr está bloqueado",
+            en: "Finta is Locked",
+            es: "Finta está bloqueado",
         }),
         "transaction.lock.unlock": t({
             en: "Unlock",
@@ -549,8 +549,8 @@ const transaction = {
             es: "No se guardó nada. Inténtalo de nuevo.",
         }),
         "transaction.save.scheduleFailedBody": t({
-            en: "Your subscription was saved, but its charges could not be logged. Outlayr will try again the next time you open it.",
-            es: "Tu suscripción se guardó, pero no se pudieron registrar sus cargos. Outlayr volverá a intentarlo la próxima vez que la abras.",
+            en: "Your subscription was saved, but its charges could not be logged. Finta will try again the next time you open it.",
+            es: "Tu suscripción se guardó, pero no se pudieron registrar sus cargos. Finta volverá a intentarlo la próxima vez que la abras.",
         }),
         "transaction.save.scheduleFailedTitle": t({
             en: "Schedule not applied",

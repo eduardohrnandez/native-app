@@ -48,10 +48,10 @@ afterEach(() => {
 });
 
 describe("requestUnlock on Android", () => {
-    it("asks only once Outlayr is back in front", async () => {
+    it("asks only once Finta is back in front", async () => {
         startIn("background");
 
-        const unlock = requestUnlock("Unlock Outlayr");
+        const unlock = requestUnlock("Unlock Finta");
         await jest.advanceTimersByTimeAsync(5000);
         expect(mockAuthenticate).not.toHaveBeenCalled();
 
@@ -62,10 +62,10 @@ describe("requestUnlock on Android", () => {
         await expect(unlock).resolves.toStrictEqual({ success: true });
     });
 
-    it("frees a request still unanswered after Outlayr comes back", async () => {
+    it("frees a request still unanswered after Finta comes back", async () => {
         startIn("active");
 
-        const unlock = requestUnlock("Unlock Outlayr");
+        const unlock = requestUnlock("Unlock Finta");
         await jest.advanceTimersByTimeAsync(0);
         changeTo("background");
         changeTo("active");
@@ -78,7 +78,7 @@ describe("requestUnlock on Android", () => {
     it("keeps an answer that lands just after the return", async () => {
         startIn("active");
 
-        const unlock = requestUnlock("Unlock Outlayr");
+        const unlock = requestUnlock("Unlock Finta");
         await jest.advanceTimersByTimeAsync(0);
         changeTo("background");
         changeTo("active");

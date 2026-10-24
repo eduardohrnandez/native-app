@@ -40,7 +40,7 @@ export interface InstallmentOrderInput {
     installmentsPaidOutside?: number;
     purchase: TransactionInput & { accountId: string };
     schedule: readonly ScheduledInstallment[];
-    /** Required with an upfront row (sequence 0): its source account, or null when paid outside Outlayr. */
+    /** Required with an upfront row (sequence 0): its source account, or null when paid outside Finta. */
     upfront?: PaymentSource | null;
 }
 
@@ -55,7 +55,7 @@ export interface InstallmentPaymentInput {
     amount: number;
     date: Date;
     planId: string;
-    /** `null` records it as paid outside Outlayr: nothing leaves an account. */
+    /** `null` records it as paid outside Finta: nothing leaves an account. */
     source: PaymentSource | null;
 }
 

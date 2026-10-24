@@ -256,8 +256,8 @@ const installments = {
             es: "Ninguna",
         }),
         "installments.from.outside": t({
-            en: "Paid outside Outlayr. You owe {account} less, no bank changes.",
-            es: "Pagado fuera de Outlayr. Le debes menos a {account} y ningún banco cambia.",
+            en: "Paid outside Finta. You owe {account} less, no bank changes.",
+            es: "Pagado fuera de Finta. Le debes menos a {account} y ningún banco cambia.",
         }),
         "installments.inDays_one": t({
             en: "in {count} day",
@@ -320,16 +320,16 @@ const installments = {
             es: "Pagué",
         }),
         "installments.paidBefore": t({
-            en: "Paid before Outlayr",
-            es: "Pagada antes de Outlayr",
+            en: "Paid before Finta",
+            es: "Pagada antes de Finta",
         }),
         "installments.paidNow": t({
             en: "Paid now",
             es: "Pagado ahora",
         }),
         "installments.paidOutside": t({
-            en: "Paid outside Outlayr",
-            es: "Pagado fuera de Outlayr",
+            en: "Paid outside Finta",
+            es: "Pagado fuera de Finta",
         }),
         "installments.partly": t({
             en: "{amount} in",

@@ -24,8 +24,8 @@ const alerts = {
             es: "No se pudo generar la imagen en este dispositivo.",
         }),
         "alerts.photo.failed": t({
-            en: "Couldn't open your photos. Check Outlayr's permission and try again.",
-            es: "No se pudieron abrir tus fotos. Revisa el permiso de Outlayr e inténtalo de nuevo.",
+            en: "Couldn't open your photos. Check Finta's permission and try again.",
+            es: "No se pudieron abrir tus fotos. Revisa el permiso de Finta e inténtalo de nuevo.",
         }),
         "alerts.transaction.logAgain": t({
             en: "Log Again",

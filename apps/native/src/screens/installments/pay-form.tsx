@@ -71,7 +71,7 @@ export function usePayForm({ account, amount: owed, entry, forNext, sources }: P
     const [date, setDate] = useState(() => new Date());
     const [pickingDate, setPickingDate] = useState(false);
     const [pickingFrom, setPickingFrom] = useState(false);
-    // Null is None: paid outside Outlayr.
+    // Null is None: paid outside Finta.
     const [fromId, setFromId] = useState<string | null>(() => {
         // A card pays only when picked: the default stays a bank.
         const banks = sources.filter((source) => toAccountKind(source.kind) !== "liability");

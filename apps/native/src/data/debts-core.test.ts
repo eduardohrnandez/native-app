@@ -138,7 +138,7 @@ describe("recording a debt with a person", () => {
         expect(spent).toStrictEqual([expect.objectContaining({ amount: 80, categoryId: repairs })]);
     });
 
-    it("settles a debt with moves made outside Outlayr, and moves no account", async () => {
+    it("settles a debt with moves made outside Finta, and moves no account", async () => {
         const db = migratedDatabase({ foreignKeys: false });
         const zinli = await accountsRepo.create(db, { currency: "USD", initialBalance: 100, name: "Zinli" });
         const pedro = await createPerson(db, { currency: "USD", name: "Pedro", openingBalance: -300 });

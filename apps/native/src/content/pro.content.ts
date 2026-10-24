@@ -8,8 +8,8 @@ const pro = {
             es: "{feature}. Gratis: {free}. Pro: {pro}.",
         }),
         "pro.action.see": t({
-            en: "See Outlayr Pro",
-            es: "Ver Outlayr Pro",
+            en: "See Finta Pro",
+            es: "Ver Finta Pro",
         }),
         "pro.alreadyActive": t({
             en: "Pro is active on this store account.",
@@ -64,8 +64,8 @@ const pro = {
             es: "Activando Pro…",
         }),
         "pro.entry.title": t({
-            en: "Outlayr Pro",
-            es: "Outlayr Pro",
+            en: "Finta Pro",
+            es: "Finta Pro",
         }),
         "pro.entry.value": t({
             en: "Free plan",
@@ -76,8 +76,8 @@ const pro = {
             es: "Activo",
         }),
         "pro.eyebrow": t({
-            en: "Outlayr Pro",
-            es: "Outlayr Pro",
+            en: "Finta Pro",
+            es: "Finta Pro",
         }),
         "pro.failedBody": t({
             en: "The purchase did not finish. If the store charged you, Restore will unlock Pro.",
@@ -104,8 +104,8 @@ const pro = {
             es: "Inicia sesión antes de comprar Pro para que la compra te acompañe en todos tus dispositivos.",
         }),
         "pro.needsCloud": t({
-            en: "This build has no Outlayr account service, so most of Pro has nowhere to run. Nothing is for sale here.",
-            es: "Esta versión no tiene el servicio de cuentas de Outlayr, así que la mayor parte de Pro no tiene dónde funcionar. Aquí no hay nada en venta.",
+            en: "This build has no Finta account service, so most of Pro has nowhere to run. Nothing is for sale here.",
+            es: "Esta versión no tiene el servicio de cuentas de Finta, así que la mayor parte de Pro no tiene dónde funcionar. Aquí no hay nada en venta.",
         }),
         "pro.nothingRestoredBody": t({
             en: "Nothing restored an active Pro on this store account.",

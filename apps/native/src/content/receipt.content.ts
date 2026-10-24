@@ -44,8 +44,8 @@ const receipt = {
             es: "y {count} líneas más",
         }),
         "receipt.failed.denied": t({
-            en: "Outlayr needs the camera to scan a receipt.",
-            es: "Outlayr necesita la cámara para escanear un recibo.",
+            en: "Finta needs the camera to scan a receipt.",
+            es: "Finta necesita la cámara para escanear un recibo.",
         }),
         "receipt.failed.noCamera": t({
             en: "This device has no camera.",

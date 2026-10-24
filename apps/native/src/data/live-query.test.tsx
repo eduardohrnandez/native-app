@@ -235,7 +235,7 @@ describe("a useLiveQuery bounded by the clock", () => {
         expect(result.current).toHaveLength(1);
     });
 
-    it("moves useNow() on a payment made outside Outlayr", async () => {
+    it("moves useNow() on a payment made outside Finta", async () => {
         const { result } = await renderHook(() => useNow());
         const before = result.current;
         clockMs += 60_000;

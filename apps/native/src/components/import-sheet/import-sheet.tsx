@@ -95,7 +95,7 @@ export function ImportSheet({ ref }: ImportSheetProps) {
     const t = useTranslation();
     const sheetRef = useRef<BottomSheetModal>(null);
     const [presented, setPresented] = useState(false);
-    // SAFETY: declared in global.css for both schemes, as in `outlayr-mark`.
+    // SAFETY: declared in global.css for both schemes, as in the first-run tokens.
     const backgroundColor = useCSSVariable("--background") as string;
 
     const dismiss = useCallback(() => {
