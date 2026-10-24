@@ -15,30 +15,38 @@ const RELEASES_URL = "https://api.github.com/repos/eduardohrnandez/native-pp/rel
 const LAST_CHECK_KEY = "lastApkUpdateCheckAt";
 const TIMEOUT_MS = 15_000;
 
-async function checkForApk(db: Database): Promise<void> {
+export type ApkCheck = "available" | "current" | "failed" | "skipped";
+
+/** `force` is the user asking from Settings: it skips the 12-hour wait and still offers the download. */
+export async function checkForApk(db: Database, force = false): Promise<ApkCheck> {
     const installed = Number.parseInt(APP_BUILD, 10);
     // A build without a versionCode came from a local run, not the release workflow.
     if (Number.isNaN(installed)) {
-        return;
+        return "skipped";
     }
     const now = Date.now();
     const raw = await getMeta(db, LAST_CHECK_KEY);
     const last = raw === null ? Number.NaN : Number.parseInt(raw, 10);
-    if (isThrottled(Number.isNaN(last) ? null : last, now)) {
-        return;
+    if (!force && isThrottled(Number.isNaN(last) ? null : last, now)) {
+        return "skipped";
     }
-    const response = await fetch(RELEASES_URL, {
-        headers: { Accept: "application/vnd.github+json" },
-        signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
-    if (!response.ok) {
-        return;
+    let body: GithubPayload;
+    try {
+        const response = await fetch(RELEASES_URL, {
+            headers: { Accept: "application/vnd.github+json" },
+            signal: AbortSignal.timeout(TIMEOUT_MS),
+        });
+        if (!response.ok) {
+            return "failed";
+        }
+        body = await response.json();
+    } catch {
+        return "failed";
     }
-    const body: GithubPayload = await response.json();
     await setMeta(db, LAST_CHECK_KEY, String(now));
     const update = newerApk(body, installed);
     if (update === null) {
-        return;
+        return "current";
     }
     notifyWarning({
         actionLabel: translateNow("update.download"),
@@ -50,6 +58,7 @@ async function checkForApk(db: Database): Promise<void> {
         },
         title: translateNow("update.availableTitle"),
     });
+    return "available";
 }
 
 /** Sideloaded Android builds have no store to update them, so the app looks for a newer release itself. */

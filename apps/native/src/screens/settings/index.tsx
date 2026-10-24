@@ -44,6 +44,8 @@ import { convex } from "@/lib/convex";
 import { importDraftStore } from "@/lib/import-draft-store";
 import { hasSystemLanguageSettings, openLanguageSettings } from "@/lib/language-settings";
 import { notifyFailure } from "@/lib/notify";
+import { checkForApk } from "@/lib/use-apk-update";
+import type { ApkCheck } from "@/lib/use-apk-update";
 import { THEME_OPTIONS } from "@/theme/theme-preference";
 import { useIsDark } from "@/theme/use-is-dark";
 
@@ -302,6 +304,7 @@ export function Settings() {
             </SettingsSection>
 
             <SettingsSection title={t("settings.section.about")}>
+                {Platform.OS === "android" ? <UpdateCheckRow /> : null}
                 <LinkRow
                     icon="InformationCircle"
                     onPress={() => router.push("/settings/about")}
@@ -310,6 +313,37 @@ export function Settings() {
             </SettingsSection>
             <ImportSheet ref={importSheetRef} />
         </SettingsScreen>
+    );
+}
+
+const CHECK_LABELS = {
+    available: "update.check.available",
+    current: "update.check.current",
+    failed: "update.check.failed",
+    skipped: "update.check.current",
+} as const satisfies Record<ApkCheck, TranslationKey>;
+
+function UpdateCheckRow() {
+    const db = useDatabase();
+    const t = useTranslation();
+    const [state, setState] = useState<ApkCheck | "checking" | null>(null);
+    const value =
+        state === null
+            ? t("update.check.version", { build: APP_BUILD })
+            : t(state === "checking" ? "update.check.checking" : CHECK_LABELS[state]);
+    return (
+        <LinkRow
+            icon="SmartPhone01"
+            onPress={async () => {
+                if (state === "checking") {
+                    return;
+                }
+                setState("checking");
+                setState(await checkForApk(db, true));
+            }}
+            title={t("update.check.title")}
+            value={value}
+        />
     );
 }
 
