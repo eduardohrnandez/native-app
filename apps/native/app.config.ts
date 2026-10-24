@@ -317,7 +317,6 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => ({
             },
         ],
         "./plugins/with-android-capture.ts",
-        ["posthog-react-native/expo", { skipOnConflict: true }],
         "./plugins/with-android-material-theme.ts",
         [
             "react-native-nano-icons",
