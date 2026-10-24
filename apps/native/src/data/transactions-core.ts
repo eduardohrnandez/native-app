@@ -382,7 +382,7 @@ export const transactionsRepo = {
             try {
                 await rememberLogoCandidate(db, id, row.updatedAt.getTime(), LOGO_CANDIDATE_KEEP_MS);
             } catch (error) {
-                console.warn("[outlayr] logo candidate not recorded", error);
+                console.warn("[finta] logo candidate not recorded", error);
             }
         }
         return id;

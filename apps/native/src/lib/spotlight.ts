@@ -54,7 +54,7 @@ export async function indexSpotlight(db: SpendDb, now = new Date()) {
             indexBudgets(db, now, money, valuation, categoryName),
         ]);
     } catch (error) {
-        console.warn("[outlayr] spotlight index failed", error);
+        console.warn("[finta] spotlight index failed", error);
     }
 }
 
@@ -182,6 +182,6 @@ export async function clearSpotlight() {
     try {
         await Spotlight.removeAllItems();
     } catch (error) {
-        console.warn("[outlayr] spotlight clear failed", error);
+        console.warn("[finta] spotlight clear failed", error);
     }
 }

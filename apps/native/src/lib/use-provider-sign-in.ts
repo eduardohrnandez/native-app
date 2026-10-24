@@ -149,7 +149,7 @@ export function useProviderSignIn(client: AuthClient, options: ProviderSignInOpt
         completed
             .catch((cause: unknown) => {
                 if (!isSignInCancellation(cause)) {
-                    console.warn("[outlayr] sign-in failed", signInFailureDetail(cause));
+                    console.warn("[finta] sign-in failed", signInFailureDetail(cause));
                     setError(signInFailureMessage(cause, t));
                 }
             })

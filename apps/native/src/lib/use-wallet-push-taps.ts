@@ -39,10 +39,10 @@ export function useWalletPushTaps(db: Database, ready: boolean): void {
             }
             const settle = async () => {
                 await drainPendingWrites(db, claimPendingWrites, releasePendingWrites).catch((error) => {
-                    console.warn("[outlayr] pending writes failed to apply", error);
+                    console.warn("[finta] pending writes failed to apply", error);
                 });
                 await fileWaitingPurchases(db).catch((error) => {
-                    console.warn("[outlayr] waiting purchases failed to file", error);
+                    console.warn("[finta] waiting purchases failed to file", error);
                 });
                 return pendingWriteTxId(db, parsed.data.walletWrite);
             };
@@ -65,7 +65,7 @@ export function useWalletPushTaps(db: Database, ready: boolean): void {
         };
         const handle = (response: NotificationResponse | null) => {
             open(response).catch((error) => {
-                console.warn("[outlayr] wallet push tap failed", error);
+                console.warn("[finta] wallet push tap failed", error);
             });
         };
 

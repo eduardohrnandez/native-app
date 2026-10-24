@@ -41,7 +41,7 @@ export function usePhotoSync(db: Database | null, paused: boolean): void {
                     invalidateAll(PHOTO_TABLE_NAMES);
                 }
             } catch (error) {
-                console.warn("[outlayr] photo sync failed", error);
+                console.warn("[finta] photo sync failed", error);
             }
         };
 

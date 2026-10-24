@@ -82,7 +82,7 @@ export function useSubscriptionReminderTaps(db: Database, ready: boolean): void 
         };
         const handle = (response: NotificationResponse | null) => {
             open(response).catch((error) => {
-                console.warn("[outlayr] subscription reminder tap failed", error);
+                console.warn("[finta] subscription reminder tap failed", error);
             });
         };
 

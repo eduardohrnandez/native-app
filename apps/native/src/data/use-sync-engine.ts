@@ -44,7 +44,7 @@ export function useSyncEngine(db: Database | null, paused: boolean): void {
                 // Only on a clean pass: a cycle that threw may never have reached the server.
                 await setSyncedAt(db, new Date());
             } catch (error) {
-                console.warn("[outlayr] sync failed", error);
+                console.warn("[finta] sync failed", error);
             } finally {
                 running = false;
             }
@@ -80,7 +80,7 @@ export function useSyncEngine(db: Database | null, paused: boolean): void {
                     }
                 })
                 .catch((error) => {
-                    console.warn("[outlayr] sync schedule check failed", error);
+                    console.warn("[finta] sync schedule check failed", error);
                     if (!disposed) {
                         schedule.schedule();
                     }
@@ -115,7 +115,7 @@ export function useSyncEngine(db: Database | null, paused: boolean): void {
             if (wanted) {
                 unwatch = watchSyncWatermark((watermark) => {
                     wake(watermark).catch((error) => {
-                        console.warn("[outlayr] sync wake-up failed", error);
+                        console.warn("[finta] sync wake-up failed", error);
                     });
                 });
                 return;
@@ -126,7 +126,7 @@ export function useSyncEngine(db: Database | null, paused: boolean): void {
 
         const watchGate = () => {
             reconcileWatch().catch((error) => {
-                console.warn("[outlayr] sync watch reconcile failed", error);
+                console.warn("[finta] sync watch reconcile failed", error);
             });
         };
 

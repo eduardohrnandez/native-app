@@ -50,7 +50,7 @@ export const reminderPermission: typeof iosReminderPermission = async () => {
     try {
         return toPermission(await getPermissionsAsync());
     } catch (error) {
-        console.warn("[outlayr] notification permission read failed", error);
+        console.warn("[finta] notification permission read failed", error);
         return "unknown";
     }
 };
@@ -61,7 +61,7 @@ export const requestReminderPermission: typeof iosRequestReminderPermission = as
         // The system prompt is an activity of its own.
         return toPermission(await duringHandoff(requestPermissionsAsync));
     } catch (error) {
-        console.warn("[outlayr] notification permission request failed", error);
+        console.warn("[finta] notification permission request failed", error);
         return "unknown";
     }
 };
@@ -94,6 +94,6 @@ export const cancelReminders: typeof iosCancelReminders = async (ids) => {
 export const openNotificationSettings: typeof iosOpenNotificationSettings = () => {
     expectHandoff();
     Linking.openSettings().catch((error) => {
-        console.warn("[outlayr] opening notification settings failed", error);
+        console.warn("[finta] opening notification settings failed", error);
     });
 };

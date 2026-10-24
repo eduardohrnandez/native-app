@@ -50,7 +50,7 @@ export function publishWatchSnapshot(snapshot: WatchSnapshot): void {
     try {
         watchLink?.publish(JSON.stringify(snapshot));
     } catch (error) {
-        console.warn("[outlayr] watch snapshot failed", error);
+        console.warn("[finta] watch snapshot failed", error);
     }
 }
 

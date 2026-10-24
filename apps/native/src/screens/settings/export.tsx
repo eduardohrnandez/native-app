@@ -66,7 +66,7 @@ export function ExportData() {
             async () => {
                 if (await isSyncEnabled(db)) {
                     await downloadEveryPhoto(db, photoFiles, photoTransport()).catch((cause: unknown) => {
-                        console.warn("[outlayr] fetching missing photos before export failed", cause);
+                        console.warn("[finta] fetching missing photos before export failed", cause);
                     });
                 }
                 // ponytail: one in-memory string with base64 photos; stream it to a zip if ledgers outgrow 512px JPEGs

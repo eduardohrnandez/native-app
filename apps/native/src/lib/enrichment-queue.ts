@@ -35,7 +35,7 @@ export function sendEnrichmentQueue(db: Database): void {
     sends = sends
         .then(() => sendOnce(db))
         .catch((error) => {
-            console.warn("[outlayr] enrichment queue send failed", error);
+            console.warn("[finta] enrichment queue send failed", error);
         });
 }
 
@@ -58,13 +58,13 @@ export function useEnrichmentQueue(db: Database | null): void {
                                 persist: persistLogo,
                             });
                         } catch (error) {
-                            console.warn("[outlayr] enrichment answer failed to apply", error);
+                            console.warn("[finta] enrichment answer failed to apply", error);
                         }
                     }
                     await enrichmentQueueTransport().ack(jobs.map((job) => job.localId));
                 })
                 .catch((error) => {
-                    console.warn("[outlayr] enrichment answers failed to settle", error);
+                    console.warn("[finta] enrichment answers failed to settle", error);
                 });
         });
         sendEnrichmentQueue(db);

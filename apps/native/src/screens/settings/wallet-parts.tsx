@@ -107,7 +107,7 @@ export function CardsSection({ db }: { db: Database }) {
                                     return;
                                 }
                                 pickCardAccount(db, card.text, next || null).catch((error) => {
-                                    console.warn("[outlayr] card pick failed", error);
+                                    console.warn("[finta] card pick failed", error);
                                 });
                             }}
                             options={

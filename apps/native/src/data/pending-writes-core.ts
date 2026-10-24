@@ -405,7 +405,7 @@ export async function applyPendingWrites(db: Database, jobs: PendingWrite[], now
         const categoryId = known ?? (lookup ? null : await firstCategory(db, job.income));
         if (categoryId == null && !lookup) {
             // Dropping beats inventing a category the user never made.
-            console.warn("[outlayr] dropped a queued entry with no category");
+            console.warn("[finta] dropped a queued entry with no category");
             continue;
         }
         const { account, asks } = await resolveAccount(db, job);

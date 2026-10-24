@@ -24,7 +24,7 @@ export async function reminderPermission(): Promise<ReminderPermission> {
     try {
         return toPermission(await getPermissionsAsync());
     } catch (error) {
-        console.warn("[outlayr] notification permission read failed", error);
+        console.warn("[finta] notification permission read failed", error);
         return "unknown";
     }
 }
@@ -37,7 +37,7 @@ export async function requestReminderPermission(): Promise<ReminderPermission> {
             })
         );
     } catch (error) {
-        console.warn("[outlayr] notification permission request failed", error);
+        console.warn("[finta] notification permission request failed", error);
         return "unknown";
     }
 }
@@ -78,6 +78,6 @@ export async function cancelReminders(ids: readonly string[]): Promise<void> {
 export function openNotificationSettings(): void {
     expectHandoff();
     Linking.openSettings().catch((error) => {
-        console.warn("[outlayr] opening notification settings failed", error);
+        console.warn("[finta] opening notification settings failed", error);
     });
 }

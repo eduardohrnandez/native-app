@@ -120,7 +120,7 @@ export function LedgerAdoptionProvider({ children }: { children: ReactNode }) {
                 }
                 return "settled";
             } catch (error: unknown) {
-                console.warn("[outlayr] ledger adoption deferred", error);
+                console.warn("[finta] ledger adoption deferred", error);
                 retry.schedule();
                 return "settled";
             }
@@ -162,7 +162,7 @@ export function LedgerAdoptionProvider({ children }: { children: ReactNode }) {
             };
 
             adopt().catch((cause: unknown) => {
-                console.warn("[outlayr] ledger adoption failed", cause);
+                console.warn("[finta] ledger adoption failed", cause);
                 setFailed(true);
                 setReconciled("ask");
             });

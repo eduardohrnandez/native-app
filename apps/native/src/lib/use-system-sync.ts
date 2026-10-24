@@ -12,12 +12,13 @@ import {
 import { settlePendingFees } from "@/data/card-fees-core";
 import { subscribeToSettingChanges } from "@/data/database-changes";
 import { drainPendingWrites, fileWaitingPurchases, takeRepriced } from "@/data/pending-writes-core";
+import { refreshPublicRates } from "@/data/public-rates";
 import { applyRecentRates, pullRatesIfDue } from "@/data/rates";
 import type { RateWireRow } from "@/data/rates";
 import type { Database } from "@/db/client";
 import { formatAmount } from "@/domain/money";
 import { translateNow } from "@/i18n/runtime";
-import { ratesPuller, watchRecentRates } from "@/lib/convex";
+import { convex, ratesPuller, watchRecentRates } from "@/lib/convex";
 import { sendEnrichmentQueue } from "@/lib/enrichment-queue";
 import { armLogoBackfill, backfillLogos } from "@/lib/logo-backfill";
 import { notifyWarning } from "@/lib/notify";
@@ -46,7 +47,7 @@ export function useSystemSync(db: Database | null): void {
         // after the drain so a Wallet purchase that just landed is in the set they read.
         const catchUp = () => {
             mirrorWalletRun(db).catch((error) => {
-                console.warn("[outlayr] wallet run stamp failed", error);
+                console.warn("[finta] wallet run stamp failed", error);
             });
             drainPendingWrites(db, claimPendingWrites, releasePendingWrites)
                 .then((applied) => {
@@ -55,7 +56,7 @@ export function useSystemSync(db: Database | null): void {
                     }
                 })
                 .catch((error) => {
-                    console.warn("[outlayr] pending writes failed to apply", error);
+                    console.warn("[finta] pending writes failed to apply", error);
                     publish.schedule();
                 })
                 .then(() => {
@@ -63,15 +64,15 @@ export function useSystemSync(db: Database | null): void {
                     return fileWaitingPurchases(db);
                 })
                 .catch((error) => {
-                    console.warn("[outlayr] waiting purchases failed to file", error);
+                    console.warn("[finta] waiting purchases failed to file", error);
                 })
                 .then(() => announceRepriced(db))
                 .catch((error) => {
-                    console.warn("[outlayr] repriced subscriptions failed to announce", error);
+                    console.warn("[finta] repriced subscriptions failed to announce", error);
                 })
                 .then(() => backfillLogos(db))
                 .catch((error) => {
-                    console.warn("[outlayr] logo backfill failed", error);
+                    console.warn("[finta] logo backfill failed", error);
                 });
         };
 
@@ -159,9 +160,10 @@ async function mirrorWalletRun(db: Database): Promise<void> {
 async function refreshRates(db: Database): Promise<boolean> {
     let changed = false;
     try {
-        changed = await pullRatesIfDue(db, ratesPuller());
+        // Without the account service the BCV rates come straight from the public feed.
+        changed = convex === null ? await refreshPublicRates(db) : await pullRatesIfDue(db, ratesPuller());
     } catch (error) {
-        console.warn("[outlayr] rate refresh failed", error);
+        console.warn("[finta] rate refresh failed", error);
     }
     return (await revalueLedger(db)) || changed;
 }
@@ -171,7 +173,7 @@ async function applyLiveRates(db: Database, rows: RateWireRow[]): Promise<boolea
     try {
         changed = await applyRecentRates(db, rows);
     } catch (error) {
-        console.warn("[outlayr] live rates failed to apply", error);
+        console.warn("[finta] live rates failed to apply", error);
     }
     return (await revalueLedger(db)) || changed;
 }
@@ -182,7 +184,7 @@ async function revalueLedger(db: Database): Promise<boolean> {
     try {
         changed = (await stampLedgerCurrency(db)) > 0;
     } catch (error) {
-        console.warn("[outlayr] currency stamp failed", error);
+        console.warn("[finta] currency stamp failed", error);
     }
     // Always: an offline entry can leave rows unvalued even when the rate cache was already fresh.
     try {
@@ -191,7 +193,7 @@ async function revalueLedger(db: Database): Promise<boolean> {
         changed = (await backfillOpeningUsd(db)) > 0 || changed;
         changed = (await settlePendingFees(db)) > 0 || changed;
     } catch (error) {
-        console.warn("[outlayr] canonicalization backfill failed", error);
+        console.warn("[finta] canonicalization backfill failed", error);
     }
     return changed;
 }

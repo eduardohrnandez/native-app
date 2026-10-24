@@ -19,6 +19,6 @@ export const publishWidgets: typeof iosPublishWidgets = async (db) => {
             name: translateNow("settings.wallet.pushChannel"),
         });
     } catch (error) {
-        console.warn("[outlayr] wallet push build failed", error);
+        console.warn("[finta] wallet push build failed", error);
     }
 };

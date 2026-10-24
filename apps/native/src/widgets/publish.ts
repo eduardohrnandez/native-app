@@ -108,11 +108,11 @@ export async function publishWidgets(db: Database): Promise<void> {
             zeroSpent: props.zeroSpent,
         });
     } catch (error) {
-        console.warn("[outlayr] widget publish failed", error);
+        console.warn("[finta] widget publish failed", error);
     }
     try {
         publishWalletPush(await buildWalletPush(db));
     } catch (error) {
-        console.warn("[outlayr] wallet push build failed", error);
+        console.warn("[finta] wallet push build failed", error);
     }
 }

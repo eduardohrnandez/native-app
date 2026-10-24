@@ -73,7 +73,7 @@ function useRequest() {
         setBusy(true);
         work()
             .catch((cause: unknown) => {
-                console.warn("[outlayr] email sign-in failed", signInFailureDetail(cause));
+                console.warn("[finta] email sign-in failed", signInFailureDetail(cause));
                 setError(signInFailureMessage(cause, t));
             })
             .finally(() => setBusy(false));

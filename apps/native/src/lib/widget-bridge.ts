@@ -79,7 +79,7 @@ export function publishWalletPush(snapshot: WalletPushSnapshot): void {
     try {
         sharedStore.set(WALLET_PUSH_KEY, JSON.stringify(snapshot));
     } catch (error) {
-        console.warn("[outlayr] wallet push snapshot failed", error);
+        console.warn("[finta] wallet push snapshot failed", error);
     }
 }
 
@@ -95,7 +95,7 @@ export function publishIntentSnapshot(snapshot: IntentSnapshot): void {
     try {
         sharedStore.set(INTENT_SNAPSHOT_KEY, JSON.stringify(snapshot));
     } catch (error) {
-        console.warn("[outlayr] intent snapshot failed", error);
+        console.warn("[finta] intent snapshot failed", error);
     }
 }
 
@@ -193,7 +193,7 @@ export function claimPendingWrites(): ClaimedWrites {
         adoptLegacyQueue();
         return claimQueue(queueFiles);
     } catch (error) {
-        console.warn("[outlayr] pending writes unreadable", error);
+        console.warn("[finta] pending writes unreadable", error);
         return { jobs: [], names: [] };
     }
 }
@@ -202,6 +202,6 @@ export function releasePendingWrites(claimed: ClaimedWrites): void {
     try {
         releaseQueue(queueFiles, claimed);
     } catch (error) {
-        console.warn("[outlayr] pending writes not released", error);
+        console.warn("[finta] pending writes not released", error);
     }
 }
