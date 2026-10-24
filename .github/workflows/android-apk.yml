@@ -9,16 +9,20 @@ permissions:
 
 jobs:
     apk:
-        runs-on: ubuntu-latest
+        # Pinned: ubuntu-latest is moving to a new image this month, and 24.04 ships the Android SDK.
+        runs-on: ubuntu-24.04
         timeout-minutes: 120
         steps:
-            # The first build died with the runner out of memory: extra swap keeps R8 and the native compiles alive.
-            - name: Add swap
+            # The runner died twice mid-build. Free the preinstalled toolchains this build never uses and put swap on
+            # the larger /mnt disk, so neither memory nor the root disk runs out.
+            - name: Free disk space and add swap
               run: |
-                  sudo fallocate -l 8G /swap-extra
-                  sudo chmod 600 /swap-extra
-                  sudo mkswap /swap-extra
-                  sudo swapon /swap-extra
+                  sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/local/share/boost /opt/hostedtoolcache/CodeQL
+                  sudo fallocate -l 8G /mnt/swap-extra
+                  sudo chmod 600 /mnt/swap-extra
+                  sudo mkswap /mnt/swap-extra
+                  sudo swapon /mnt/swap-extra
+                  df -h / /mnt
                   free -h
 
             - uses: actions/checkout@v4
@@ -67,7 +71,26 @@ jobs:
 
             - name: Build the release APK
               working-directory: apps/native/android
-              run: ./gradlew assembleRelease --max-workers=2
+              run: |
+                  set -o pipefail
+                  (while true; do sleep 120; echo "--- $(date -u +%T)"; df -h / | tail -1; free -m | head -2 | tail -1; done) &
+                  ./gradlew assembleRelease --max-workers=2 2>&1 | tee "$RUNNER_TEMP/gradle.log"
+
+            # The run log is not reachable from every place this is debugged from, so a failure leaves its tail in git.
+            - name: Save the build log on failure
+              if: failure()
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  tail -n 400 "$RUNNER_TEMP/gradle.log" > /tmp/gradle-tail.log || echo "no gradle log" > /tmp/gradle-tail.log
+                  git config user.name "github-actions"
+                  git config user.email "github-actions@users.noreply.github.com"
+                  git checkout --orphan "ci-logs-${{ github.run_number }}"
+                  git rm -rfq --cached .
+                  cp /tmp/gradle-tail.log gradle-tail.log
+                  git add gradle-tail.log
+                  git commit -qm "Build log tail for run ${{ github.run_number }}"
+                  git push -q origin "HEAD:refs/heads/ci-logs-${{ github.run_number }}"
 
             - name: Publish the APK as a release
               env:
