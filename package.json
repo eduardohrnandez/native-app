@@ -1,0 +1,30 @@
+{
+    "name": "outlayr",
+    "private": true,
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "type": "module",
+    "scripts": {
+        "build": "vp run -r --cache build",
+        "check": "vp check",
+        "check-types": "vp run -r --cache check-types",
+        "dev": "vp run -r --parallel dev",
+        "dev:server": "vp run --filter @outlayr/backend dev",
+        "dev:setup": "vp run --filter @outlayr/backend dev:setup",
+        "fix": "vp check --fix",
+        "prepare": "[ -n \"$CI$EAS_BUILD\" ] || vp config --no-agent",
+        "test": "vp run -r --cache test"
+    },
+    "devDependencies": {
+        "@outlayr/config": "workspace:*",
+        "@posthog/cli": "^0.18.9",
+        "@types/node": "^26.1.2",
+        "oxlint-tailwindcss": "^1.9.0",
+        "typescript": "catalog:",
+        "ultracite": "7.12.2",
+        "vite-plus": "catalog:"
+    },
+    "packageManager": "pnpm@11.20.0"
+}

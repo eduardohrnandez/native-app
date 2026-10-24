@@ -1,0 +1,22 @@
+diff --git a/plugin/build/ios/withWidgetSourceFiles.js b/plugin/build/ios/withWidgetSourceFiles.js
+--- a/plugin/build/ios/withWidgetSourceFiles.js
++++ b/plugin/build/ios/withWidgetSourceFiles.js
+@@ -346,6 +346,7 @@ internal import ExpoWidgets
+ // AppIntent
+ struct ${widget.name}ConfigurationAppIntent: WidgetConfigurationIntent {
+   static var title: LocalizedStringResource = ${JSON.stringify(`${configuration?.title ?? widget.displayName} Configuration`)}
++  static var isDiscoverable: Bool = false
+ ${configuration?.description ? `  static var description: LocalizedStringResource = ${JSON.stringify(configuration.description)}\n` : ''}
+ ${Object.entries(configuration?.parameters ?? {}).map(([name, param])=>{
+         return parameterDeclaration(widget.name, name, param);
+diff --git a/plugin/src/ios/withWidgetSourceFiles.ts b/plugin/src/ios/withWidgetSourceFiles.ts
+--- a/plugin/src/ios/withWidgetSourceFiles.ts
++++ b/plugin/src/ios/withWidgetSourceFiles.ts
+@@ -374,6 +374,7 @@ internal import ExpoWidgets
+ // AppIntent
+ struct ${widget.name}ConfigurationAppIntent: WidgetConfigurationIntent {
+   static var title: LocalizedStringResource = ${JSON.stringify(`${configuration?.title ?? widget.displayName} Configuration`)}
++  static var isDiscoverable: Bool = false
+ ${configuration?.description ? `  static var description: LocalizedStringResource = ${JSON.stringify(configuration.description)}\n` : ''}
+ ${Object.entries(configuration?.parameters ?? {})
+   .map(([name, param]) => {

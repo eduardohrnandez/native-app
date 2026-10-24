@@ -1,0 +1,52 @@
+{
+    "cli": {
+        "version": ">= 20.1.0",
+        "appVersionSource": "remote"
+    },
+    "build": {
+        "development": {
+            "environment": "development",
+            "developmentClient": true,
+            "distribution": "internal",
+            "ios": {
+                "simulator": true
+            }
+        },
+        "development-device": {
+            "extends": "development",
+            "ios": {
+                "simulator": false
+            },
+            "autoIncrement": true
+        },
+        "preview": {
+            "environment": "preview",
+            "distribution": "store",
+            "channel": "preview",
+            "autoIncrement": true,
+            "android": {
+                "resourceClass": "large"
+            }
+        },
+        "production": {
+            "environment": "production",
+            "channel": "production",
+            "autoIncrement": true,
+            "android": {
+                "resourceClass": "large"
+            }
+        }
+    },
+    "submit": {
+        "production": {
+            "android": {
+                "track": "internal",
+                "releaseStatus": "draft"
+            },
+            "ios": {
+                "appleTeamId": "8ZB3YXDU7V",
+                "ascAppId": "6801652978"
+            }
+        }
+    }
+}

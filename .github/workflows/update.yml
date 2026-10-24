@@ -1,0 +1,84 @@
+name: Publish an update
+
+run-name: ${{ inputs.platform }} ${{ inputs.channel }} update
+
+on:
+    workflow_dispatch:
+        inputs:
+            channel:
+                type: choice
+                description: Channel and xprem branch to publish to. Also selects the GitHub environment.
+                options:
+                    - production
+                    - preview
+                default: preview
+                required: true
+            message:
+                type: string
+                description: Release notes for the What's new sheet, one per line (-f message=$'First\nSecond').
+                required: true
+            platform:
+                type: choice
+                description: Platform to publish for.
+                options:
+                    - ios
+                    - android
+                default: ios
+                required: true
+            version:
+                type: string
+                description: Version of the build this update targets, as the release skill prints it.
+                required: true
+
+concurrency:
+    group: update-${{ inputs.platform }}-${{ inputs.channel }}
+    cancel-in-progress: false
+
+jobs:
+    deploy_backend:
+        uses: ./.github/workflows/deploy-backend.yml
+        with:
+            environment: ${{ inputs.channel }}
+        secrets: inherit
+
+    publish:
+        name: Publish ${{ inputs.platform }} JS to ${{ inputs.channel }}
+        needs: [deploy_backend]
+        runs-on: ubuntu-26.04
+        environment: ${{ inputs.channel }}
+        env:
+            EAS_BUILD_PROFILE: ${{ inputs.channel }}
+            RELEASE_CHANNEL: ${{ inputs.channel }}
+            UPDATE_MESSAGE: ${{ inputs.message }}
+            UPDATE_PLATFORM: ${{ inputs.platform }}
+            APP_VERSION: ${{ inputs.version }}
+            POSTHOG_CLI_API_KEY: ${{ secrets.POSTHOG_CLI_API_KEY }}
+        defaults:
+            run:
+                shell: bash
+                working-directory: apps/native
+        steps:
+            - uses: actions/checkout@v7
+
+            - uses: ./.github/actions/setup-native
+              with:
+                  variables: ${{ toJSON(vars) }}
+                  hugeicons-token: ${{ secrets.HUGEICONS_PRO_TOKEN }}
+
+            - name: Build the i18n dictionaries
+              run: vp exec intlayer build
+
+            - name: Publish
+              env:
+                  EOO_TOKEN: ${{ secrets.EOO_TOKEN }}
+              run: |
+                  if [ -z "${EOO_TOKEN:-}" ]; then
+                    echo "::error::The EOO_TOKEN secret is not set."
+                    exit 1
+                  fi
+                  npx -y eoas@3.2.6 publish --branch "$RELEASE_CHANNEL" --platform "$UPDATE_PLATFORM" \
+                    --message "$UPDATE_MESSAGE" --emitMetadata --nonInteractive
+                  cat dist/xprem-update-metadata.json
+
+            - name: Upload source maps to PostHog
+              run: vp exec posthog-cli hermes upload --directory dist --release-name com.tryoutlayr.app --release-version "$APP_VERSION"

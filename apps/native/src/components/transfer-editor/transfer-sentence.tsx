@@ -1,0 +1,141 @@
+import { Sentence } from "@/components/sentence/sentence";
+import { SentenceBlank } from "@/components/sentence/sentence-blank";
+import { SentenceValue } from "@/components/sentence/sentence-value";
+import type { SentenceFigure } from "@/components/sentence/sentence-value";
+import { useTranslation } from "@/i18n/context";
+
+export const TRANSFER_SENTENCE_SLOTS = [
+    "amount",
+    "arrives",
+    "fee",
+    "feeSide",
+    "from",
+    "outside",
+    "rate",
+    "rateType",
+    "to",
+    "when",
+] as const;
+
+export type TransferSentenceSlot = (typeof TRANSFER_SENTENCE_SLOTS)[number];
+
+export const TRANSFER_SENTENCE_KEYS = [
+    "transfers.sentence.move",
+    "transfers.sentence.rate",
+    "transfers.sentence.fee",
+    "transfers.sentence.noFee",
+    "transfers.sentence.outside",
+] as const;
+
+export const TRANSFER_CUSTOM_RATE_KEY = "transfers.sentence.rateCustom";
+
+export const TRANSFER_FEE_ARRIVAL_KEY = "transfers.sentence.feeArrives";
+
+export const TRANSFER_FEE_ON_TOP_KEY = "transfers.sentence.feeOnTop";
+
+export type TransferSentenceValues = Readonly<Record<TransferSentenceSlot, string | null>>;
+
+interface TransferSentenceProps {
+    activeSlot: TransferSentenceSlot | null;
+    crossCurrency: boolean;
+    customRate: boolean;
+    figures: Partial<Record<TransferSentenceSlot, SentenceFigure>>;
+    flaggedSlot: TransferSentenceSlot | null;
+    hasFee: boolean;
+    onSlotPress: (slot: TransferSentenceSlot) => void;
+    onTop: boolean;
+    outside: boolean;
+    values: TransferSentenceValues;
+}
+
+export function TransferSentence({
+    activeSlot,
+    crossCurrency,
+    customRate,
+    figures,
+    flaggedSlot,
+    hasFee,
+    onSlotPress,
+    onTop,
+    outside,
+    values,
+}: TransferSentenceProps) {
+    const t = useTranslation();
+
+    const labels = {
+        amount: t("transfers.field.sent"),
+        arrives: t("transfers.field.arrives"),
+        fee: t("transfers.field.fee"),
+        feeSide: t("transfers.field.feeSide"),
+        from: t("transfers.field.from"),
+        outside: t("transfers.field.outside"),
+        rate: t("transfers.field.rate"),
+        rateType: t("transfers.field.rateType"),
+        to: t("transfers.field.to"),
+        when: t("transfers.field.date"),
+    } satisfies Record<TransferSentenceSlot, string>;
+
+    const blanks = {
+        amount: t("transfers.sentence.blank.amount"),
+        arrives: t("transfers.sentence.blank.amount"),
+        fee: t("transfers.sentence.blank.noFee"),
+        feeSide: t("transfers.sentence.blank.account"),
+        from: t("transfers.sentence.blank.account"),
+        outside: t("transfers.sentence.blank.amount"),
+        rate: t("transfers.sentence.blank.rate"),
+        rateType: t("transfers.sentence.blank.rate"),
+        to: t("transfers.sentence.blank.account"),
+        when: t("transfers.field.date"),
+    } satisfies Record<TransferSentenceSlot, string>;
+
+    const part = (slot: TransferSentenceSlot) => {
+        const value = values[slot];
+        const shared = {
+            accessibilityLabel: labels[slot],
+            active: activeSlot === slot,
+            flagged: flaggedSlot === slot,
+            onPress: () => onSlotPress(slot),
+            shake: flaggedSlot === slot,
+        };
+        return value === null ? (
+            <SentenceBlank
+                {...shared}
+                label={blanks[slot]}
+                optional={slot === "fee"}
+                optionalHint={t("transaction.sentence.optional")}
+            />
+        ) : (
+            <SentenceValue {...shared} figure={figures[slot]} swapKey={slot} value={value} />
+        );
+    };
+
+    const rateClause = customRate ? t(TRANSFER_CUSTOM_RATE_KEY) : t("transfers.sentence.rate");
+    const includedClause = crossCurrency ? t("transfers.sentence.fee") : t(TRANSFER_FEE_ARRIVAL_KEY);
+    const feeClause = onTop ? t(TRANSFER_FEE_ON_TOP_KEY) : includedClause;
+    const template = [
+        t("transfers.sentence.move"),
+        crossCurrency ? rateClause : null,
+        hasFee ? feeClause : t("transfers.sentence.noFee"),
+        outside ? t("transfers.sentence.outside") : null,
+    ]
+        .filter((clause) => clause !== null)
+        .join(" ");
+
+    return (
+        <Sentence
+            slots={{
+                amount: part("amount"),
+                arrives: part("arrives"),
+                fee: part("fee"),
+                feeSide: part("feeSide"),
+                from: part("from"),
+                outside: part("outside"),
+                rate: part("rate"),
+                rateType: part("rateType"),
+                to: part("to"),
+                when: part("when"),
+            }}
+            template={template}
+        />
+    );
+}

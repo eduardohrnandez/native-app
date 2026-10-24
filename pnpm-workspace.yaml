@@ -1,0 +1,57 @@
+packages:
+    - apps/*
+    - packages/*
+allowBuilds:
+    "@parcel/watcher": false
+    "@posthog/cli": true
+    "@shopify/react-native-skia": true
+    better-sqlite3: true
+    core-js: false
+    esbuild: true
+    sharp: false
+    unrs-resolver: false
+catalog:
+    "@better-auth/expo": ~1.6.15
+    "@convex-dev/agent": ^0.7.1
+    "@convex-dev/better-auth": ^0.12.5
+    better-auth: ~1.6.15
+    convex: ^1.45.0
+    dotenv: ^17.4.2
+    intlayer: ^9.5.2
+    react-intlayer: ^9.5.2
+    react-native-intlayer: ^9.5.2
+    vite-intlayer: ^9.5.2
+    zod: ^4.6.5
+    typescript: ~6.0.3
+    vite: npm:@voidzero-dev/vite-plus-core@1.0.0
+    vite-plus: 1.0.0
+packageExtensions:
+    "@tanstack/react-router":
+        peerDependencies:
+            "@types/react": "*"
+        peerDependenciesMeta:
+            "@types/react":
+                optional: true
+    "@tanstack/react-start-client":
+        peerDependencies:
+            "@types/react": "*"
+        peerDependenciesMeta:
+            "@types/react":
+                optional: true
+minimumReleaseAgeExclude:
+    - panelui-native@0.75.1
+
+patchedDependencies:
+    "@expo/fingerprint@0.21.6": patches/@expo__fingerprint@0.21.6.patch
+    expo-router@58.0.25: patches/expo-router@58.0.25.patch
+    expo-widgets@58.0.22: patches/expo-widgets@58.0.22.patch
+    number-flow-react-native@0.5.1: patches/number-flow-react-native@0.5.1.patch
+    panelui-native@0.113.1: patches/panelui-native@0.113.1.patch
+    react-native-nano-icons@1.0.1: patches/react-native-nano-icons@1.0.1.patch
+overrides:
+    vite@*: "catalog:"
+peerDependencyRules:
+    allowAny:
+        - vite
+    allowedVersions:
+        vite: "*"

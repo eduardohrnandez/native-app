@@ -1,0 +1,49 @@
+name: Set up the native app
+description: Installs the workspace and exports the job's GitHub environment variables.
+
+inputs:
+    variables:
+        description: The job's variables, as toJSON(vars).
+        required: false
+        default: "{}"
+    hugeicons-token:
+        description: Token for the private @hugeicons-pro registry.
+        required: true
+
+runs:
+    using: composite
+    steps:
+        - uses: voidzero-dev/setup-vp@v1.21.2
+          with:
+              node-version: 22
+              cache: true
+              run-install: false
+
+        - name: Authenticate the private icon registry
+          shell: bash
+          env:
+              HUGEICONS_PRO_TOKEN: ${{ inputs.hugeicons-token }}
+          run: |
+              if [ -z "$HUGEICONS_PRO_TOKEN" ]; then
+                echo "::error::HUGEICONS_PRO_TOKEN is not set. @hugeicons-pro/* will 401."
+                exit 1
+              fi
+              vp pm config set "//npm.hugeicons.com/:_authToken" "$HUGEICONS_PRO_TOKEN" --location user
+
+        - name: Install
+          shell: bash
+          run: vp install --frozen-lockfile
+
+        - name: Export the environment variables
+          shell: bash
+          env:
+              VARIABLES: ${{ inputs.variables }}
+          run: |
+              python3 - <<'PY'
+              import json, os, secrets
+              with open(os.environ["GITHUB_ENV"], "a") as env:
+                  for name, value in json.loads(os.environ["VARIABLES"]).items():
+                      delimiter = f"EOF_{secrets.token_hex(8)}"
+                      env.write(f"{name}<<{delimiter}\n{value}\n{delimiter}\n")
+                      print(f"Exported {name}")
+              PY
