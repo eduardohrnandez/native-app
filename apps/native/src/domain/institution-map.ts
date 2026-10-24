@@ -78,8 +78,9 @@ export function suggestInstitutions(query: string, currency: string, limit: numb
             merchantKey(entry.label) !== key &&
             (merchantKey(entry.label).startsWith(key) || entry.patterns.some((pattern) => pattern.startsWith(key)))
     );
+    // Not `toSorted`: Hermes lacks it and the editor crashed on open. `filter` already made a fresh array.
     return matches
-        .toSorted((a, b) => Number(local(b)) - Number(local(a)))
+        .sort((a, b) => Number(local(b)) - Number(local(a)))
         .slice(0, limit)
         .map((entry) => entry.label);
 }

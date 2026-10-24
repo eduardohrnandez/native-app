@@ -4,6 +4,7 @@ import { getMeta, setMeta } from "@/data/app-meta-core";
 import { applyRecentRates, isThrottled } from "@/data/rates";
 import type { RateWireRow } from "@/data/rates";
 import type { Database } from "@/db/client";
+import { fetchWithTimeout } from "@/lib/fetch-timeout";
 
 // Both feeds are keyless, so a build without an account service still prices VES. BCV Rates is the
 // one Mak3D Hub already trusts for the day's rate; DolarApi adds the history and stands in when it is down.
@@ -102,7 +103,7 @@ export function mergeRates(history: readonly RateWireRow[], current: readonly (R
 type FetchJson = (url: string) => Promise<DolarApiPayload>;
 
 async function fetchJson(url: string): Promise<DolarApiPayload> {
-    const response = await fetch(url, { signal: AbortSignal.timeout(TIMEOUT_MS) });
+    const response = await fetchWithTimeout(url, {}, TIMEOUT_MS);
     if (!response.ok) {
         throw new Error(`DolarApi answered HTTP ${response.status} for ${url}`);
     }

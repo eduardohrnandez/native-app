@@ -8,6 +8,7 @@ import { isThrottled } from "@/data/rates";
 import type { Database } from "@/db/client";
 import { translateNow } from "@/i18n/runtime";
 import { APP_BUILD } from "@/lib/app-version";
+import { fetchWithTimeout } from "@/lib/fetch-timeout";
 import { notifyWarning } from "@/lib/notify";
 
 // Unauthenticated GitHub allows 60 calls an hour per IP, so a check every 12 hours never trips it.
@@ -32,10 +33,11 @@ export async function checkForApk(db: Database, force = false): Promise<ApkCheck
     }
     let body: GithubPayload;
     try {
-        const response = await fetch(RELEASES_URL, {
-            headers: { Accept: "application/vnd.github+json" },
-            signal: AbortSignal.timeout(TIMEOUT_MS),
-        });
+        const response = await fetchWithTimeout(
+            RELEASES_URL,
+            { headers: { Accept: "application/vnd.github+json" } },
+            TIMEOUT_MS
+        );
         if (!response.ok) {
             return "failed";
         }
