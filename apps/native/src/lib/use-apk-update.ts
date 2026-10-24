@@ -11,8 +11,9 @@ import { APP_BUILD } from "@/lib/app-version";
 import { fetchWithTimeout } from "@/lib/fetch-timeout";
 import { notifyWarning } from "@/lib/notify";
 
-// Unauthenticated GitHub allows 60 calls an hour per IP, so a check every 12 hours never trips it.
-const RELEASES_URL = "https://api.github.com/repos/eduardohrnandez/native-pp/releases?per_page=10";
+// Unauthenticated GitHub allows 60 calls an hour per IP, so a check every 12 hours never trips it. The list is not
+// strictly newest first, so it takes a full page and `newerApk` picks the highest build.
+const RELEASES_URL = "https://api.github.com/repos/eduardohrnandez/native-pp/releases?per_page=100";
 const LAST_CHECK_KEY = "lastApkUpdateCheckAt";
 const TIMEOUT_MS = 15_000;
 
