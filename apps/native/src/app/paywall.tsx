@@ -1,11 +1,6 @@
-import { CloseToolbar } from "@/components/close-toolbar";
-import { Paywall } from "@/screens/paywall";
+import { Redirect } from "expo-router";
 
-export default function PaywallScreen() {
-    return (
-        <>
-            <CloseToolbar placement="right" />
-            <Paywall />
-        </>
-    );
+// Finta has no plans; any leftover link to the old paywall lands back home.
+export default function PaywallRedirect() {
+    return <Redirect href="/" />;
 }

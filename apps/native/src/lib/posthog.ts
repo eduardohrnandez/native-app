@@ -1,27 +1,12 @@
-import { env } from "@outlayr/env/native";
-import { usePathname, useSegments } from "expo-router";
-import PostHog from "posthog-react-native";
-import { useEffect } from "react";
+// Finta ships no analytics. Call sites keep their optional chaining against a client that never exists.
+type AnalyticsValue = string | number | boolean | null | undefined;
 
-import { SETTING_DEFAULTS } from "@/data/settings-core";
-import { scrubQueryParams } from "@/domain/exception-scrub";
+type AnalyticsProperties = Readonly<Record<string, AnalyticsValue>>;
 
-export const posthog =
-    !__DEV__ && env.EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN
-        ? new PostHog(env.EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN, {
-              before_send: scrubQueryParams,
-              defaultOptIn: SETTING_DEFAULTS.shareAnalytics,
-              disableRemoteFeatureFlags: true,
-              errorTracking: { autocapture: { uncaughtExceptions: true, unhandledRejections: true } },
-          })
-        : null;
-
-export function useScreenTracking() {
-    const pathname = usePathname();
-    const screen = useSegments().join("/");
-    useEffect(() => {
-        if (screen) {
-            posthog?.screen(screen);
-        }
-    }, [pathname, screen]);
+interface AnalyticsClient {
+    capture: (event: string, properties?: AnalyticsProperties) => void;
+    reset: () => void;
+    screen: (name: string) => void;
 }
+
+export const posthog: AnalyticsClient | null = null;

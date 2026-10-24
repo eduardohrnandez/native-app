@@ -4,6 +4,7 @@ import { useAppSettings, useDisplaySettings } from "@/contexts/display-settings-
 import { useDatabase } from "@/contexts/local-data-context";
 import { setBoolSetting } from "@/data/settings-core";
 import { useTranslation } from "@/i18n/context";
+import { convex } from "@/lib/convex";
 
 export function FeatureLab() {
     const db = useDatabase();
@@ -18,27 +19,30 @@ export function FeatureLab() {
 
     return (
         <SettingsScreen>
-            <SettingsSection
-                footer={`${t("settings.featureLab.aiEnrichmentNote")}\n\n${t("settings.featureLab.groundedLookupNote")}\n\n${t("settings.featureLab.aiProvidersNote")}`}
-                title={t("settings.featureLab.aiSection")}
-            >
-                <ToggleRow
-                    icon="Sparkles"
-                    onValueChange={(next) => {
-                        setBoolSetting(db, "aiEnrichment", next);
-                    }}
-                    title={t("settings.featureLab.aiEnrichment")}
-                    value={aiEnrichment}
-                />
-                <ToggleRow
-                    icon="Sparkles"
-                    onValueChange={(next) => {
-                        setBoolSetting(db, "groundedLookup", next);
-                    }}
-                    title={t("settings.featureLab.groundedLookup")}
-                    value={groundedLookup}
-                />
-            </SettingsSection>
+            {/* Both AI lookups run on the account service, which a build without one cannot reach. */}
+            {convex === null ? null : (
+                <SettingsSection
+                    footer={`${t("settings.featureLab.aiEnrichmentNote")}\n\n${t("settings.featureLab.groundedLookupNote")}\n\n${t("settings.featureLab.aiProvidersNote")}`}
+                    title={t("settings.featureLab.aiSection")}
+                >
+                    <ToggleRow
+                        icon="Sparkles"
+                        onValueChange={(next) => {
+                            setBoolSetting(db, "aiEnrichment", next);
+                        }}
+                        title={t("settings.featureLab.aiEnrichment")}
+                        value={aiEnrichment}
+                    />
+                    <ToggleRow
+                        icon="Sparkles"
+                        onValueChange={(next) => {
+                            setBoolSetting(db, "groundedLookup", next);
+                        }}
+                        title={t("settings.featureLab.groundedLookup")}
+                        value={groundedLookup}
+                    />
+                </SettingsSection>
+            )}
 
             <SettingsSection
                 footer={t("settings.featureLab.confettiNote")}

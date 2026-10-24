@@ -3,13 +3,13 @@
 const { existsSync } = require("node:fs");
 const path = require("node:path");
 
-const { getPostHogExpoConfig } = require("posthog-react-native/metro");
+const { getDefaultConfig } = require("expo/metro-config");
 const { configMetroIntlayerSync } = require("react-native-intlayer/metro");
 const { withUniwindConfig } = require("uniwind/metro");
 const { wrapWithReanimatedMetroConfig } = require("react-native-reanimated/metro-config");
 
 /** @type {import('expo/metro-config').MetroConfig} */
-const config = getPostHogExpoConfig(__dirname);
+const config = getDefaultConfig(__dirname);
 
 // Skia's `src/index.ts` re-exports a directory, and directory-index resolution only searches crawled files.
 const pnpmStore = path.resolve(__dirname, "../../node_modules");
@@ -29,17 +29,12 @@ const finalConfig = configMetroIntlayerSync(
     })
 );
 
-// RevenueCat's ~1 MB web SDK only runs in browser mode; native builds always carry `RNPurchases`.
 // The AI SDK's `zod/v4` resolves to `.cjs` while the app's `zod` gets `.js`: a second ~500 KB zod.
-const BROWSER_ONLY_MODULES = new Set(["@revenuecat/purchases-js-hybrid-mappings"]);
 const upstreamResolveRequest = finalConfig.resolver.resolveRequest;
 finalConfig.resolver = {
     ...finalConfig.resolver,
     resolveRequest: (context, moduleName, platform) => {
         const resolve = upstreamResolveRequest ?? context.resolveRequest;
-        if (platform !== "web" && BROWSER_ONLY_MODULES.has(moduleName)) {
-            return { type: "empty" };
-        }
         const resolution = resolve(context, moduleName, platform);
         if ((moduleName === "zod" || moduleName.startsWith("zod/")) && resolution.filePath?.endsWith(".cjs")) {
             const esmTwin = resolution.filePath.replace(/\.cjs$/, ".js");

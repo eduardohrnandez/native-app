@@ -28,7 +28,6 @@ import { UpdateSheet } from "@/components/update-sheet";
 import { AppSettingsProvider } from "@/contexts/display-settings-context";
 import { IdentityDraftProvider } from "@/contexts/identity-draft-context";
 import { LocalDataProvider, useDatabase, useLocalData } from "@/contexts/local-data-context";
-import { RevenueCatProvider } from "@/contexts/revenuecat-context";
 import { BackgroundWork } from "@/data/background-work";
 import { useAccountDeferred, useOnboardingSettled } from "@/data/onboarding";
 import { useSeededClockPreference } from "@/data/settings";
@@ -43,9 +42,6 @@ import { cloudRuntime } from "@/lib/cloud-runtime";
 import { setCloudAuthenticated } from "@/lib/convex";
 import { DeviceResetRecovery } from "@/lib/device-reset-recovery";
 import { LedgerAdoptionProvider, useLedgerAdoption } from "@/lib/ledger-adoption";
-import { useScreenTracking } from "@/lib/posthog";
-import { useAnalyticsConsent } from "@/lib/posthog-consent";
-import { usePostHogIdentity } from "@/lib/posthog-identity";
 import { identityPickerDetent } from "@/lib/sheet-detents";
 import { useSubscriptionReminderTaps } from "@/lib/use-subscription-reminder-taps";
 import { useWalletPushTaps } from "@/lib/use-wallet-push-taps";
@@ -89,22 +85,13 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
 function CloudRuntimeProvider({ children }: { children: ReactNode }) {
     return (
         <AuthSessionProvider>
-            <RevenueCatProvider>
-                <ActivatedCloudRuntime>{children}</ActivatedCloudRuntime>
-            </RevenueCatProvider>
+            <ActivatedCloudRuntime>{children}</ActivatedCloudRuntime>
         </AuthSessionProvider>
     );
 }
 
-function Analytics() {
-    useAnalyticsConsent();
-    useScreenTracking();
-    return null;
-}
-
 function ActivatedCloudRuntime({ children }: { children: ReactNode }) {
     const { accountId } = useAuthSession();
-    usePostHogIdentity();
     if (cloudRuntime === null || accountId === null) {
         return children;
     }
@@ -182,7 +169,6 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
                             <AuthCover>
                                 <AppLockGate>
                                     <RootStack />
-                                    <Analytics />
                                     <UpdateSheet />
                                     <AiConsentSheet />
                                     <CelebrationConfetti />

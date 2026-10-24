@@ -23,6 +23,7 @@ import { useGlobalCurrency } from "@/data/app-meta";
 import { finishOnboarding } from "@/data/onboarding-core";
 import { setCurrency } from "@/data/settings-core";
 import { useTranslation } from "@/i18n/context";
+import { convex } from "@/lib/convex";
 import { notifyFailure } from "@/lib/notify";
 import { posthog } from "@/lib/posthog";
 
@@ -110,8 +111,8 @@ export function OnboardingCurrency() {
             try {
                 await setCurrency(db, code);
                 if (meta === "continue") {
-                    // The root guard does not swap on this write: the AI consent question is next.
-                    router.push("/onboarding/smart-features");
+                    // The root guard does not swap on this write. The AI consent question only matters with a backend.
+                    router.push(convex === null ? "/onboarding/rhythm" : "/onboarding/smart-features");
                 } else {
                     // `finishOnboarding` settles the root guard, which swaps the stack; pushing too would race it.
                     await finishOnboarding(db);

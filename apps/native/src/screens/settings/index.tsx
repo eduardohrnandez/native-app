@@ -9,10 +9,8 @@ import { LinkRow, PickerRow, SettingsSection, ToggleRow } from "@/components/lis
 import { AccountRow } from "@/components/settings/account-row";
 import type { SettingsIconName } from "@/components/settings/settings-icons";
 import { SettingsScreen } from "@/components/settings/settings-screen";
-import { UsageRow } from "@/components/settings/usage-row";
 import { useAppSettings, useDisplaySettings } from "@/contexts/display-settings-context";
 import { useDatabase } from "@/contexts/local-data-context";
-import { useRevenueCat } from "@/contexts/revenuecat-context";
 import { useGlobalCurrency } from "@/data/app-meta";
 import {
     HAPTICS_OPTIONS,
@@ -42,6 +40,7 @@ import { alternateIconsSupported, useAppIcon } from "@/lib/app-icon";
 import { requestUnlock } from "@/lib/app-lock";
 import { APP_BUILD, APP_VERSION } from "@/lib/app-version";
 import { useAuthSession } from "@/lib/auth-session";
+import { convex } from "@/lib/convex";
 import { importDraftStore } from "@/lib/import-draft-store";
 import { hasSystemLanguageSettings, openLanguageSettings } from "@/lib/language-settings";
 import { notifyFailure } from "@/lib/notify";
@@ -74,7 +73,6 @@ export function Settings() {
     const db = useDatabase();
     const router = useRouter();
     const t = useTranslation();
-    const { isPro } = useRevenueCat();
     const importSheetRef = useRef<ImportSheetHandle>(null);
     const [lockPending, setLockPending] = useState<boolean | null>(null);
     const { language } = useLanguage();
@@ -88,7 +86,6 @@ export function Settings() {
     const { showCents } = useDisplaySettings().state;
     const showNotifications = settings.bool("showNotifications");
     const biometricLock = settings.bool("biometricLock");
-    const shareAnalytics = settings.bool("shareAnalytics");
     const aiConsent = settings.bool("aiConsentV2");
     const incomeTracking = settings.bool("incomeTracking");
     const showUpcoming = settings.bool("showUpcoming");
@@ -109,24 +106,20 @@ export function Settings() {
 
     return (
         <SettingsScreen footer={`Finta ${APP_VERSION} (${APP_BUILD})`}>
-            <SettingsSection title={t("settings.section.account")}>
-                <AccountRow />
-                <LinkRow
-                    icon="Sparkles"
-                    onPress={() => router.push("/paywall")}
-                    title={t("pro.entry.title")}
-                    value={isPro ? t("pro.entry.valuePro") : t("pro.entry.value")}
-                />
-                <UsageRow />
-                {accountId === null ? null : (
-                    <LinkRow
-                        icon="Cloud"
-                        onPress={() => router.push("/settings/sync")}
-                        title={t("settings.row.sync")}
-                        value={syncValue}
-                    />
-                )}
-            </SettingsSection>
+            {/* Accounts, sync and AI run on the account service; a build without one shows none of them. */}
+            {convex === null ? null : (
+                <SettingsSection title={t("settings.section.account")}>
+                    <AccountRow />
+                    {accountId === null ? null : (
+                        <LinkRow
+                            icon="Cloud"
+                            onPress={() => router.push("/settings/sync")}
+                            title={t("settings.row.sync")}
+                            value={syncValue}
+                        />
+                    )}
+                </SettingsSection>
+            )}
 
             <SettingsSection footer={coverageNote(coverage, t) ?? undefined} title={t("settings.section.money")}>
                 <LinkRow
@@ -255,26 +248,20 @@ export function Settings() {
                     title={t("settings.row.authentication")}
                     value={lockPending ?? biometricLock}
                 />
-                <ToggleRow
-                    icon="ChartBarLine"
-                    onValueChange={(next) => {
-                        setBoolSetting(db, "shareAnalytics", next);
-                    }}
-                    title={t("settings.row.shareAnalytics")}
-                    value={shareAnalytics}
-                />
-                <ToggleRow
-                    icon="Sparkles"
-                    onValueChange={(next) => {
-                        if (next) {
-                            setBoolSetting(db, "aiConsentV2", true);
-                        } else {
-                            saveAiConsent(db, false);
-                        }
-                    }}
-                    title={t("settings.row.sendToAi")}
-                    value={aiConsent}
-                />
+                {convex === null ? null : (
+                    <ToggleRow
+                        icon="Sparkles"
+                        onValueChange={(next) => {
+                            if (next) {
+                                setBoolSetting(db, "aiConsentV2", true);
+                            } else {
+                                saveAiConsent(db, false);
+                            }
+                        }}
+                        title={t("settings.row.sendToAi")}
+                        value={aiConsent}
+                    />
+                )}
                 <PickerRow
                     icon="Tap01"
                     onChange={(next) => {
