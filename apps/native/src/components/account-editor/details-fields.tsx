@@ -33,6 +33,7 @@ interface AccountDetailsFieldsProps {
     onNameChange: (name: string) => void;
     /** Banks and apps to fill the name with; empty hides the row. */
     nameSuggestions?: readonly string[];
+    onPickSuggestion?: (name: string) => void;
     onSubmitName: () => void;
     /** Omitted for a person, which hides the row. */
     onToggleLiability?: (next: boolean) => void;
@@ -57,6 +58,7 @@ export function AccountDetailsFields({
     onCurrencyPress,
     onNameChange,
     nameSuggestions = NO_SUGGESTIONS,
+    onPickSuggestion,
     onSubmitName,
     onToggleLiability,
     onToggleSign,
@@ -84,7 +86,11 @@ export function AccountDetailsFields({
                     testID="account-name-suggestions"
                 >
                     {nameSuggestions.map((label) => (
-                        <StageOption key={label} label={label} onPress={() => onNameChange(label)} />
+                        <StageOption
+                            key={label}
+                            label={label}
+                            onPress={() => (onPickSuggestion ?? onNameChange)(label)}
+                        />
                     ))}
                 </ScrollView>
             )}

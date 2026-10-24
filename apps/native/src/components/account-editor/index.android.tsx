@@ -367,6 +367,12 @@ function AccountEditorReady(props: AccountEditorProps & { db: Database }) {
                         onCurrencyPress={openCurrencyPicker}
                         nameSuggestions={nameSuggestions}
                         onNameChange={onNameChange}
+                        onPickSuggestion={(picked) => {
+                            // Choosing a bank by name asks for its logo, even over an icon the account already had.
+                            setIdentitySource("suggested");
+                            latest.current = { ...latest.current, identitySource: "suggested" };
+                            onNameChange(picked);
+                        }}
                         onSubmitName={() => pressSubmit(form)}
                         onToggleLiability={
                             person || props.mode === "create"
