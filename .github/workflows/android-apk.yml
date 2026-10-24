@@ -53,6 +53,8 @@ jobs:
               working-directory: apps/native
               env:
                   CI: "1"
+                  # The versionCode is the run number, which is also the release tag the app compares against.
+                  BUILD_NUMBER: ${{ github.run_number }}
               run: pnpm exec expo prebuild --platform android --no-install --clean
 
             # Later keys win in gradle.properties: fewer workers and no R8 shrinking keep memory inside the runner.

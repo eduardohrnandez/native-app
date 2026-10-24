@@ -3,6 +3,18 @@ import type { Dictionary } from "intlayer";
 
 const update = {
     content: {
+        "update.availableBody": t({
+            en: "A new version of Finta is ready. Download it and install it over this one; your data stays.",
+            es: "Hay una versión nueva de Finta. Descárgala e instálala encima de esta; tus datos se quedan.",
+        }),
+        "update.availableTitle": t({
+            en: "Update available",
+            es: "Hay una actualización",
+        }),
+        "update.download": t({
+            en: "Download",
+            es: "Descargar",
+        }),
         "update.failed": t({
             en: "The update did not install. Try again.",
             es: "La actualización no se instaló. Inténtalo de nuevo.",

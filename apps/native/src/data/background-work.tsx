@@ -15,6 +15,7 @@ import { syncInstallmentReminders } from "@/lib/installment-reminder-sync";
 import { useDailyReminderSync } from "@/lib/reminder-sync";
 import { syncSubscriptionReminders } from "@/lib/subscription-reminder-sync";
 import { debounce, PUBLISH_DEBOUNCE_MS } from "@/lib/sync-cadence";
+import { useApkUpdate } from "@/lib/use-apk-update";
 import { useSystemSync } from "@/lib/use-system-sync";
 
 const IDLE_TIMEOUT_MS = 1000;
@@ -83,6 +84,7 @@ export function BackgroundWork() {
     }, [ready]);
     // After the sweep, so a subscription that advanced this foreground is in the table when the widgets rebuild.
     useSystemSync(ready);
+    useApkUpdate(ready);
     useEnrichmentQueue(ready);
     // Held down without a confirmed entitlement and session: the server refuses a lapsed customer and a missing token.
     useSyncEngine(ready, !proEntitled || !cloudAuthenticated);
