@@ -1,7 +1,8 @@
 import { Directory, File, Paths } from "expo-file-system";
 
 const CACHE_DIRECTORY = "merchant-logos";
-const MISS_MARKER = ".miss";
+// Versioned: misses filed before logo.dev and the site-icon tier were added must not hide logos those now find.
+const MISS_MARKER = ".miss2";
 /** A merchant can gain a logo, and a miss from a bad day must not brand a name forever. */
 const MISS_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 

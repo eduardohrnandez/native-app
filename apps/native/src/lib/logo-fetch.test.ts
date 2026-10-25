@@ -57,40 +57,50 @@ describe("fetchMerchantImage", () => {
         expect(calls[0]).toContain("img.logo.dev");
     });
 
-    it("falls through to the favicon tier when logo.dev refuses", async () => {
-        const favicon = png(1200);
+    it("falls through to the site's own touch icon when logo.dev has no logo", async () => {
+        const touchIcon = png(1200);
         const calls: string[] = [];
         const result = await fetchMerchantImage({ domain: "zzqq-nothing.example", name: "zzqq nothing" }, (async (
             url: string
         ) => {
             calls.push(String(url));
-            return String(url).includes("img.logo.dev") ? notFound : imageResponse(200, favicon);
+            return String(url).includes("img.logo.dev") ? notFound : imageResponse(200, touchIcon);
         }) as unknown as typeof fetch);
 
-        expect(result).toStrictEqual({ bytes: favicon, kind: "logo" });
+        expect(result).toStrictEqual({ bytes: touchIcon, kind: "logo" });
         expect(calls[0]).toContain("img.logo.dev");
-        expect(calls[1]).toContain("s2/favicons");
+        expect(calls[1]).toBe("https://zzqq-nothing.example/apple-touch-icon.png");
     });
 
-    it("skips straight to the favicon when no logo.dev token is configured", async () => {
+    it("takes the favicon only when neither logo.dev nor the site has an icon", async () => {
+        const favicon = png(1200);
+        const result = await fetchMerchantImage({ domain: "zzqq-nothing.example", name: "zzqq nothing" }, (async (
+            url: string
+        ) =>
+            String(url).includes("s2/favicons") ? imageResponse(200, favicon) : notFound) as unknown as typeof fetch);
+
+        expect(result).toStrictEqual({ bytes: favicon, kind: "logo" });
+    });
+
+    it("skips logo.dev when no token is configured", async () => {
         jest.resetModules();
         jest.doMock<Partial<typeof import("@outlayr/env/native")>>("@outlayr/env/native", () => ({
             env: { EXPO_PUBLIC_LOGO_DEV_TOKEN: undefined },
         }));
         const { fetchMerchantImage: fetchWithNoToken } = require("./logo-fetch") as typeof import("./logo-fetch");
 
-        const favicon = png(1300);
+        const touchIcon = png(1300);
         const calls: string[] = [];
         const result = await fetchWithNoToken({ domain: "zzqq-nothing.example", name: "zzqq nothing" }, (async (
             url: string
         ) => {
             calls.push(String(url));
-            return imageResponse(200, favicon);
+            return imageResponse(200, touchIcon);
         }) as unknown as typeof fetch);
 
-        expect(result).toStrictEqual({ bytes: favicon, kind: "logo" });
+        expect(result).toStrictEqual({ bytes: touchIcon, kind: "logo" });
         expect(calls).toHaveLength(1);
-        expect(calls[0]).toContain("s2/favicons");
+        expect(calls[0]).not.toContain("img.logo.dev");
         jest.dontMock("@outlayr/env/native");
     });
 
@@ -203,10 +213,10 @@ describe("timeouts", () => {
             { domain: "zinli.com", name: "Zinli" },
             fetchImpl as unknown as typeof fetch
         );
-        // Two attempts for logo.dev, two for the favicon.
-        await jest.advanceTimersByTimeAsync(3000 * 4);
+        // Two attempts each for logo.dev, the touch icon and the favicon.
+        await jest.advanceTimersByTimeAsync(3000 * 6);
         await expect(pending).resolves.toStrictEqual({ kind: "none" });
-        expect(attempts).toBe(4);
+        expect(attempts).toBe(6);
         expect(mockWriteCachedLogo).not.toHaveBeenCalled();
     });
 });

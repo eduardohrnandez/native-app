@@ -66,7 +66,7 @@ describe("cachedLogoUri", () => {
     });
 
     it("returns null for a remembered miss, even though the marker file exists", () => {
-        __existing.add("netflix.miss");
+        __existing.add("netflix.miss2");
         expect(cachedLogoUri("netflix")).toBeNull();
     });
 });
@@ -80,21 +80,21 @@ describe("a miss expires", () => {
     });
 
     it("is still a miss inside the week", async () => {
-        __existing.add("zinli.miss");
-        __writtenAt.set("zinli.miss", 1000);
+        __existing.add("zinli.miss2");
+        __writtenAt.set("zinli.miss2", 1000);
         await expect(readCachedLogo("zinli", 1000 + WEEK - 1)).resolves.toStrictEqual({ kind: "miss" });
         expect(cachedLogoUri("zinli", 1000 + WEEK - 1)).toBeNull();
     });
 
     it("is forgotten, and its marker removed, once the week is up", async () => {
-        __existing.add("zinli.miss");
-        __writtenAt.set("zinli.miss", 1000);
+        __existing.add("zinli.miss2");
+        __writtenAt.set("zinli.miss2", 1000);
         await expect(readCachedLogo("zinli", 1000 + WEEK + 1)).resolves.toStrictEqual({ kind: "unknown" });
-        expect(__existing.has("zinli.miss")).toBe(false);
+        expect(__existing.has("zinli.miss2")).toBe(false);
     });
 
     it("keeps a marker with no readable time, rather than guessing", async () => {
-        __existing.add("zinli.miss");
+        __existing.add("zinli.miss2");
         await expect(readCachedLogo("zinli", Number.MAX_SAFE_INTEGER)).resolves.toStrictEqual({ kind: "miss" });
     });
 });
@@ -108,12 +108,12 @@ describe("writeCachedLogo", () => {
     // A refreshed ask found the logo the earlier miss said was not there; the
     // marker is read first, so it has to go or the file is never served.
     it("removes a standing miss marker when a logo is written for the key", () => {
-        __existing.add("zinli.miss");
-        __writtenAt.set("zinli.miss", 1000);
+        __existing.add("zinli.miss2");
+        __writtenAt.set("zinli.miss2", 1000);
 
         writeCachedLogo("zinli", new Uint8Array([1]));
 
-        expect(__existing.has("zinli.miss")).toBe(false);
+        expect(__existing.has("zinli.miss2")).toBe(false);
         expect(__existing.has("zinli")).toBe(true);
     });
 });

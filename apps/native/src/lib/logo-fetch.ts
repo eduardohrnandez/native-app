@@ -30,6 +30,11 @@ export function logoDevUrl(domain: string, token: string): string {
     return `https://img.logo.dev/${encodeURIComponent(domain)}?token=${encodeURIComponent(token)}&size=512&format=png&fallback=404`;
 }
 
+/** The home-screen icon most sites publish: larger and cleaner than a favicon, and where small banks have one. */
+export function touchIconUrl(domain: string): string {
+    return `https://${encodeURIComponent(domain)}/apple-touch-icon.png`;
+}
+
 export function faviconUrl(domain: string): string {
     return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`;
 }
@@ -125,9 +130,14 @@ async function resolveMerchantImage(request: MerchantImageRequest, fetchImpl: ty
         ({ definitive } = branded);
     }
 
+    const touchIcon = await fetchAccepted(touchIconUrl(domain), fetchImpl);
+    if (touchIcon.kind === "logo") {
+        return touchIcon;
+    }
+
     const favicon = await fetchAccepted(faviconUrl(domain), fetchImpl);
     if (favicon.kind === "logo") {
         return favicon;
     }
-    return definitive && favicon.definitive ? REFUSED : INDETERMINATE;
+    return definitive && touchIcon.definitive && favicon.definitive ? REFUSED : INDETERMINATE;
 }
