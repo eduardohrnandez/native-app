@@ -24,7 +24,8 @@ import type { Account } from "@/data/accounts-core";
 import { useGlobalCurrency } from "@/data/app-meta";
 import { useDeferredDelete } from "@/data/use-deferred-delete";
 import type { Database } from "@/db/client";
-import { suggestInstitutions } from "@/domain/institution-map";
+import { resolveInstitutionDomain, suggestInstitutions } from "@/domain/institution-map";
+import { merchantKey } from "@/domain/merchant-resolver";
 import { formatAmount, minorUnitsFor, roundToMinorUnits } from "@/domain/money";
 import { numberToNumpad, numpadToNumber } from "@/domain/numpad";
 import { useAccountIdentity } from "@/hooks/use-account-identity";
@@ -33,6 +34,8 @@ import { useLocaleTag } from "@/hooks/use-locale-tag";
 import { useAccountSaveCapped, useCurrencyBlocked } from "@/hooks/use-pro-gate";
 import { useRegionCode } from "@/hooks/use-region-code";
 import { useLanguage, useTranslation } from "@/i18n/context";
+import { fetchMerchantImage } from "@/lib/logo-fetch";
+import { persistLogo } from "@/lib/persist-logo";
 import { posthog } from "@/lib/posthog";
 import { useHaptics } from "@/lib/use-haptics";
 import { useColors } from "@/theme/use-colors";
@@ -227,6 +230,27 @@ function AccountEditorReady(props: AccountEditorProps & { db: Database }) {
         );
     }, [mode, loaded, setDraft]);
 
+    const [logoNote, setLogoNote] = useState<string | null>(null);
+    const noteMissingLogo = (missing: string) => {
+        setLogoNote(missing.length === 0 ? null : t("accounts.logoMissing", { name: missing }));
+    };
+
+    // A bank picked by name asks for its logo directly, past the lookup's guards: the user just chose it.
+    const brandWithInstitution = async (picked: string) => {
+        const domain = resolveInstitutionDomain(merchantKey(picked));
+        if (domain === null) {
+            return;
+        }
+        const outcome = await fetchMerchantImage({ domain, name: picked, refresh: true });
+        if (outcome.kind !== "logo") {
+            noteMissingLogo(picked);
+            return;
+        }
+        const logo = await persistLogo(outcome.bytes);
+        setIdentitySource("suggested");
+        setDraft((previous) => ({ ...previous, photoColor: logo.imageColor, photoUri: logo.imageUri }));
+    };
+
     const identity = useAccountIdentity({
         canAttach: () =>
             latest.current.identitySource !== "user" &&
@@ -249,6 +273,7 @@ function AccountEditorReady(props: AccountEditorProps & { db: Database }) {
             }));
         },
         onLogo: (logo) => {
+            setLogoNote(null);
             setIdentitySource("suggested");
             setDraft((previous) => ({
                 ...previous,
@@ -256,11 +281,13 @@ function AccountEditorReady(props: AccountEditorProps & { db: Database }) {
                 photoUri: logo.imageUri,
             }));
         },
+        onMissing: noteMissingLogo,
         regionCode,
         remoteEnabled: aiEnrichment,
     });
 
     const onNameChange = (next: string) => {
+        setLogoNote(null);
         form.setFieldValue("name", next);
         identity.onNameChange(next);
     };
@@ -367,11 +394,11 @@ function AccountEditorReady(props: AccountEditorProps & { db: Database }) {
                         onCurrencyPress={openCurrencyPicker}
                         nameSuggestions={nameSuggestions}
                         onNameChange={onNameChange}
+                        nameNote={logoNote}
                         onPickSuggestion={(picked) => {
-                            // Choosing a bank by name asks for its logo, even over an icon the account already had.
-                            setIdentitySource("suggested");
-                            latest.current = { ...latest.current, identitySource: "suggested" };
-                            onNameChange(picked);
+                            setLogoNote(null);
+                            form.setFieldValue("name", picked);
+                            brandWithInstitution(picked).catch(() => noteMissingLogo(picked));
                         }}
                         onSubmitName={() => pressSubmit(form)}
                         onToggleLiability={

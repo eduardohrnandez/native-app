@@ -34,6 +34,8 @@ interface AccountDetailsFieldsProps {
     /** Banks and apps to fill the name with; empty hides the row. */
     nameSuggestions?: readonly string[];
     onPickSuggestion?: (name: string) => void;
+    /** Shown under the name, e.g. when a bank's logo could not be found. */
+    nameNote?: string | null;
     onSubmitName: () => void;
     /** Omitted for a person, which hides the row. */
     onToggleLiability?: (next: boolean) => void;
@@ -59,6 +61,7 @@ export function AccountDetailsFields({
     onNameChange,
     nameSuggestions = NO_SUGGESTIONS,
     onPickSuggestion,
+    nameNote = null,
     onSubmitName,
     onToggleLiability,
     onToggleSign,
@@ -93,6 +96,16 @@ export function AccountDetailsFields({
                         />
                     ))}
                 </ScrollView>
+            )}
+
+            {nameNote === null ? null : (
+                <Text
+                    className="text-footnote font-sans"
+                    style={{ color: m3.onSurfaceVariant }}
+                    testID="account-name-note"
+                >
+                    {nameNote}
+                </Text>
             )}
 
             <OutlinedSelectField

@@ -22,6 +22,8 @@ export interface UseAccountIdentityArgs {
     locale?: string;
     onClear: () => void;
     onLogo: (logo: AccountLogo) => void;
+    /** A known bank or app whose logo could not be found, so the user can add one themselves. */
+    onMissing?: (name: string) => void;
     persistLogo?: (bytes: Uint8Array) => Promise<AccountLogo>;
     regionCode?: string;
     remoteEnabled?: boolean;
@@ -43,6 +45,7 @@ export function useAccountIdentity(args: UseAccountIdentityArgs): UseAccountIden
         canAttach,
         onLogo,
         onClear,
+        onMissing,
         transport,
         fetchImage = fetchMerchantImage,
         persistLogo = persistLogoDefault,
@@ -50,9 +53,9 @@ export function useAccountIdentity(args: UseAccountIdentityArgs): UseAccountIden
 
     const nameRef = useRef("");
     const ticketRef = useRef(0);
-    const latest = useRef({ canAttach, fetchImage, onClear, onLogo, persistLogo });
+    const latest = useRef({ canAttach, fetchImage, onClear, onLogo, onMissing, persistLogo });
     useEffect(() => {
-        latest.current = { canAttach, fetchImage, onClear, onLogo, persistLogo };
+        latest.current = { canAttach, fetchImage, onClear, onLogo, onMissing, persistLogo };
     });
 
     const attach = useCallback(async (domain: string | null) => {
@@ -76,6 +79,7 @@ export function useAccountIdentity(args: UseAccountIdentityArgs): UseAccountIden
         }
         if (outcome.kind !== "logo") {
             latest.current.onClear();
+            latest.current.onMissing?.(nameRef.current.trim());
             return;
         }
         let logo: AccountLogo;

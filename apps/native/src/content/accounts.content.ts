@@ -3,6 +3,10 @@ import type { Dictionary } from "intlayer";
 
 const accounts = {
     content: {
+        "accounts.logoMissing": t({
+            en: "We couldn't find a logo for {name}. Tap the square above to add a photo.",
+            es: "No encontramos el logo de {name}. Toca el cuadro de arriba para subir una foto.",
+        }),
         "accounts.a11y.balanceSign": t({
             en: "Toggle balance sign",
             es: "Cambiar el signo del saldo",
