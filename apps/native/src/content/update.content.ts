@@ -10,13 +10,19 @@ const update = {
         "update.check.title": t({ en: "Check for updates", es: "Buscar actualizaciones" }),
         "update.check.version": t({ en: "Version {build}", es: "Versión {build}" }),
         "update.availableBody": t({
-            en: "A new version of Finta is ready. Download it and install it over this one; your data stays.",
-            es: "Hay una versión nueva de Finta. Descárgala e instálala encima de esta; tus datos se quedan.",
+            en: "A new version of Finta is ready. It installs over this one and your data stays.",
+            es: "Hay una versión nueva de Finta. Se instala encima de esta y tus datos se quedan.",
         }),
         "update.availableTitle": t({
             en: "Update available",
             es: "Hay una actualización",
         }),
+        "update.downloading": t({ en: "Downloading the update", es: "Descargando la actualización" }),
+        "update.downloadingBody": t({
+            en: "Android's installer opens when it is done. The first time, allow Finta to install apps.",
+            es: "Al terminar se abre el instalador de Android. La primera vez, permite que Finta instale apps.",
+        }),
+        "update.check.progress": t({ en: "Downloading {percent}%", es: "Descargando {percent} %" }),
         "update.download": t({
             en: "Download",
             es: "Descargar",

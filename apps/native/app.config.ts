@@ -185,6 +185,8 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => ({
             "com.google.android.c2dm.permission.RECEIVE",
         ],
         package: APP_ID,
+        // Finta updates itself from GitHub Releases: it downloads the APK and hands it to the system installer.
+        permissions: ["android.permission.REQUEST_INSTALL_PACKAGES"],
         versionCode: buildNumber ? Number(buildNumber) : undefined,
     },
     experiments: {

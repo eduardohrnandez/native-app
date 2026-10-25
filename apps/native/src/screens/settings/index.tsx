@@ -44,7 +44,7 @@ import { convex } from "@/lib/convex";
 import { importDraftStore } from "@/lib/import-draft-store";
 import { hasSystemLanguageSettings, openLanguageSettings } from "@/lib/language-settings";
 import { notifyFailure } from "@/lib/notify";
-import { checkForApk } from "@/lib/use-apk-update";
+import { checkForApk, useApkDownloadProgress } from "@/lib/use-apk-update";
 import type { ApkCheck } from "@/lib/use-apk-update";
 import { THEME_OPTIONS } from "@/theme/theme-preference";
 import { useIsDark } from "@/theme/use-is-dark";
@@ -327,15 +327,18 @@ function UpdateCheckRow() {
     const db = useDatabase();
     const t = useTranslation();
     const [state, setState] = useState<ApkCheck | "checking" | null>(null);
-    const value =
+    const progress = useApkDownloadProgress();
+    const idleValue =
         state === null
             ? t("update.check.version", { build: APP_BUILD })
             : t(state === "checking" ? "update.check.checking" : CHECK_LABELS[state]);
+    const value =
+        progress === null ? idleValue : t("update.check.progress", { percent: String(Math.round(progress * 100)) });
     return (
         <LinkRow
             icon="SmartPhone01"
             onPress={async () => {
-                if (state === "checking") {
+                if (state === "checking" || progress !== null) {
                     return;
                 }
                 setState("checking");
