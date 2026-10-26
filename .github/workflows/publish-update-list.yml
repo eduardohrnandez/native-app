@@ -1,0 +1,36 @@
+name: Publish update list
+
+# Hands Convex the release list itself, so the app's update check never depends on Convex reaching GitHub.
+on:
+    workflow_dispatch:
+    workflow_run:
+        workflows: ["Android APK"]
+        types: [completed]
+
+permissions:
+    contents: read
+
+jobs:
+    publish:
+        if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Send the release list to Convex
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+              run: |
+                  releases=$(gh api "repos/${{ github.repository }}/releases?per_page=30" \
+                    --jq '[.[] | {tag_name, draft, html_url, assets: [.assets[] | {name, browser_download_url}]}]')
+                  payload=$(jq -nc --arg body "$releases" --argjson at "$(date +%s%3N)" \
+                    '{args: {body: $body, fetchedAt: $at}, format: "json"}')
+                  response=$(curl -sS -X POST "https://confident-dotterel-266.convex.cloud/api/run/appUpdates/storeReleases" \
+                    -H "Content-Type: application/json" \
+                    -H "Authorization: Convex $CONVEX_DEPLOY_KEY" \
+                    -d "$payload")
+                  status=$(echo "$response" | jq -r '.status // "error"')
+                  if [ "$status" != "success" ]; then
+                    echo "::error title=Convex refused the list::$(echo "$response" | head -c 400)"
+                    exit 1
+                  fi
+                  echo "::notice title=Update list sent::$(echo "$releases" | jq -r 'map(select(.draft==false) | .tag_name) | join(", ")')"
