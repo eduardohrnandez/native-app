@@ -13,8 +13,9 @@ import {
     prepareAccountAdoption,
 } from "@/data/ledger-adoption";
 import { useLiveValue } from "@/data/live-query";
+import { reopenOnboarding } from "@/data/onboarding-core";
 import { appMeta } from "@/db/schema";
-import { adoptionActions, adoptionPlan, choiceActions } from "@/domain/ledger-adoption";
+import { adoptionActions, adoptionPlan, choiceActions, reopensOnboarding } from "@/domain/ledger-adoption";
 import type { AdoptionChoice } from "@/domain/ledger-adoption";
 import { useProLocked, useProPending } from "@/hooks/use-pro-locked";
 import { adoptionEngine } from "@/lib/adoption-engine";
@@ -124,6 +125,9 @@ export function LedgerAdoptionProvider({ children }: { children: ReactNode }) {
                 const actions = adoptionActions(plan);
                 if (actions) {
                     await completeAdoption(db, engine, actions, account);
+                    if (reopensOnboarding(foreign, remote)) {
+                        await reopenOnboarding(db);
+                    }
                 }
                 return "settled";
             } catch (error: unknown) {

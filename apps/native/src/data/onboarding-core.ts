@@ -8,9 +8,14 @@ export function isOnboardingSettled(completed: string | null): boolean {
     return completed === "true";
 }
 
-// The sole writer of `onboardingComplete`: the rhythm step, or the currency step's "I already have an account".
+// Writes `onboardingComplete` as "true": the rhythm step, or the currency step's "I already have an account".
 export async function finishOnboarding(db: Database): Promise<void> {
     await setMeta(db, META_KEYS.onboardingComplete, "true");
+}
+
+// "false", not a deleted row: `isOnboardingSettled` only accepts "true", so the next route check opens the welcome.
+export async function reopenOnboarding(db: Database): Promise<void> {
+    await setMeta(db, META_KEYS.onboardingComplete, "false");
 }
 
 export function isReminderChosen(chosen: string | null): boolean {

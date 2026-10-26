@@ -31,6 +31,12 @@ export function adoptionPlan(local: LocalLedger, remote: RemoteLedger, foreign =
     return remote === "empty" ? "adopt" : "ask";
 }
 
+// A brand-new account on a phone that finished the flow for someone else gets the welcome again; an account that
+// already has data goes straight in. A fresh install never reaches here with `foreign`, so it is not asked twice.
+export function reopensOnboarding(foreign: boolean, remote: RemoteLedger): boolean {
+    return foreign && remote === "empty";
+}
+
 export function adoptionActions(plan: AdoptionPlan): AdoptionActions | null {
     switch (plan) {
         case "fresh": {

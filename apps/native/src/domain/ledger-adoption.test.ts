@@ -1,6 +1,12 @@
 import { describe, expect, it } from "@jest/globals";
 
-import { adoptionActions, adoptionPlan, choiceActions, isDestructiveChoice } from "./ledger-adoption";
+import {
+    adoptionActions,
+    adoptionPlan,
+    choiceActions,
+    isDestructiveChoice,
+    reopensOnboarding,
+} from "./ledger-adoption";
 
 describe("adoption plan", () => {
     it("has nothing to reconcile when neither side holds a ledger", () => {
@@ -84,5 +90,16 @@ describe("adoption choice", () => {
             wipeAccount: false,
             wipeLocal: true,
         });
+    });
+});
+
+describe("reopening the welcome", () => {
+    it("shows it to a new account on a phone another account used, not to one with data", () => {
+        expect(reopensOnboarding(true, "empty")).toBe(true);
+        expect(reopensOnboarding(true, "populated")).toBe(false);
+    });
+
+    it("never asks a first sign-in on this phone to repeat the flow it just finished", () => {
+        expect(reopensOnboarding(false, "empty")).toBe(false);
     });
 });
