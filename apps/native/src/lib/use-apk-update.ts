@@ -1,7 +1,8 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { Alert, Platform } from "react-native";
 
-import { newerApk } from "@/data/apk-update";
+import { newerApks } from "@/data/apk-update";
+import type { GithubPayload } from "@/data/apk-update";
 import type { Database } from "@/db/client";
 import { translateNow } from "@/i18n/runtime";
 import { installApk } from "@/lib/apk-install";
@@ -14,6 +15,8 @@ import { notifyWarning } from "@/lib/notify";
 // Without a backend the app asks GitHub directly, where the list is not strictly newest first: it takes the whole page.
 const RELEASES_URL = "https://api.github.com/repos/eduardohrnandez/native-pp/releases?per_page=30";
 const TIMEOUT_MS = 15_000;
+const NOT_FOUND = 404;
+const PROBE_LIMIT = 3;
 
 // One download at a time, shared by the alert and the Settings row so both show the same progress.
 let downloadProgress: number | null = null;
@@ -51,7 +54,7 @@ export function startApkInstall(url: string): void {
 
 export type ApkCheck = "available" | "current" | "failed" | "skipped";
 
-async function fetchReleases(): Promise<unknown> {
+async function fetchReleases(): Promise<GithubPayload> {
     if (convex !== null) {
         const raw = await cloudAction<Record<string, never>, string>("appUpdates:latest", {});
         return JSON.parse(raw);
@@ -74,18 +77,39 @@ export async function checkForApk(): Promise<ApkCheck> {
     if (Number.isNaN(installed)) {
         return "skipped";
     }
-    let body: unknown;
+    let body: GithubPayload;
     try {
         body = await fetchReleases();
     } catch {
         return "failed";
     }
-    const update = newerApk(body, installed);
-    if (update === null) {
+    const candidates = newerApks(body, installed);
+    if (candidates.length === 0) {
         return "current";
     }
-    offerInstall(update.downloadUrl);
+    const reachable = await firstReachable(candidates.map((candidate) => candidate.downloadUrl));
+    if (reachable === null) {
+        return "current";
+    }
+    offerInstall(reachable);
     return "available";
+}
+
+// The release list can name a build that was deleted since it was cached, so a dead link falls to the next one.
+// A network failure counts as reachable: the download itself reports it, and a flaky probe must not hide an update.
+async function isReachable(url: string): Promise<boolean> {
+    try {
+        const response = await fetchWithTimeout(url, { method: "HEAD" }, TIMEOUT_MS);
+        return response.status !== NOT_FOUND;
+    } catch {
+        return true;
+    }
+}
+
+async function firstReachable(urls: readonly string[]): Promise<string | null> {
+    const probed = urls.slice(0, PROBE_LIMIT);
+    const alive = await Promise.all(probed.map(isReachable));
+    return probed.find((_, index) => alive[index]) ?? null;
 }
 
 // "Después" dismisses for this launch only: nothing is stored, so the next launch offers again.

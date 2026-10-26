@@ -30,13 +30,13 @@ export interface ApkRelease {
     downloadUrl: string;
 }
 
-/** The newest published APK strictly newer than the installed build, or null when this one is current. */
-export function newerApk(payload: unknown, installedBuild: number): ApkRelease | null {
+/** Every published APK strictly newer than the installed build, newest first, so a dead link can fall to the next. */
+export function newerApks(payload: GithubPayload, installedBuild: number): ApkRelease[] {
     const parsed = releaseList.safeParse(payload);
     if (!parsed.success) {
-        return null;
+        return [];
     }
-    let newest: ApkRelease | null = null;
+    const candidates: ApkRelease[] = [];
     for (const release of parsed.data) {
         const match = release === null || release.draft ? null : TAG_PATTERN.exec(release.tag_name);
         const apk = release?.assets.find((asset) => asset.name.endsWith(APK_SUFFIX));
@@ -44,9 +44,9 @@ export function newerApk(payload: unknown, installedBuild: number): ApkRelease |
             continue;
         }
         const build = Number.parseInt(match[1] ?? "", 10);
-        if (build > installedBuild && (newest === null || build > newest.build)) {
-            newest = { build, downloadUrl: apk.browser_download_url };
+        if (build > installedBuild) {
+            candidates.push({ build, downloadUrl: apk.browser_download_url });
         }
     }
-    return newest;
+    return candidates.toSorted((a, b) => b.build - a.build);
 }

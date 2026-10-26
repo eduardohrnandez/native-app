@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
 
-import { newerApk } from "./apk-update";
+import { newerApks } from "./apk-update";
 
 function release(tag: string, options: { apk?: boolean; draft?: boolean } = {}) {
     return {
@@ -19,15 +19,15 @@ function release(tag: string, options: { apk?: boolean; draft?: boolean } = {}) 
     };
 }
 
-describe("newerApk", () => {
-    it("offers the highest build above the installed one, whatever the list order", () => {
-        const result = newerApk([release("apk-7"), release("apk-9"), release("apk-8")], 7);
-        expect(result?.build).toBe(9);
-        expect(result?.downloadUrl).toContain("apk-9");
+describe("newerApks", () => {
+    it("lists builds above the installed one newest first, whatever the list order", () => {
+        const result = newerApks([release("apk-7"), release("apk-9"), release("apk-8")], 7);
+        expect(result.map((apk) => apk.build)).toStrictEqual([9, 8]);
+        expect(result[0]?.downloadUrl).toContain("apk-9");
     });
 
     it("offers nothing when the installed build is already the newest", () => {
-        expect(newerApk([release("apk-7"), release("apk-6")], 7)).toBeNull();
+        expect(newerApks([release("apk-7"), release("apk-6")], 7)).toStrictEqual([]);
     });
 
     it("skips drafts, releases without an APK and tags it did not publish", () => {
@@ -37,10 +37,10 @@ describe("newerApk", () => {
             release("v12"),
             release("apk-8"),
         ];
-        expect(newerApk(payload, 7)?.build).toBe(8);
+        expect(newerApks(payload, 7).map((apk) => apk.build)).toStrictEqual([8]);
     });
 
     it("answers nothing for an API error body", () => {
-        expect(newerApk({ message: "API rate limit exceeded" }, 1)).toBeNull();
+        expect(newerApks({ message: "API rate limit exceeded" }, 1)).toStrictEqual([]);
     });
 });
