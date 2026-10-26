@@ -15,6 +15,10 @@ jobs:
         env:
             # A publishable key, made to ship inside apps; logo.dev's free plan asks for the credit in Settings › About.
             EXPO_PUBLIC_LOGO_DEV_TOKEN: pk_ds1RNpJiTl6tzoNqlO7qRg
+            # Public by design: the app has to know where its backend and Google sign-in live.
+            EXPO_PUBLIC_CONVEX_URL: https://confident-dotterel-266.convex.cloud
+            EXPO_PUBLIC_CONVEX_SITE_URL: https://confident-dotterel-266.convex.site
+            EXPO_PUBLIC_GOOGLE_CLIENT_ID_WEB: 800510956127-tpr3mkgu50n9ri1l39rmtpkd6mre3p6s.apps.googleusercontent.com
         steps:
             # The runner died twice mid-build. Free the preinstalled toolchains this build never uses and put swap on
             # the larger /mnt disk, so neither memory nor the root disk runs out.

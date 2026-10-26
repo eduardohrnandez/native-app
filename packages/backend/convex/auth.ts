@@ -31,7 +31,7 @@ function resolveSiteUrl() {
 }
 
 function resolveNativeAppUrl() {
-    return process.env.NATIVE_APP_URL || "outlayr://";
+    return process.env.NATIVE_APP_URL || "finta://";
 }
 
 const LONGEST_COOKIE_MAX_AGE_SECONDS = 400 * 24 * 60 * 60;

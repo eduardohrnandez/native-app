@@ -1,0 +1,32 @@
+name: Convex deploy
+
+# Publishes the backend to the Convex deployment the APK talks to. Run it after changing packages/backend.
+on:
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    deploy:
+        runs-on: ubuntu-24.04
+        timeout-minutes: 20
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+
+            - name: Install pnpm
+              run: npm install -g pnpm@11.20.0
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            # The deploy key lives in the repo's Actions secrets, never in the code.
+            - name: Deploy the backend
+              working-directory: packages/backend
+              env:
+                  CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+              run: pnpm exec convex deploy
