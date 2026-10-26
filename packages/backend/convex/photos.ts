@@ -7,7 +7,6 @@ import { action, internalMutation, internalQuery, mutation } from "./_generated/
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { requireUserId } from "./lib/auth";
 import { isPhotoName, ownsPhotoKey, photoKeyFor, photoOwnerFromKey } from "./lib/photoKeys";
-import { requirePro } from "./revenuecat";
 
 // Photo bytes travel outside sync.ts, to R2 when all four R2_* vars are set and Convex storage otherwise. The key
 // is the same either way, so a row resolves through whichever backend stored it and turning R2 on later is safe.
@@ -73,7 +72,6 @@ export const requestUpload = mutation({
     args: { name: v.string() },
     handler: async (ctx, args) => {
         const userId = await requireUserId(ctx);
-        await requirePro(ctx, userId);
         if (!isPhotoName(args.name)) {
             throw new ConvexError(`Not a photo file name: ${args.name}`);
         }

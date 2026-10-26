@@ -27,7 +27,6 @@ import {
     transferFields,
 } from "./lib/syncTables";
 import type { SyncedTable, WireFields, WireValue } from "./lib/syncTables";
-import { requirePro } from "./revenuecat";
 
 // Convex reads at most 4,096 index ranges per transaction and push does one lookup per row, so 500 is an 8x margin.
 export const PUSH_BATCH_LIMIT = 500;
@@ -417,7 +416,6 @@ export const push = mutation({
     },
     handler: async (ctx, args) => {
         const userId = await requireUserId(ctx);
-        await requirePro(ctx, userId);
         await refuseWhileDeleting(ctx, userId);
 
         if (args.rows.length > PUSH_BATCH_LIMIT) {
@@ -523,7 +521,6 @@ export const pullSince = query({
     },
     handler: async (ctx, args) => {
         const userId = await requireUserId(ctx);
-        await requirePro(ctx, userId);
         const limit = Math.min(Math.max(Math.trunc(args.limit ?? PULL_PAGE_LIMIT), 1), PULL_PAGE_LIMIT);
 
         const tables: readonly SyncedTable[] = args.tables ?? SYNCED_TABLES;

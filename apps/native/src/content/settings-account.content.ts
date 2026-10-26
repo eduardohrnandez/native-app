@@ -188,8 +188,8 @@ const settingsAccount = {
             es: "En pausa",
         }),
         "settings.sync.pausedDetail": t({
-            en: "Syncing needs Finta Pro. Your ledger is complete on this phone and keeps working; changes wait here until Pro is active again.",
-            es: "Sincronizar requiere Finta Pro. Tu registro está completo en este celular y sigue funcionando; los cambios esperan aquí hasta que Pro esté activo otra vez.",
+            en: "Sync is paused. Your ledger is complete on this phone and keeps working; changes wait here until sync resumes.",
+            es: "La sincronización está en pausa. Tu registro está completo en este celular y sigue funcionando; los cambios esperan aquí hasta que se reanude la sincronización.",
         }),
         "settings.sync.pending": t({
             en: "{count} waiting to sync",
