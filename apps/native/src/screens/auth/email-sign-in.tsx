@@ -115,6 +115,16 @@ function SignInStep({ client, email: givenEmail, route }: Flow) {
             action={{ disabled: busy || !email || !password, label: t("auth.email.signIn.action"), onPress: submit }}
             error={error}
             eyebrow={t("auth.email.email")}
+            footnote={
+                // Below the button, not in the field stack: with the keyboard up the stack shrinks into the button.
+                <Text
+                    accessibilityRole="link"
+                    className="font-sans-medium text-fr-ink"
+                    onPress={() => goTo(route, "forgot", email)}
+                >
+                    {t("auth.email.forgot")}
+                </Text>
+            }
             skip={{ label: t("auth.email.create"), onPress: () => goTo(route, "create", email) }}
             title={t("auth.email.signIn.title")}
         >
@@ -130,9 +140,6 @@ function SignInStep({ client, email: givenEmail, route }: Flow) {
                     textContentType="password"
                     value={password}
                 />
-                <Pressable accessibilityRole="button" className="self-end" onPress={() => goTo(route, "forgot", email)}>
-                    <Text className="font-sans-medium text-caption text-fr-ink">{t("auth.email.forgot")}</Text>
-                </Pressable>
             </Fields>
         </FirstRun>
     );
