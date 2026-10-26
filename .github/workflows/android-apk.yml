@@ -79,42 +79,6 @@ jobs:
                   reactNativeArchitectures=arm64-v8a
                   PROPS
 
-            # A permanent key keeps every release on one signing certificate, so updates install over the last
-            # build and Google sign-in keeps one SHA-1. Without the secret the build stays on the debug key.
-            - name: Sign the release with the Finta key
-              working-directory: apps/native/android
-              env:
-                  ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-                  ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-                  ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-                  ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-              run: |
-                  if [ -z "$ANDROID_KEYSTORE_BASE64" ]; then
-                    echo "No release key secret; building with the debug key."
-                    exit 0
-                  fi
-                  echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > app/finta-release.jks
-                  cat >> app/build.gradle <<'GRADLE'
-
-                  // Appended, not spliced in: the generated file's layout is not ours to match. It must run while the
-                  // project evaluates; afterEvaluate is too late to add a signing config.
-                  android {
-                      signingConfigs {
-                          finta {
-                              storeFile file("finta-release.jks")
-                              storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
-                              keyAlias System.getenv("ANDROID_KEY_ALIAS")
-                              keyPassword System.getenv("ANDROID_KEY_PASSWORD")
-                          }
-                      }
-                      buildTypes {
-                          release {
-                              signingConfig signingConfigs.finta
-                          }
-                      }
-                  }
-                  GRADLE
-
             # The native modules' C++ is most of the build and rarely changes between releases.
             - name: Cache compiled C++
               uses: hendrikmuhs/ccache-action@v1.2
@@ -127,9 +91,6 @@ jobs:
               env:
                   CMAKE_C_COMPILER_LAUNCHER: ccache
                   CMAKE_CXX_COMPILER_LAUNCHER: ccache
-                  ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-                  ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-                  ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
               run: |
                   set -o pipefail
                   (while true; do sleep 120; echo "--- $(date -u +%T)"; df -h / | tail -1; free -m | head -2 | tail -1; done) &
