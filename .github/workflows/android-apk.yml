@@ -94,13 +94,19 @@ jobs:
                     exit 0
                   fi
                   echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > app/finta-release.jks
-                  export ANDROID_KEYSTORE_PATH="$PWD/app/finta-release.jks"
-                  perl -0pi -e 's/(signingConfigs \{\n)/$1        finta {\n            storeFile file(System.getenv("ANDROID_KEYSTORE_PATH"))\n            storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")\n            keyAlias System.getenv("ANDROID_KEY_ALIAS")\n            keyPassword System.getenv("ANDROID_KEY_PASSWORD")\n        }\n/' app/build.gradle
-                  perl -0pi -e 's/(release \{(?:(?!\n        \}).)*?)signingConfig signingConfigs\.debug/$1signingConfig signingConfigs.finta/s' app/build.gradle
-                  if ! grep -q "signingConfigs.finta" app/build.gradle; then
-                    echo "::error title=Release signing not wired::build.gradle has no release config pointing at the Finta key"
-                    exit 1
-                  fi
+                  cat >> app/build.gradle <<'GRADLE'
+
+                  // Appended, not spliced in: the generated file's layout is not ours to match.
+                  afterEvaluate {
+                      android.signingConfigs.create("finta") {
+                          storeFile file("finta-release.jks")
+                          storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                          keyAlias System.getenv("ANDROID_KEY_ALIAS")
+                          keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+                      }
+                      android.buildTypes.getByName("release").signingConfig = android.signingConfigs.getByName("finta")
+                  }
+                  GRADLE
 
             # The native modules' C++ is most of the build and rarely changes between releases.
             - name: Cache compiled C++
@@ -114,6 +120,9 @@ jobs:
               env:
                   CMAKE_C_COMPILER_LAUNCHER: ccache
                   CMAKE_CXX_COMPILER_LAUNCHER: ccache
+                  ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+                  ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+                  ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
               run: |
                   set -o pipefail
                   (while true; do sleep 120; echo "--- $(date -u +%T)"; df -h / | tail -1; free -m | head -2 | tail -1; done) &
