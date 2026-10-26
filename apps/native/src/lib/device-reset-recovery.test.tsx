@@ -10,6 +10,9 @@ import { DeviceResetRecovery } from "./device-reset-recovery";
 const mockRecover = jest.fn<typeof import("@/lib/device-data-reset").recoverDeviceReset>();
 const mockResumePersistedCloudDeletion = jest.fn<typeof import("@/lib/deletion-resume").resumePersistedCloudDeletion>();
 let mockCompleteCloudDeletion: (() => Promise<void>) | undefined;
+let mockMarker: { phase: "cloud" | "device"; v: 1 } | null = null;
+let mockSecret: string | null = null;
+const mockClearMarker = jest.fn(async () => undefined);
 let mockCloseDatabase: (() => Promise<void>) | undefined;
 const mockDatabase = mockUnusedDatabase();
 const mockRetry = jest.fn();
@@ -17,11 +20,15 @@ jest.mock("@/contexts/local-data-context", () => ({
     useLocalData: () => mockTestLocalData({ db: mockDatabase, retry: mockRetry }),
 }));
 jest.mock("@/db/client", () => ({ closeDatabase: jest.fn() }));
+jest.mock("expo-secure-store", () => ({ getItemAsync: async () => mockSecret }));
 jest.mock("./deletion-resume", () => ({
+    deletionResumeSecretKey: "resume-secret-key",
     resumePersistedCloudDeletion: (...args: Parameters<typeof mockResumePersistedCloudDeletion>) =>
         mockResumePersistedCloudDeletion(...args),
 }));
 jest.mock("./device-data-reset", () => ({
+    clearDeviceResetMarker: () => mockClearMarker(),
+    readDeviceResetMarker: async () => mockMarker,
     createDeviceResetGate: ({
         closeDatabase,
         completeCloudDeletion,
@@ -42,6 +49,9 @@ describe("deviceResetRecovery", () => {
         mockRetry.mockReset();
         mockCompleteCloudDeletion = undefined;
         mockCloseDatabase = undefined;
+        mockMarker = null;
+        mockSecret = null;
+        mockClearMarker.mockClear();
     });
 
     it("invokes persisted-marker recovery before rendering the root child", async () => {
@@ -134,7 +144,21 @@ describe("deviceResetRecovery", () => {
         expect(mockRetry).not.toHaveBeenCalled();
     });
 
+    it("opens the app when a cloud marker was left behind by a deletion the server never began", async () => {
+        mockMarker = { phase: "cloud", v: 1 };
+        const { getByText } = await render(
+            <DeviceResetRecovery>
+                <Text>ledger</Text>
+            </DeviceResetRecovery>
+        );
+        await waitFor(() => expect(getByText("ledger")).toBeTruthy());
+        expect(mockClearMarker).toHaveBeenCalledTimes(1);
+        expect(mockRecover).not.toHaveBeenCalled();
+    });
+
     it("keeps the root opaque when the cloud marker has no usable resume material", async () => {
+        mockMarker = { phase: "cloud", v: 1 };
+        mockSecret = "stored";
         mockResumePersistedCloudDeletion.mockRejectedValue(
             new Error("Cloud deletion recovery requires reauthentication")
         );

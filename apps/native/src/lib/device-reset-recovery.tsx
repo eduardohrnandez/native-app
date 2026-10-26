@@ -1,3 +1,4 @@
+import { getItemAsync } from "expo-secure-store";
 import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { Pressable, Text, View } from "react-native";
@@ -7,8 +8,8 @@ import { closeDatabase } from "@/db/client";
 import type { Database } from "@/db/client";
 import { useTranslation } from "@/i18n/context";
 
-import { resumePersistedCloudDeletion } from "./deletion-resume";
-import { createDeviceResetGate } from "./device-data-reset";
+import { deletionResumeSecretKey, resumePersistedCloudDeletion } from "./deletion-resume";
+import { clearDeviceResetMarker, createDeviceResetGate, readDeviceResetMarker } from "./device-data-reset";
 
 async function recoverDevice(db: Database | null, retry: () => void): Promise<Error | null> {
     try {
@@ -16,6 +17,13 @@ async function recoverDevice(db: Database | null, retry: () => void): Promise<Er
             throw new Error("Local database is unavailable for device reset");
         }
         const database = db;
+        // The marker is written before the server is asked, and the resume secret right after it says yes. A marker
+        // with no secret is a deletion the server never began, which no retry can finish.
+        const marker = await readDeviceResetMarker();
+        if (marker?.phase === "cloud" && (await getItemAsync(deletionResumeSecretKey)) === null) {
+            await clearDeviceResetMarker();
+            return null;
+        }
         // Set only when the sweep reached the sqlite store: reopening after an ordinary launch publishes
         // `status: "opening"`, which un-gates this in `_layout`, remounts it and loops forever.
         let closed = false;

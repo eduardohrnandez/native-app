@@ -23,7 +23,7 @@ import { useAuthSession } from "@/lib/auth-session";
 import { cloudAction, cloudMutation, convex } from "@/lib/convex";
 import { deletionResumeSecretKey, resumePersistedCloudDeletion, resumeProviderRevocation } from "@/lib/deletion-resume";
 import type { StoredDeletionPreparation } from "@/lib/deletion-resume";
-import { createDeviceResetGate, writeDeviceResetMarker } from "@/lib/device-data-reset";
+import { clearDeviceResetMarker, createDeviceResetGate, writeDeviceResetMarker } from "@/lib/device-data-reset";
 import { flushToCloud } from "@/lib/flush-to-cloud";
 import { posthog } from "@/lib/posthog";
 import { providerBindingFor } from "@/lib/provider-revocation";
@@ -145,6 +145,7 @@ function AccountContent({ client, db }: { client: AuthClient; db: Database }) {
             allowLocal: openLedger,
             beginDeviceReset:
                 action === "deleteAll" ? async () => await writeDeviceResetMarker({ phase: "cloud", v: 1 }) : undefined,
+            cancelDeviceReset: action === "deleteAll" ? clearDeviceResetMarker : undefined,
             clearDeletionSecret: async () => await deleteItemAsync(deletionResumeSecretKey),
             deleteAccount: async () => undefined,
             eraseBilling: async (resumeSecret) => {
@@ -183,10 +184,12 @@ function AccountContent({ client, db }: { client: AuthClient; db: Database }) {
             },
         })
             .catch((cause: unknown) => {
-                const message = signInFailureMessage(cause, t);
+                const trail = failureTrail(cause);
+                const expired = trail.includes("Unauthenticated");
+                const message = expired ? t("settings.account.deleteNeedsSignIn") : signInFailureMessage(cause, t);
                 setError(message);
                 // The inline error sits below the fold on a small screen, so the failure also surfaces as an alert.
-                Alert.alert(message, failureTrail(cause));
+                Alert.alert(message, expired ? undefined : trail);
             })
             .finally(() => setBusy(null));
     };

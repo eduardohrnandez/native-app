@@ -67,6 +67,10 @@ const settingsAccount = {
             en: "Sign-in didn't complete. Your ledger on this device is untouched.",
             es: "El inicio de sesi\u00F3n no se complet\u00F3. Tu registro en este dispositivo est\u00E1 intacto.",
         }),
+        "settings.account.deleteNeedsSignIn": t({
+            en: "Your session expired. Sign out, sign in again and retry.",
+            es: "Tu sesión venció. Cierra sesión, vuelve a entrar e inténtalo de nuevo.",
+        }),
         "settings.account.notSignedIn": t({
             en: "Not signed in",
             es: "No has iniciado sesión",

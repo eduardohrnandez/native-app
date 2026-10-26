@@ -158,3 +158,35 @@ test("does not clean the device before cloud deletion completes", async () => {
         "onboarding",
     ]);
 });
+
+test("drops the device reset marker when the server refuses to start the deletion", async () => {
+    const calls: string[] = [];
+    await expect(
+        runAccountLifecycle("deleteAll", {
+            advanceDeletion: async () => ({ phase: "complete" }),
+            allowLocal: () => calls.push("allowLocal"),
+            beginDeviceReset: async () => {
+                calls.push("marker-cloud");
+            },
+            cancelDeviceReset: async () => {
+                calls.push("cancel-marker");
+            },
+            clearDeletionSecret: async () => undefined,
+            deleteAccount: async () => undefined,
+            eraseBilling: async () => ({ phase: "billingErased" }),
+            navigateToLedger: () => calls.push("ledger"),
+            persistDeletionSecret: async () => {
+                calls.push("persist-secret");
+            },
+            prepareDeletion: async () => {
+                throw new Error("Unauthenticated");
+            },
+            quiesce: async () => {
+                calls.push("quiesce");
+            },
+            revokeProvider: async () => undefined,
+        })
+    ).rejects.toMatchObject({ stage: "revokeProvider" });
+
+    expect(calls).toStrictEqual(["allowLocal", "quiesce", "marker-cloud", "cancel-marker"]);
+});

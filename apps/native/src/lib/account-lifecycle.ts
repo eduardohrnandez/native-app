@@ -16,6 +16,8 @@ export interface AccountLifecycleDependencies {
     advanceDeletion?: (resumeSecret: string) => Promise<{ phase: DeletionPhase }>;
     allowLocal: () => void;
     beginDeviceReset?: () => Promise<void>;
+    // Undoes `beginDeviceReset` when the server refused to start the deletion, so no marker outlives a no-op.
+    cancelDeviceReset?: () => Promise<void>;
     clearDeletionSecret?: () => Promise<void>;
     deleteAccount: () => Promise<void>;
     eraseBilling?: (resumeSecret: string) => Promise<{ phase: DeletionPhase }>;
@@ -86,7 +88,13 @@ async function completeCloudDeletion(deps: AccountLifecycleDependencies, clearSe
         prepareDeletion,
         revokeProvider,
     } = deps;
-    const preparation = await prepareDeletion();
+    let preparation: DeletionPreparation;
+    try {
+        preparation = await prepareDeletion();
+    } catch (cause) {
+        await deps.cancelDeviceReset?.();
+        throw cause;
+    }
     await persistDeletionSecret(preparation);
     await resumeCloudDeletion("prepared", preparation, { advanceDeletion, eraseBilling, revokeProvider });
     if (clearSecret) {
