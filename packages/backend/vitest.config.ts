@@ -11,6 +11,7 @@ export default defineConfig({
             NATIVE_APP_URL: "outlayr://",
             POSTHOG_PERSONAL_API_KEY: "test-posthog-personal-api-key",
             POSTHOG_PROJECT_ID: "12345",
+            PRO_GATES_OPEN: "false",
             REVENUECAT_SECRET_KEY: "test-revenuecat-secret-key",
             REVENUECAT_WEBHOOK_AUTH: "test-revenuecat-webhook-secret-0123456789",
             SITE_URL: "http://localhost:3000",

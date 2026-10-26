@@ -11,12 +11,12 @@ vi.mock(import("@outlayr/env/backend"), () => ({ env: {} }));
 
 const modules = import.meta.glob("./**/*.ts");
 
-test("refuses to start a deletion it could not finish without the upstream erase secrets", async () => {
+test("starts a deletion when no upstream service is configured, since it has nothing to erase", async () => {
     const t = convexTest(schema, modules);
     const owner = await seedAuthUser(t);
 
-    await expect(authenticatedAs(t, owner).mutation(api.accountDeletion.prepare, {})).rejects.toThrow(
-        "REVENUECAT_SECRET_KEY, POSTHOG_PERSONAL_API_KEY, POSTHOG_PROJECT_ID"
-    );
-    await expect(t.run((ctx) => ctx.db.query("accountDeletionJobs").collect())).resolves.toStrictEqual([]);
+    const prepared = await authenticatedAs(t, owner).mutation(api.accountDeletion.prepare, {});
+
+    expect(prepared.resumeSecret).toBeTruthy();
+    await expect(t.run((ctx) => ctx.db.query("accountDeletionJobs").collect())).resolves.toHaveLength(1);
 });

@@ -17,11 +17,9 @@ export const revenuecat = new RevenueCat(components.revenuecat, {
     REVENUECAT_WEBHOOK_AUTH: env.REVENUECAT_WEBHOOK_AUTH,
 });
 
-// Nothing is sold yet, so every signed-in user gets the Pro path. Set to false to start charging.
-export const PRO_GATES_OPEN = true;
-
+// Nothing is sold yet, so every signed-in user gets the Pro path. Set PRO_GATES_OPEN to "false" in Convex to charge.
 export async function isPro(ctx: Parameters<typeof revenuecat.hasEntitlement>[0], userId: string): Promise<boolean> {
-    if (PRO_GATES_OPEN) {
+    if (env.PRO_GATES_OPEN !== "false") {
         return true;
     }
     return revenuecat.hasEntitlement(ctx, { appUserId: userId, entitlementId: PRO_ENTITLEMENT_ID });

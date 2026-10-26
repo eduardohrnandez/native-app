@@ -443,13 +443,13 @@ describe("the convex storage fallback", () => {
     });
 });
 
-describe("the Pro gate", () => {
-    it("refuses an upload target to an account without Pro", async () => {
+describe("an account without Pro", () => {
+    it("gets an upload target, since photo backup is free", async () => {
         const t = harness();
         const free = await seedAuthUser(t);
 
-        await expect(
-            authenticatedAs(t, free).mutation(api.photos.requestUpload, { name: "receipt.jpg" })
-        ).rejects.toThrow("Pro");
+        const { key } = await authenticatedAs(t, free).mutation(api.photos.requestUpload, { name: PHOTO });
+
+        expect(key).toBe(photoKeyFor(free.userId, PHOTO));
     });
 });

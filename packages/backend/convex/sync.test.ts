@@ -936,39 +936,17 @@ describe("currentSeq", () => {
     });
 });
 
-describe("the Pro gate", () => {
-    it("refuses a push from an account without Pro, and writes nothing", async () => {
+describe("an account without Pro", () => {
+    it("pushes and pulls, since sync is free", async () => {
         const t = harness();
         const free = await seedAuthUser(t);
 
         await expect(
             authenticatedAs(t, free).mutation(api.sync.push, { deviceId: DEVICE_A, rows: [transactionRow("a", 1)] })
-        ).rejects.toThrow("Pro");
-
-        const rows = await t.run((ctx) => ctx.db.query("transactions").collect());
-        expect(rows).toStrictEqual([]);
-    });
-
-    it("refuses a pull from an account without Pro", async () => {
-        const t = harness();
-        const free = await seedAuthUser(t);
-
-        await expect(authenticatedAs(t, free).query(api.sync.pullSince, { cursor: 0 })).rejects.toThrow("Pro");
-    });
-
-    it("lets the same account through the moment the entitlement lands", async () => {
-        const t = harness();
-        const owner = await seedAuthUser(t);
-        await expect(
-            authenticatedAs(t, owner).mutation(api.sync.push, { deviceId: DEVICE_A, rows: [transactionRow("a", 1)] })
-        ).rejects.toThrow("Pro");
-
-        await grantPro(t, owner);
-
-        await expect(
-            authenticatedAs(t, owner).mutation(api.sync.push, { deviceId: DEVICE_A, rows: [transactionRow("a", 1)] })
         ).resolves.toMatchObject({ accepted: 1, skipped: 0 });
-        await expect(t.run((ctx) => ctx.db.query("transactions").collect())).resolves.toHaveLength(1);
+
+        const pulled = await authenticatedAs(t, free).query(api.sync.pullSince, { cursor: 0 });
+        expect(pulled.rows).toHaveLength(1);
     });
 });
 
