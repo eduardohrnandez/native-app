@@ -96,15 +96,22 @@ jobs:
                   echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > app/finta-release.jks
                   cat >> app/build.gradle <<'GRADLE'
 
-                  // Appended, not spliced in: the generated file's layout is not ours to match.
-                  afterEvaluate {
-                      android.signingConfigs.create("finta") {
-                          storeFile file("finta-release.jks")
-                          storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
-                          keyAlias System.getenv("ANDROID_KEY_ALIAS")
-                          keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+                  // Appended, not spliced in: the generated file's layout is not ours to match. It must run while the
+                  // project evaluates; afterEvaluate is too late to add a signing config.
+                  android {
+                      signingConfigs {
+                          finta {
+                              storeFile file("finta-release.jks")
+                              storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                              keyAlias System.getenv("ANDROID_KEY_ALIAS")
+                              keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+                          }
                       }
-                      android.buildTypes.getByName("release").signingConfig = android.signingConfigs.getByName("finta")
+                      buildTypes {
+                          release {
+                              signingConfig signingConfigs.finta
+                          }
+                      }
                   }
                   GRADLE
 
