@@ -104,8 +104,24 @@ const settingsAccount = {
             es: "Cerrar sesi\u00F3n",
         }),
         "settings.account.signOutFooter": t({
-            en: "Signing out ends the session on this phone. Every transaction, budget and category stays exactly where it is.",
-            es: "Cerrar sesión solo afecta a este celular. Tus transacciones, presupuestos y categorías se quedan tal como están.",
+            en: "Signing out removes this phone's copy of your data. It stays saved in your account and comes back when you sign in again.",
+            es: "Cerrar sesión borra la copia de tus datos en este celular. Siguen guardados en tu cuenta y vuelven al iniciar sesión otra vez.",
+        }),
+        "settings.account.signOutPendingTitle": t({
+            en: "Changes not synced yet",
+            es: "Cambios sin sincronizar",
+        }),
+        "settings.account.signOutPendingBody": t({
+            en: "{count} changes haven't reached your account yet. If you sign out now, they will be lost from this phone.",
+            es: "{count} cambios aún no llegan a tu cuenta. Si cierras sesión ahora, se perderán de este celular.",
+        }),
+        "settings.account.signOutWait": t({
+            en: "Wait for sync",
+            es: "Esperar sincronización",
+        }),
+        "settings.account.signOutNow": t({
+            en: "Sign out anyway",
+            es: "Cerrar sesión igual",
         }),
         "settings.account.signedInAs": t({
             en: "Signed in as",

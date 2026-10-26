@@ -29,6 +29,11 @@ export async function deferAccount(db: Database): Promise<void> {
     await setMeta(db, META_KEYS.accountDeferred, "true");
 }
 
+// Sign-out ends the local-only mode, so the next launch asks for a session again instead of opening an empty ledger.
+export async function clearAccountDeferred(db: Database): Promise<void> {
+    await setMeta(db, META_KEYS.accountDeferred, "false");
+}
+
 // `migrated` gates this to once per device: a device killed between `setCurrency` and `finishOnboarding` looks exactly
 // like a pre-flow ledger, and would otherwise be backfilled past a flow it was mid-way through.
 export function shouldSettleLegacyLedger(

@@ -70,7 +70,7 @@ async function localRows(db: Database, table: SyncedTable): Promise<Map<string, 
 // Only account-scoped `appMeta` keys are cleared: `syncDeviceId`, `syncCursor` and `onboardingComplete` never come
 // back from a pull. The cursor resets in the wipe's transaction, so a crash cannot leave an empty replica pointed at
 // the end of the log.
-export async function replaceLocalFromAccount(db: Database, pull: PullFn, now: Date = new Date()): Promise<void> {
+export async function clearLocalLedger(db: Database): Promise<void> {
     await withTransaction(db, async () => {
         /* oxlint-disable no-await-in-loop -- `withTransaction` holds one SQLite connection, so the wipe's statements have to be issued on it one at a time */
         for (const table of SYNCED_TABLES) {
@@ -86,6 +86,10 @@ export async function replaceLocalFromAccount(db: Database, pull: PullFn, now: D
         // The walk below reads the whole log under the merge that knows `restoredAt`.
         await db.delete(appMeta).where(eq(appMeta.key, META_KEYS.syncRestoresReread));
     });
+}
+
+export async function replaceLocalFromAccount(db: Database, pull: PullFn, now: Date = new Date()): Promise<void> {
+    await clearLocalLedger(db);
 
     let cursor = 0;
     /* oxlint-disable no-await-in-loop -- each page's cursor is the next request's argument, and a page must be applied before the one that may supersede it */

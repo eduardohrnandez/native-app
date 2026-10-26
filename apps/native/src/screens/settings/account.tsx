@@ -9,7 +9,10 @@ import { MonoLabel } from "@/components/mono-label";
 import { SettingsScreen } from "@/components/settings/settings-screen";
 import { Text } from "@/components/text";
 import { useDatabase, useLocalData } from "@/contexts/local-data-context";
+import { clearLocalLedger } from "@/data/adoption-engine-core";
+import { clearAccountDeferred } from "@/data/onboarding-core";
 import { setSyncEnabled } from "@/data/sync-outbox-core";
+import { useSyncStatus } from "@/data/use-sync-status";
 import { closeDatabase } from "@/db/client";
 import type { Database } from "@/db/client";
 import { accountLabel, signInFailureMessage } from "@/domain/account";
@@ -59,6 +62,7 @@ function AccountContent({ client, db }: { client: AuthClient; db: Database }) {
     const [busy, setBusy] = useState<"deleteAll" | "deleteCloud" | "signOut" | null>(null);
     const [error, setError] = useState<string | null>(null);
     const { busy: signingIn, error: signInError, start } = useProviderSignIn(client);
+    const { pending } = useSyncStatus(db);
 
     useEffect(() => {
         let mounted = true;
@@ -77,7 +81,7 @@ function AccountContent({ client, db }: { client: AuthClient; db: Database }) {
         };
     }, [t]);
 
-    const signOut = () => {
+    const finishSignOut = () => {
         setError(null);
         setBusy("signOut");
         runAccountLifecycle("signOut", {
@@ -89,10 +93,28 @@ function AccountContent({ client, db }: { client: AuthClient; db: Database }) {
             quiesce: () => setSyncEnabled(db, false),
             signOut: async () => {
                 await client.signOut();
+                await clearLocalLedger(db);
+                await clearAccountDeferred(db);
             },
         })
             .catch((cause: unknown) => setError(signInFailureMessage(cause, t)))
             .finally(() => setBusy(null));
+    };
+
+    // Unsynced rows exist only on this phone, so the user decides whether to wait for them or drop them.
+    const signOut = () => {
+        if (pending === 0) {
+            finishSignOut();
+            return;
+        }
+        Alert.alert(
+            t("settings.account.signOutPendingTitle"),
+            t("settings.account.signOutPendingBody", { count: pending }),
+            [
+                { style: "cancel", text: t("settings.account.signOutWait") },
+                { onPress: finishSignOut, style: "destructive", text: t("settings.account.signOutNow") },
+            ]
+        );
     };
 
     const deleteAccount = (action: "deleteAll" | "deleteCloud" = "deleteCloud") => {
