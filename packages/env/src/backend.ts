@@ -18,6 +18,7 @@ export const env = createEnv({
         EMAIL_FROM: z.string().optional(),
         GOOGLE_CLIENT_ID_IOS: z.string().optional(),
         GOOGLE_CLIENT_ID_WEB: z.string().optional(),
+        GITHUB_TOKEN: z.string().optional(),
         GOOGLE_CLIENT_SECRET: z.string().optional(),
         POSTHOG_PERSONAL_API_KEY: z.string().optional(),
         POSTHOG_PROJECT_ID: z.string().optional(),

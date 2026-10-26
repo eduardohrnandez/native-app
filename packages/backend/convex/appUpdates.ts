@@ -1,3 +1,4 @@
+import { env } from "@outlayr/env/backend";
 import { ConvexError, v } from "convex/values";
 
 import { internal } from "./_generated/api";
@@ -38,11 +39,14 @@ export const latest = action({
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
         try {
-            const response = await fetch(RELEASES_URL, {
-                headers: { Accept: "application/vnd.github+json", "User-Agent": "finta-app" },
-                signal: controller.signal,
-            });
+            const headers = new Headers({ Accept: "application/vnd.github+json", "User-Agent": "finta-app" });
+            // A token lifts the 60-an-hour limit that Convex's shared outbound addresses can exhaust.
+            if (env.GITHUB_TOKEN) {
+                headers.set("Authorization", `Bearer ${env.GITHUB_TOKEN}`);
+            }
+            const response = await fetch(RELEASES_URL, { headers, signal: controller.signal });
             if (!response.ok) {
+                console.warn(`[appUpdates] GitHub releases answered ${response.status}`);
                 // A stale copy beats a failed check for every phone that asks in the meantime.
                 if (cached !== null) {
                     return cached.body;
