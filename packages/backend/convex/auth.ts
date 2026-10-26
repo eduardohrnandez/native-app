@@ -70,8 +70,9 @@ const googleConfig = (() => {
     const clientIdIos = env.GOOGLE_CLIENT_ID_IOS;
     const clientSecret = env.GOOGLE_CLIENT_SECRET;
 
-    if (clientIdWeb && clientIdIos && clientSecret) {
-        return { clientId: [clientIdWeb, clientIdIos], clientSecret };
+    // The iOS client is optional: Android signs in with the web client's id, so the web id alone is enough.
+    if (clientIdWeb && clientSecret) {
+        return { clientId: clientIdIos ? [clientIdWeb, clientIdIos] : [clientIdWeb], clientSecret };
     }
 
     return null;
