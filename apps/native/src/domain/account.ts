@@ -55,6 +55,22 @@ export function signInFailureMessage(cause: unknown, t: TranslateFn): string {
     return t((code === null ? undefined : EMAIL_FAILURES.get(code)) ?? "settings.account.genericFailure");
 }
 
+const MAX_TRAIL_DEPTH = 5;
+
+/** Every message along a `cause` chain, outermost first, so a wrapped lifecycle error still names the real failure. */
+export function failureTrail(cause: unknown): string {
+    const messages: string[] = [];
+    let current: unknown = cause;
+    for (let depth = 0; depth < MAX_TRAIL_DEPTH && current != null; depth += 1) {
+        const message = signInFailureDetail(current);
+        if (message !== null && !messages.includes(message)) {
+            messages.push(message);
+        }
+        current = current instanceof Error ? current.cause : null;
+    }
+    return messages.join(" > ");
+}
+
 export function signInFailureDetail(cause: unknown): string | null {
     return firstNonBlank(errorField(cause, "message"), errorField(cause, "code"));
 }

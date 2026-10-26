@@ -55,7 +55,12 @@ export async function resumeProviderRevocation(preparation: StoredDeletionPrepar
         return;
     }
     if (preparation.provider === "google") {
-        await revokeGoogleProviderSubject(preparation.providerSubject);
+        // Revoking only removes Google's grant for this app; a phone that cannot do it must not strand the deletion.
+        try {
+            await revokeGoogleProviderSubject(preparation.providerSubject);
+        } catch (cause) {
+            console.warn("[finta] Google access revocation skipped", cause);
+        }
         await setItemAsync(
             deletionResumeSecretKey,
             JSON.stringify({ ...preparation, googleLocalReceipt: preparation.receiptChallenge })

@@ -58,6 +58,18 @@ describe("resumePersistedCloudDeletion", () => {
         expect(deleteItemAsync).not.toHaveBeenCalled();
     });
 
+    it("still deletes the account when Google refuses to revoke its access", async () => {
+        mockRevokeGoogleProviderSubject.mockImplementationOnce(() => {
+            throw new Error("No access token was returned");
+        });
+        await expect(resumePersistedCloudDeletion({ clearOnComplete: false, required: true })).resolves.toBe(true);
+
+        expect(cloudMocks().cloudMutation).toHaveBeenCalledWith("accountDeletion:submitGoogleLocalReceipt", {
+            receiptChallenge: "challenge",
+            resumeSecret: "secret",
+        });
+    });
+
     it("resumes a password account without revoking a provider", async () => {
         jest.mocked(getItemAsync).mockResolvedValue(
             JSON.stringify({

@@ -15,7 +15,7 @@ import { setSyncEnabled } from "@/data/sync-outbox-core";
 import { useSyncStatus } from "@/data/use-sync-status";
 import { closeDatabase } from "@/db/client";
 import type { Database } from "@/db/client";
-import { accountLabel, signInFailureMessage } from "@/domain/account";
+import { accountLabel, failureTrail, signInFailureMessage } from "@/domain/account";
 import { useTranslation } from "@/i18n/context";
 import { runAccountLifecycle } from "@/lib/account-lifecycle";
 import { authClient, useAuthClientSession } from "@/lib/auth-client";
@@ -180,7 +180,12 @@ function AccountContent({ client, db }: { client: AuthClient; db: Database }) {
                 await resumeProviderRevocation(preparation as StoredDeletionPreparation);
             },
         })
-            .catch((cause: unknown) => setError(signInFailureMessage(cause, t)))
+            .catch((cause: unknown) => {
+                const message = signInFailureMessage(cause, t);
+                setError(message);
+                // The inline error sits below the fold on a small screen, so the failure also surfaces as an alert.
+                Alert.alert(message, failureTrail(cause));
+            })
             .finally(() => setBusy(null));
     };
 
