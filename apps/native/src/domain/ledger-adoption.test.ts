@@ -22,6 +22,8 @@ describe("adoption plan", () => {
     it("defers while the account's ledger cannot be read", () => {
         expect(adoptionPlan("empty", "unknown")).toBe("defer");
         expect(adoptionPlan("populated", "unknown")).toBe("defer");
+        expect(adoptionPlan("populated", "empty", true)).toBe("replace");
+        expect(adoptionPlan("populated", "populated", true)).toBe("replace");
     });
 });
 

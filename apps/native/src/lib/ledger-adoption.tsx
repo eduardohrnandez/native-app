@@ -6,7 +6,12 @@ import { AppState } from "react-native";
 import { useDatabase } from "@/contexts/local-data-context";
 import { createSingleAdoptionRetry } from "@/data/adoption-retry";
 import { META_KEYS } from "@/data/app-meta-core";
-import { completeAdoption, localLedgerState, prepareAccountAdoption } from "@/data/ledger-adoption";
+import {
+    adoptedAccount as readAdoptedAccount,
+    completeAdoption,
+    localLedgerState,
+    prepareAccountAdoption,
+} from "@/data/ledger-adoption";
 import { useLiveValue } from "@/data/live-query";
 import { appMeta } from "@/db/schema";
 import { adoptionActions, adoptionPlan, choiceActions } from "@/domain/ledger-adoption";
@@ -106,7 +111,9 @@ export function LedgerAdoptionProvider({ children }: { children: ReactNode }) {
                 await prepareAccountAdoption(db, account);
                 const engine = adoptionEngine(db);
                 const remote = engine ? await engine.accountLedger() : "unknown";
-                const plan = adoptionPlan(await localLedgerState(db), remote);
+                const owner = await readAdoptedAccount(db);
+                const foreign = owner !== null && owner !== account;
+                const plan = adoptionPlan(await localLedgerState(db), remote, foreign);
                 if (plan === "ask") {
                     return "ask";
                 }

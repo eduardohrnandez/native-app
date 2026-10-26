@@ -16,9 +16,14 @@ export interface AdoptionActions {
 }
 
 // `docs/internals/convex-sync.md` §1: only both-populated asks, since merging double-counts and wiping destroys.
-export function adoptionPlan(local: LocalLedger, remote: RemoteLedger): AdoptionPlan {
+// `foreign` means this device's rows were adopted by a different account, so they belong to someone else and
+// must never be pushed into this one: the account's own ledger replaces them, even when it is empty.
+export function adoptionPlan(local: LocalLedger, remote: RemoteLedger, foreign = false): AdoptionPlan {
     if (remote === "unknown") {
         return "defer";
+    }
+    if (foreign) {
+        return "replace";
     }
     if (local === "empty") {
         return remote === "empty" ? "fresh" : "replace";
