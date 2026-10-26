@@ -101,6 +101,22 @@ function requireUnexpiredPreparedJob(job: DeletionJob) {
     }
 }
 
+export type SignInProvider = "apple" | "google" | "password";
+
+// The phone asks the server which revocation the job needs, so deletion never hinges on what the phone remembers.
+async function signInProviderFor(ctx: MutationCtx, userId: string): Promise<SignInProvider> {
+    const accounts = await ctx.runQuery(components.betterAuth.adapter.findMany, {
+        model: "account",
+        paginationOpts: { cursor: null, numItems: AUTH_DELETE_PAGE },
+        where: [{ field: "userId", operator: "eq", value: userId }],
+    });
+    const providers = new Set(accounts.page.map((account: { providerId: string }) => account.providerId));
+    if (providers.has("apple")) {
+        return "apple";
+    }
+    return providers.has("google") ? "google" : "password";
+}
+
 /** Capped so `sync.refuseWhileDeleting` reads jobs cheaply and no client can bury the job that refuses a push. */
 export const DELETION_JOBS_PER_USER = 20;
 
@@ -129,7 +145,7 @@ export const prepare = mutation({
             tokenIdentifier: identity?.tokenIdentifier,
             userId,
         });
-        return { receiptChallenge, resumeSecret };
+        return { provider: await signInProviderFor(ctx, userId), receiptChallenge, resumeSecret };
     },
 });
 
@@ -329,7 +345,7 @@ export const eraseBilling = action({
     handler: async (ctx, args): Promise<{ errorCode: string | null; phase: DeletionPhase }> => {
         const appUserId = await ctx.runQuery(internal.accountDeletion.billingTarget, args);
         if (appUserId !== null) {
-            // An upstream copy exists only where its service is configured, so a deployment without one has nothing to erase.
+            // An upstream copy exists only where its service is configured; without one there is nothing to erase.
             if (env.REVENUECAT_SECRET_KEY) {
                 await eraseUpstreamCustomer(appUserId);
             }

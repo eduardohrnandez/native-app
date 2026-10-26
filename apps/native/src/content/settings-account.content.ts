@@ -16,16 +16,16 @@ const settingsAccount = {
             es: "Eliminar",
         }),
         "settings.account.deleteConfirmBody": t({
-            en: "Your account and everything synced to it are removed for good. The ledger on this device is not touched.",
-            es: "Tu cuenta y todo lo sincronizado en ella se eliminan de forma definitiva. El registro de este dispositivo no se toca.",
+            en: "Your account and everything saved in it are deleted, in the cloud and on this phone, and you are signed out. This can't be undone.",
+            es: "Se eliminarán tu cuenta y toda la información guardada en ella, en la nube y en este teléfono, y se cerrará la sesión. No se puede deshacer.",
         }),
         "settings.account.deleteConfirmTitle": t({
-            en: "Delete this account?",
-            es: "¿Eliminar esta cuenta?",
+            en: "Delete your account?",
+            es: "¿Eliminar tu cuenta?",
         }),
         "settings.account.deleteFooter": t({
-            en: "Deletes your account and everything synced to it. The ledger on this device stays, and signing in again adopts it.",
-            es: "Elimina tu cuenta y todo lo sincronizado en ella. El registro de este dispositivo se conserva y, si vuelves a iniciar sesión, se suma a tu cuenta.",
+            en: "Deletes your account and all of its data, in the cloud and on this phone, then signs you out.",
+            es: "Elimina tu cuenta y toda su información, en la nube y en este teléfono, y cierra la sesión.",
         }),
         "settings.account.deleteSection": t({
             en: "Deleting your account",
@@ -35,30 +35,6 @@ const settingsAccount = {
             en: "Deleting…",
             es: "Eliminando…",
         }),
-        "settings.account.eraseDevice": t({
-            en: "Delete account and erase this device",
-            es: "Eliminar cuenta y borrar este dispositivo",
-        }),
-        "settings.account.eraseDeviceConfirm": t({
-            en: "Erase device",
-            es: "Borrar dispositivo",
-        }),
-        "settings.account.eraseDeviceConfirmBody": t({
-            en: "This permanently removes your account and all erasable Finta data on this device.",
-            es: "Esto elimina de forma permanente tu cuenta y todos los datos borrables de Finta en este dispositivo.",
-        }),
-        "settings.account.eraseDeviceConfirmTitle": t({
-            en: "Erase this device too?",
-            es: "¿Borrar también este dispositivo?",
-        }),
-        "settings.account.eraseDeviceFooter": t({
-            en: "Erases Finta data on this device after your cloud account is deleted. System permissions and widget placement remain controlled by the OS.",
-            es: "Borra los datos de Finta de este dispositivo después de eliminar tu cuenta en la nube. Los permisos del sistema y la ubicación de los widgets siguen bajo control del sistema operativo.",
-        }),
-        "settings.account.eraseDeviceSection": t({
-            en: "Erase this device",
-            es: "Borrar este dispositivo",
-        }),
         "settings.account.eyebrow": t({
             en: "Account",
             es: "Cuenta",
@@ -67,9 +43,13 @@ const settingsAccount = {
             en: "Sign-in didn't complete. Your ledger on this device is untouched.",
             es: "El inicio de sesi\u00F3n no se complet\u00F3. Tu registro en este dispositivo est\u00E1 intacto.",
         }),
-        "settings.account.deleteNeedsSignIn": t({
-            en: "Your session expired. Sign out, sign in again and retry.",
-            es: "Tu sesión venció. Cierra sesión, vuelve a entrar e inténtalo de nuevo.",
+        "settings.account.deletedExpiredBody": t({
+            en: "Your session had already expired, so this phone was erased and signed out. If the account still exists, sign in and delete it again.",
+            es: "Tu sesión ya había vencido, así que se borró este teléfono y se cerró la sesión. Si la cuenta sigue existiendo, entra de nuevo y elimínala.",
+        }),
+        "settings.account.deletedExpiredTitle": t({
+            en: "Signed out",
+            es: "Sesión cerrada",
         }),
         "settings.account.notSignedIn": t({
             en: "Not signed in",

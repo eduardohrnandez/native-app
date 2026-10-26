@@ -27,6 +27,7 @@ import { clearDeviceResetMarker, createDeviceResetGate, writeDeviceResetMarker }
 import { flushToCloud } from "@/lib/flush-to-cloud";
 import { posthog } from "@/lib/posthog";
 import { providerBindingFor } from "@/lib/provider-revocation";
+import type { ProviderBinding } from "@/lib/provider-revocation";
 import { useProviderSignIn } from "@/lib/use-provider-sign-in";
 
 type AuthClient = NonNullable<typeof authClient>;
@@ -60,7 +61,7 @@ function AccountContent({ client, db }: { client: AuthClient; db: Database }) {
     const { retry: reopenLocalData } = useLocalData();
     const { data: session, isPending: restoring } = useAuthClientSession();
     const { accountId } = useAuthSession();
-    const [busy, setBusy] = useState<"deleteAll" | "deleteCloud" | "signOut" | null>(null);
+    const [busy, setBusy] = useState<"deleteAll" | "signOut" | null>(null);
     const [error, setError] = useState<string | null>(null);
     const { busy: signingIn, error: signInError, start } = useProviderSignIn(client);
     const { pending } = useSyncStatus(db);
@@ -119,23 +120,43 @@ function AccountContent({ client, db }: { client: AuthClient; db: Database }) {
         );
     };
 
-    const deleteAccount = (action: "deleteAll" | "deleteCloud" = "deleteCloud") => {
+    // Deleting the server's user leaves this phone's copy of the session behind, so it is dropped and re-read here.
+    const forgetSession = async () => {
+        await client.signOut().catch(() => undefined);
+        client.$store.notify("$sessionSignal");
+    };
+
+    const leaveForSignIn = () => {
+        reopenLocalData();
+        router.replace("/onboarding");
+    };
+
+    // One flow, no local-only copy: the account, its cloud data and this phone's data go together, then the session.
+    const deleteAccount = () => {
         if (!activeSession) {
             return;
         }
         setError(null);
-        setBusy(action);
+        setBusy("deleteAll");
         posthog?.reset();
-        const resetGate =
-            action === "deleteAll"
-                ? createDeviceResetGate({
-                      closeDatabase: async () => await closeDatabase(db),
-                      completeCloudDeletion: async () => {
-                          await resumePersistedCloudDeletion({ clearOnComplete: false, required: true });
-                      },
-                  })
-                : null;
-        runAccountLifecycle(action, {
+        const resetGate = createDeviceResetGate({
+            closeDatabase: async () => await closeDatabase(db),
+            completeCloudDeletion: async () => {
+                await resumePersistedCloudDeletion({ clearOnComplete: false, required: true });
+            },
+        });
+        // A session the server no longer knows cannot start a deletion; the phone is still erased and signed out.
+        const eraseAfterExpiredSession = async () => {
+            await writeDeviceResetMarker({ phase: "device", v: 1 });
+            const { failures } = await resetGate.recover();
+            if (failures.length > 0) {
+                throw new Error(`Device cleanup incomplete: ${failures.join(", ")}`);
+            }
+            await forgetSession();
+            leaveForSignIn();
+            Alert.alert(t("settings.account.deletedExpiredTitle"), t("settings.account.deletedExpiredBody"));
+        };
+        runAccountLifecycle("deleteAll", {
             advanceDeletion: async (resumeSecret) => {
                 if (convex === null) {
                     throw new Error("Cloud deletion is unavailable");
@@ -143,9 +164,8 @@ function AccountContent({ client, db }: { client: AuthClient; db: Database }) {
                 return await cloudMutation("accountDeletion:advance", { resumeSecret });
             },
             allowLocal: openLedger,
-            beginDeviceReset:
-                action === "deleteAll" ? async () => await writeDeviceResetMarker({ phase: "cloud", v: 1 }) : undefined,
-            cancelDeviceReset: action === "deleteAll" ? clearDeviceResetMarker : undefined,
+            beginDeviceReset: async () => await writeDeviceResetMarker({ phase: "cloud", v: 1 }),
+            cancelDeviceReset: clearDeviceResetMarker,
             clearDeletionSecret: async () => await deleteItemAsync(deletionResumeSecretKey),
             deleteAccount: async () => undefined,
             eraseBilling: async (resumeSecret) => {
@@ -154,42 +174,47 @@ function AccountContent({ client, db }: { client: AuthClient; db: Database }) {
                 }
                 return await cloudAction("accountDeletion:eraseBilling", { resumeSecret });
             },
-            markDeviceCleanupReady:
-                action === "deleteAll"
-                    ? async () => await writeDeviceResetMarker({ phase: "device", v: 1 })
-                    : undefined,
+            markDeviceCleanupReady: async () => await writeDeviceResetMarker({ phase: "device", v: 1 }),
             navigateToLedger: openLedger,
-            navigateToOnboarding: () => {
-                reopenLocalData();
-                router.replace("/onboarding");
-            },
+            navigateToOnboarding: leaveForSignIn,
             persistDeletionSecret: async (preparation) =>
                 await setItemAsync(deletionResumeSecretKey, JSON.stringify(preparation)),
             prepareDeletion: async () => {
                 if (convex === null) {
                     throw new Error("Cloud deletion is unavailable");
                 }
-                const binding = await providerBindingFor(activeSession.user.id);
                 const preparation = await cloudMutation<
                     Record<string, never>,
-                    { receiptChallenge: string; resumeSecret: string }
+                    { provider?: ProviderBinding["provider"]; receiptChallenge: string; resumeSecret: string }
                 >("accountDeletion:prepare", {});
-                return { ...preparation, provider: binding.provider, providerSubject: binding.providerSubject };
+                // The subject only feeds Google's best-effort revoke, so a phone that lost it still deletes.
+                const binding = await providerBindingFor(activeSession.user.id).catch(() => null);
+                return {
+                    ...preparation,
+                    provider: preparation.provider ?? binding?.provider ?? "password",
+                    providerSubject: binding?.providerSubject ?? "",
+                };
             },
             quiesce: () => setSyncEnabled(db, false),
-            resetDevice: action === "deleteAll" && resetGate ? async () => await resetGate.recover() : undefined,
+            resetDevice: async () => await resetGate.recover(),
             revokeProvider: async (preparation) => {
                 // SAFETY: `prepareDeletion` is the only producer and adds the pair `StoredDeletionPreparation` needs.
                 await resumeProviderRevocation(preparation as StoredDeletionPreparation);
             },
         })
+            .then(forgetSession)
+            .catch(async (cause: unknown) => {
+                if (failureTrail(cause).includes("Unauthenticated")) {
+                    await eraseAfterExpiredSession();
+                    return;
+                }
+                throw cause;
+            })
             .catch((cause: unknown) => {
-                const trail = failureTrail(cause);
-                const expired = trail.includes("Unauthenticated");
-                const message = expired ? t("settings.account.deleteNeedsSignIn") : signInFailureMessage(cause, t);
+                const message = signInFailureMessage(cause, t);
                 setError(message);
                 // The inline error sits below the fold on a small screen, so the failure also surfaces as an alert.
-                Alert.alert(message, expired ? undefined : trail);
+                Alert.alert(message, failureTrail(cause));
             })
             .finally(() => setBusy(null));
     };
@@ -198,20 +223,9 @@ function AccountContent({ client, db }: { client: AuthClient; db: Database }) {
         Alert.alert(t("settings.account.deleteConfirmTitle"), t("settings.account.deleteConfirmBody"), [
             { style: "cancel", text: t("common.cancel") },
             {
-                onPress: () => deleteAccount(),
+                onPress: deleteAccount,
                 style: "destructive",
                 text: t("settings.account.deleteConfirm"),
-            },
-        ]);
-    };
-
-    const confirmDeleteDevice = () => {
-        Alert.alert(t("settings.account.eraseDeviceConfirmTitle"), t("settings.account.eraseDeviceConfirmBody"), [
-            { style: "cancel", text: t("common.cancel") },
-            {
-                onPress: () => deleteAccount("deleteAll"),
-                style: "destructive",
-                text: t("settings.account.eraseDeviceConfirm"),
             },
         ]);
     };
@@ -276,19 +290,6 @@ function AccountContent({ client, db }: { client: AuthClient; db: Database }) {
                     icon="UserRemove01"
                     onPress={busy === null ? confirmDelete : undefined}
                     title={t("settings.account.delete")}
-                    value={busy === "deleteCloud" ? t("settings.account.deleting") : undefined}
-                />
-            </SettingsSection>
-
-            <SettingsSection
-                footer={t("settings.account.eraseDeviceFooter")}
-                title={t("settings.account.eraseDeviceSection")}
-            >
-                <LinkRow
-                    destructive
-                    icon="UserRemove01"
-                    onPress={busy === null ? confirmDeleteDevice : undefined}
-                    title={t("settings.account.eraseDevice")}
                     value={busy === "deleteAll" ? t("settings.account.deleting") : undefined}
                 />
             </SettingsSection>
