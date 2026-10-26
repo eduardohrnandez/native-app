@@ -17,7 +17,13 @@ export const revenuecat = new RevenueCat(components.revenuecat, {
     REVENUECAT_WEBHOOK_AUTH: env.REVENUECAT_WEBHOOK_AUTH,
 });
 
+// Nothing is sold yet, so every signed-in user gets the Pro path. Set to false to start charging.
+export const PRO_GATES_OPEN = true;
+
 export async function isPro(ctx: Parameters<typeof revenuecat.hasEntitlement>[0], userId: string): Promise<boolean> {
+    if (PRO_GATES_OPEN) {
+        return true;
+    }
     return revenuecat.hasEntitlement(ctx, { appUserId: userId, entitlementId: PRO_ENTITLEMENT_ID });
 }
 
