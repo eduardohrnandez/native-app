@@ -24,6 +24,7 @@ const mockCompleteAdoption = jest.fn(
         })
 );
 jest.mock("@/data/ledger-adoption", () => ({
+    adoptedAccount: async () => null,
     completeAdoption: () => mockCompleteAdoption(),
     localLedgerState: async () => "empty",
     prepareAccountAdoption: async () => undefined,

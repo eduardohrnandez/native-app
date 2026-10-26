@@ -342,7 +342,7 @@ function UpdateCheckRow() {
                     return;
                 }
                 setState("checking");
-                setState(await checkForApk(db, true));
+                setState(await checkForApk());
             }}
             title={t("update.check.title")}
             value={value}

@@ -31,7 +31,7 @@ export interface ApkRelease {
 }
 
 /** The newest published APK strictly newer than the installed build, or null when this one is current. */
-export function newerApk(payload: GithubPayload, installedBuild: number): ApkRelease | null {
+export function newerApk(payload: unknown, installedBuild: number): ApkRelease | null {
     const parsed = releaseList.safeParse(payload);
     if (!parsed.success) {
         return null;

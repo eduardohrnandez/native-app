@@ -13,6 +13,7 @@ import type * as accountDeletion from "../accountDeletion.js";
 import type * as auth from "../auth.js";
 import type * as cotizave from "../cotizave.js";
 import type * as crons from "../crons.js";
+import type * as appUpdates from "../appUpdates.js";
 import type * as csvImport from "../csvImport.js";
 import type * as enrichment from "../enrichment.js";
 import type * as enrichmentQueue from "../enrichmentQueue.js";
@@ -61,6 +62,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   cotizave: typeof cotizave;
   crons: typeof crons;
+  appUpdates: typeof appUpdates;
   csvImport: typeof csvImport;
   enrichment: typeof enrichment;
   enrichmentQueue: typeof enrichmentQueue;

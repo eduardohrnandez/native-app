@@ -226,4 +226,8 @@ export default defineSchema({
         .index("by_user_and_seq", ["userId", "seq"])
         .index("by_user_and_localId", ["userId", "localId"])
         .index("by_user_and_deletedAt_and_date", ["userId", "deletedAt", "date"]),
+    appReleaseCache: defineTable({
+        body: v.string(),
+        fetchedAt: v.number(),
+    }),
 });
