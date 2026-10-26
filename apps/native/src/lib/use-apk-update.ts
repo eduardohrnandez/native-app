@@ -13,7 +13,7 @@ import { notifyWarning } from "@/lib/notify";
 
 // Phones ask Convex, which asks GitHub at most every ten minutes, so no phone count reaches GitHub's 60-an-hour limit.
 // Without a backend the app asks GitHub directly, where the list is not strictly newest first: it takes the whole page.
-const RELEASES_URL = "https://api.github.com/repos/eduardohrnandez/native-pp/releases?per_page=30";
+const RELEASES_URL = "https://api.github.com/repos/eduardohrnandez/native-app/releases?per_page=30";
 const TIMEOUT_MS = 15_000;
 const NOT_FOUND = 404;
 const PROBE_LIMIT = 3;

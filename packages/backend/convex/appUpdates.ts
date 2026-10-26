@@ -5,7 +5,7 @@ import { internal } from "./_generated/api";
 import { action, internalMutation, internalQuery } from "./_generated/server";
 
 // One GitHub call per window serves every phone: unauthenticated GitHub allows 60 calls an hour per IP.
-const RELEASES_URL = "https://api.github.com/repos/eduardohrnandez/native-pp/releases?per_page=30";
+const RELEASES_URL = "https://api.github.com/repos/eduardohrnandez/native-app/releases?per_page=30";
 const CACHE_WINDOW_MS = 10 * 60 * 1000;
 const FETCH_TIMEOUT_MS = 10_000;
 
