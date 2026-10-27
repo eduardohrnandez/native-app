@@ -88,6 +88,39 @@ function toRateWire(doc: Doc<"exchangeRates">) {
     };
 }
 
+/** Writes a pair only where the day has no row yet, so a rate fetched later never rewrites one already recorded. */
+export const insertRatesIfMissing = internalMutation({
+    args: {
+        date: v.string(),
+        fetchedAt: v.number(),
+        rates: v.array(v.object({ quote: v.string(), rate: v.number(), rateType: marketRateType })),
+        source: rateSource,
+    },
+    handler: async (ctx, args) => {
+        /* oxlint-disable no-await-in-loop -- each pair's existence check precedes its own insert, and the list is two entries */
+        for (const entry of args.rates) {
+            const existing = await ctx.db
+                .query("exchangeRates")
+                .withIndex("by_quote_and_rateType_and_date", (q) =>
+                    q.eq("quote", entry.quote).eq("rateType", entry.rateType).eq("date", args.date)
+                )
+                .unique();
+            if (existing === null && Number.isFinite(entry.rate) && entry.rate > 0) {
+                await ctx.db.insert("exchangeRates", {
+                    date: args.date,
+                    fetchedAt: args.fetchedAt,
+                    quote: entry.quote,
+                    rate: entry.rate,
+                    rateType: entry.rateType,
+                    source: args.source,
+                });
+            }
+        }
+        /* oxlint-enable no-await-in-loop */
+        return null;
+    },
+});
+
 export const upsertRates = internalMutation({
     args: {
         date: v.string(),

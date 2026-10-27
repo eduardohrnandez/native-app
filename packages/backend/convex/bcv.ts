@@ -8,6 +8,7 @@ import { utcDateString } from "./lib/currencies";
 // Free and keyless, the same feed Mak3D Hub reads: the official BCV dollar and euro, in bolívares each.
 const BCV_URL = "https://bcv.justcarlux.dev/api/v1/rates";
 const RATES_TIMEOUT_MS = 20_000;
+const MS_PER_DAY = 86_400_000;
 
 const VES_QUOTE = "VES";
 
@@ -44,13 +45,21 @@ export const fetchRates = internalAction({
         }
 
         const fetchedAt = Date.now();
+        const rates = [
+            { quote: VES_QUOTE, rate: contract.data.rates.usd, rateType: "official" as const },
+            { quote: VES_QUOTE, rate: contract.data.rates.eur, rateType: "eur_reference" as const },
+        ];
         await ctx.runMutation(internal.exchangeRates.upsertRates, {
             date: utcDateString(fetchedAt),
             fetchedAt,
-            rates: [
-                { quote: VES_QUOTE, rate: contract.data.rates.usd, rateType: "official" },
-                { quote: VES_QUOTE, rate: contract.data.rates.eur, rateType: "eur_reference" },
-            ],
+            rates,
+            source: "bcv",
+        });
+        // Caracas is four hours behind UTC, so from 8 p.m. an entry dated "today" there is yesterday here.
+        await ctx.runMutation(internal.exchangeRates.insertRatesIfMissing, {
+            date: utcDateString(fetchedAt - MS_PER_DAY),
+            fetchedAt,
+            rates,
             source: "bcv",
         });
         return null;
