@@ -1,5 +1,7 @@
+import { env } from "@outlayr/env/native";
 import { useEffect, useSyncExternalStore } from "react";
 import { Alert, Platform } from "react-native";
+import { z } from "zod";
 
 import { newerApks } from "@/data/apk-update";
 import type { GithubPayload } from "@/data/apk-update";
@@ -7,7 +9,6 @@ import type { Database } from "@/db/client";
 import { translateNow } from "@/i18n/runtime";
 import { installApk } from "@/lib/apk-install";
 import { APP_BUILD } from "@/lib/app-version";
-import { cloudAction, convex } from "@/lib/convex";
 import { fetchWithTimeout } from "@/lib/fetch-timeout";
 import { notifyWarning } from "@/lib/notify";
 
@@ -16,6 +17,7 @@ import { notifyWarning } from "@/lib/notify";
 const RELEASES_URL = "https://api.github.com/repos/eduardohrnandez/native-app/releases?per_page=30";
 const TIMEOUT_MS = 15_000;
 const NOT_FOUND = 404;
+const CHECK_DEADLINE_MS = 30_000;
 const PROBE_LIMIT = 3;
 
 // One download at a time, shared by the alert and the Settings row so both show the same progress.
@@ -54,11 +56,25 @@ export function startApkInstall(url: string): void {
 
 export type ApkCheck = "available" | "current" | "failed" | "skipped";
 
-async function fetchReleases(): Promise<GithubPayload> {
-    if (convex !== null) {
-        const raw = await cloudAction<Record<string, never>, string>("appUpdates:latest", {});
-        return JSON.parse(raw);
-    }
+const convexAnswer = z.object({ status: z.literal("success"), value: z.string() });
+
+// Plain HTTP, not the websocket client: that one parks every call until its auth handshake settles, which never
+// happens on a phone whose session was just erased, and the check would sit on "Checking" for good.
+async function releasesFromConvex(baseUrl: string): Promise<GithubPayload> {
+    const response = await fetchWithTimeout(
+        `${baseUrl}/api/action`,
+        {
+            body: JSON.stringify({ args: {}, format: "json", path: "appUpdates:latest" }),
+            headers: { "Content-Type": "application/json" },
+            method: "POST",
+        },
+        TIMEOUT_MS
+    );
+    const answer = convexAnswer.parse(await response.json());
+    return JSON.parse(answer.value);
+}
+
+async function releasesFromGithub(): Promise<GithubPayload> {
     const response = await fetchWithTimeout(
         RELEASES_URL,
         { headers: { Accept: "application/vnd.github+json" } },
@@ -70,8 +86,32 @@ async function fetchReleases(): Promise<GithubPayload> {
     return await response.json();
 }
 
+async function fetchReleases(): Promise<GithubPayload> {
+    const baseUrl = env.EXPO_PUBLIC_CONVEX_URL;
+    if (!baseUrl) {
+        return await releasesFromGithub();
+    }
+    try {
+        return await releasesFromConvex(baseUrl);
+    } catch {
+        return await releasesFromGithub();
+    }
+}
+
 /** Asks for a newer build every time, so the offer comes back on each launch until the phone is updated. */
 export async function checkForApk(): Promise<ApkCheck> {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const deadline = new Promise<ApkCheck>((resolve) => {
+        timer = setTimeout(() => resolve("failed"), CHECK_DEADLINE_MS);
+    });
+    try {
+        return await Promise.race([lookForApk(), deadline]);
+    } finally {
+        clearTimeout(timer);
+    }
+}
+
+async function lookForApk(): Promise<ApkCheck> {
     const installed = Number.parseInt(APP_BUILD, 10);
     // A build without a versionCode came from a local run, not the release workflow.
     if (Number.isNaN(installed)) {
