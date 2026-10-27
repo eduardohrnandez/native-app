@@ -48,5 +48,6 @@ export function newerApks(payload: GithubPayload, installedBuild: number): ApkRe
             candidates.push({ build, downloadUrl: apk.browser_download_url });
         }
     }
-    return candidates.toSorted((a, b) => b.build - a.build);
+    // Not `toSorted`: Hermes lacks it, and the check died there whenever a newer build existed.
+    return candidates.sort((a, b) => b.build - a.build);
 }
