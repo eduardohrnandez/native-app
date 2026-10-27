@@ -324,7 +324,6 @@ const CHECK_LABELS = {
 } as const satisfies Record<ApkCheck, TranslationKey>;
 
 function UpdateCheckRow() {
-    const db = useDatabase();
     const t = useTranslation();
     const [state, setState] = useState<ApkCheck | "checking" | null>(null);
     const progress = useApkDownloadProgress();
@@ -342,7 +341,8 @@ function UpdateCheckRow() {
                     return;
                 }
                 setState("checking");
-                setState(await checkForApk());
+                // Whatever goes wrong, the row must leave "Checking": an escaped rejection would pin it there.
+                setState(await checkForApk().catch((): ApkCheck => "failed"));
             }}
             title={t("update.check.title")}
             value={value}

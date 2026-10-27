@@ -1,13 +1,9 @@
-import { env } from "@outlayr/env/backend";
-import { ConvexError, v } from "convex/values";
+import { v } from "convex/values";
 
 import { internal } from "./_generated/api";
 import { action, internalMutation, internalQuery } from "./_generated/server";
 
-// One GitHub call per window serves every phone: unauthenticated GitHub allows 60 calls an hour per IP.
-const RELEASES_URL = "https://api.github.com/repos/eduardohrnandez/native-app/releases?per_page=30";
-const CACHE_WINDOW_MS = 10 * 60 * 1000;
-const FETCH_TIMEOUT_MS = 10_000;
+const EMPTY_LIST = "[]";
 
 export const cachedReleases = internalQuery({
     args: {},
@@ -26,38 +22,14 @@ export const storeReleases = internalMutation({
     },
 });
 
-/** The raw GitHub releases JSON, as text, served from a cache refreshed at most every ten minutes. */
+/**
+ * The release list the APK workflow last pushed, as the raw JSON text. It never calls GitHub: a refresh that hangs
+ * would hold every phone on "Checking", and the workflow already sends the list after each build.
+ */
 export const latest = action({
     args: {},
     handler: async (ctx): Promise<string> => {
         const cached = await ctx.runQuery(internal.appUpdates.cachedReleases, {});
-        const now = Date.now();
-        if (cached !== null && now - cached.fetchedAt < CACHE_WINDOW_MS) {
-            return cached.body;
-        }
-
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-        try {
-            const headers = new Headers({ Accept: "application/vnd.github+json", "User-Agent": "finta-app" });
-            // A token lifts the 60-an-hour limit that Convex's shared outbound addresses can exhaust.
-            if (env.GITHUB_TOKEN) {
-                headers.set("Authorization", `Bearer ${env.GITHUB_TOKEN}`);
-            }
-            const response = await fetch(RELEASES_URL, { headers, signal: controller.signal });
-            if (!response.ok) {
-                console.warn(`[appUpdates] GitHub releases answered ${response.status}`);
-                // A stale copy beats a failed check for every phone that asks in the meantime.
-                if (cached !== null) {
-                    return cached.body;
-                }
-                throw new ConvexError(`GitHub releases answered ${response.status}`);
-            }
-            const body = await response.text();
-            await ctx.runMutation(internal.appUpdates.storeReleases, { body, fetchedAt: now });
-            return body;
-        } finally {
-            clearTimeout(timer);
-        }
+        return cached?.body ?? EMPTY_LIST;
     },
 });
