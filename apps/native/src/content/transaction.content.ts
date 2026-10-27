@@ -440,6 +440,14 @@ const transaction = {
             en: "My rate",
             es: "Mi tasa",
         }),
+        "transaction.rate.nameField": t({
+            en: "Name this rate",
+            es: "Nombre de esta tasa",
+        }),
+        "transaction.rate.namePlaceholder": t({
+            en: "My rate, Cash, Binance…",
+            es: "Mi tasa, Efectivo, Binance…",
+        }),
         "transaction.rate.daysOld_one": t({
             en: "{count} day old · {date}",
             es: "De hace {count} día · {date}",

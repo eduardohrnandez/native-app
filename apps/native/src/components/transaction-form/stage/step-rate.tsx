@@ -1,8 +1,9 @@
 import type { EntryRateType } from "@outlayr/money/rates";
 import type { ReactNode } from "react";
-import { Pressable, View } from "react-native";
+import { Pressable, TextInput, View } from "react-native";
 
 import { currencySymbol, symbolPrefix } from "@/domain/money";
+import { useColors } from "@/theme/use-colors";
 
 import { FlowAmount } from "../../amount-text";
 import { Text } from "../../text";
@@ -83,10 +84,19 @@ export interface StepRateReference {
     onPress: () => void;
 }
 
+interface RateNameInput {
+    label: string;
+    maxLength: number;
+    onChange: (next: string) => void;
+    placeholder: string;
+    value: string;
+}
+
 interface StepRateFieldProps {
     children: ReactNode;
     error: string | null;
     figure?: { amount: number; code: string };
+    nameInput?: RateNameInput;
     note: string | null;
     placeholder: boolean;
     references?: readonly StepRateReference[];
@@ -98,12 +108,14 @@ export function StepRateField({
     children,
     error,
     figure,
+    nameInput,
     note,
     placeholder,
     references,
     unit,
     value,
 }: StepRateFieldProps) {
+    const colors = useColors();
     const valueClass = cn(
         "font-mono-medium text-[34px] leading-[42px] tracking-tight tabular-nums",
         placeholder ? "text-muted" : "text-foreground"
@@ -128,6 +140,18 @@ export function StepRateField({
                 </View>
                 {unit === undefined ? null : <Text className="text-callout text-foreground">{unit}</Text>}
             </View>
+            {nameInput === undefined ? null : (
+                <TextInput
+                    accessibilityLabel={nameInput.label}
+                    autoCapitalize="sentences"
+                    className="border-separator text-callout text-foreground border-b py-2"
+                    maxLength={nameInput.maxLength}
+                    onChangeText={nameInput.onChange}
+                    placeholder={nameInput.placeholder}
+                    placeholderTextColor={colors.muted}
+                    value={nameInput.value}
+                />
+            )}
             {error === null ? null : <Text className="text-danger text-subtitle">{error}</Text>}
             {note === null ? null : <Text className="text-subtitle text-foreground">{note}</Text>}
             {references === undefined || references.length === 0 ? null : (

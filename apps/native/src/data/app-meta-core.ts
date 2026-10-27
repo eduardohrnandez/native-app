@@ -11,6 +11,8 @@ export const META_KEYS = {
     currency: "currency",
     /** `bootstrap` seeds `currency` unconditionally, so only this tells a chosen code from the default. */
     currencyChosen: "currencyChosen",
+    /** Device-local: the user's own name for the typed rate, such as "Cash" or "Binance". */
+    customRateName: "customRateName",
     enrichmentOutbox: "enrichmentOutbox",
     favouriteCurrencies: "favouriteCurrencies",
     firstLaunch: "firstLaunch",

@@ -41,6 +41,7 @@ import type { CardFeeInput } from "@/data/card-fees-core";
 import { useCategoriesByNamespace } from "@/data/categories";
 import { ensureCategoryByName, getCategoryById } from "@/data/categories-core";
 import type { Category } from "@/data/categories-core";
+import { CUSTOM_RATE_NAME_LIMIT, saveCustomRateName, useCustomRateName } from "@/data/custom-rate-name";
 import { queueEnrichment } from "@/data/enrichment-queue-core";
 import { useFavouriteCurrencies } from "@/data/favourite-currencies";
 import { useRatesRead } from "@/data/live-query";
@@ -1093,7 +1094,14 @@ export function TransactionForm({
     };
     const rateOptions = (): StepRateOption[] =>
         transactionRateOptions(currency).map((type) => {
-            const shared = { name: t(rateNameKey(type, quotedByBcv(currency))), type, unit: rateUnitLabel };
+            const shared = {
+                name:
+                    type === "custom" && customRateName !== null
+                        ? customRateName
+                        : t(rateNameKey(type, quotedByBcv(currency))),
+                type,
+                unit: rateUnitLabel,
+            };
             if (type === "custom") {
                 const prior = rateSuggestions.priorCustom;
                 const typed = rateSelection.exchangeRateType === "custom" ? rateInForce : null;
@@ -1159,7 +1167,7 @@ export function TransactionForm({
         let template = t("transaction.sentence.rate.provider");
         if (missing) {
             template = t("transaction.sentence.rate.missing");
-        } else if (type === "custom") {
+        } else if (type === "custom" && customRateName === null) {
             template = t("transaction.sentence.rate.custom");
         }
         return {
@@ -1169,7 +1177,10 @@ export function TransactionForm({
             onConvertedPress: openUsd,
             onSourcePress: () => enterStep("rate"),
             shake: rateShake,
-            source: t(rateSourceWordKey(type, quotedByBcv(currency))),
+            source:
+                type === "custom" && customRateName !== null
+                    ? customRateName
+                    : t(rateSourceWordKey(type, quotedByBcv(currency))),
             template,
         };
     };
@@ -1188,6 +1199,15 @@ export function TransactionForm({
         restoreRate(usdSnapshot.current);
     };
     const favouriteCurrencies = useFavouriteCurrencies(db);
+    const savedRateName = useCustomRateName(db);
+    const [rateNameDraft, setRateNameDraft] = useState<string | null>(null);
+    const customRateName = rateNameDraft === null ? savedRateName : rateNameDraft.trim() || null;
+    const typeRateName = (next: string) => {
+        setRateNameDraft(next);
+        saveCustomRateName(db, next.trim()).catch((cause: unknown) => {
+            console.warn("[finta] could not save the rate name", cause);
+        });
+    };
     const toggleFavourite = useToggleFavouriteCurrency(db);
     const selectCategory = (picked: Category) => {
         form.setFieldValue("category", picked);
@@ -2186,6 +2206,13 @@ export function TransactionForm({
                 body: (
                     <StepRateField
                         error={rateMissingAfterRefusal ? t("transaction.rate.required") : null}
+                        nameInput={{
+                            label: t("transaction.rate.nameField"),
+                            maxLength: CUSTOM_RATE_NAME_LIMIT,
+                            onChange: typeRateName,
+                            placeholder: t("transaction.rate.namePlaceholder"),
+                            value: rateNameDraft ?? savedRateName ?? "",
+                        }}
                         note={typed ? rateDeltaNote(rateInForce, amountNumber) : null}
                         placeholder={!typed}
                         references={providerReferences()}
@@ -2215,7 +2242,7 @@ export function TransactionForm({
                         leaveTo("amount");
                     },
                 },
-                title: t("transaction.rate.custom"),
+                title: customRateName ?? t("transaction.rate.custom"),
             };
         }
         if (stageStep === "rateUsd") {
