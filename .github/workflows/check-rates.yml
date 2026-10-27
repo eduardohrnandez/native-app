@@ -12,7 +12,7 @@ jobs:
               run: |
                   at=$(date +%s%3N)
                   rows=""
-                  for cursor in 0 12 24; do
+                  for cursor in 0 12 24 36 48 60; do
                     body=$(curl -s -X POST "https://confident-dotterel-266.convex.cloud/api/query" \
                       -H "Content-Type: application/json" \
                       -d "{\"path\":\"exchangeRates:pullRates\",\"args\":{\"at\":$at,\"cursor\":$cursor},\"format\":\"json\"}")
