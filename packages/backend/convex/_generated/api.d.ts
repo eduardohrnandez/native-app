@@ -14,6 +14,7 @@ import type * as auth from "../auth.js";
 import type * as cotizave from "../cotizave.js";
 import type * as crons from "../crons.js";
 import type * as appUpdates from "../appUpdates.js";
+import type * as bcv from "../bcv.js";
 import type * as csvImport from "../csvImport.js";
 import type * as enrichment from "../enrichment.js";
 import type * as enrichmentQueue from "../enrichmentQueue.js";

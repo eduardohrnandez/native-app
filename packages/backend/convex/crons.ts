@@ -6,6 +6,8 @@ const crons = cronJobs();
 
 crons.cron("refresh open exchange rates", "5 * * * *", internal.openexchangerates.fetchRates, {});
 
+crons.interval("refresh bcv ves rates", { minutes: 60 }, internal.bcv.fetchRates, {});
+
 crons.interval("refresh cotizave ves rates", { minutes: 72 }, internal.cotizave.fetchRates, {});
 
 crons.interval("prune stale exchange rates", { hours: 24 }, internal.exchangeRates.pruneStale, {});

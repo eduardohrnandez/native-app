@@ -30,3 +30,14 @@ jobs:
               env:
                   CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
               run: pnpm exec convex deploy
+
+            # Fills today's BCV rates right away instead of waiting for the hourly cron. A miss is not a failed deploy.
+            - name: Load today's BCV rates
+              continue-on-error: true
+              env:
+                  CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+              run: |
+                  curl -sS -X POST "https://confident-dotterel-266.convex.cloud/api/run/bcv/fetchRates" \
+                    -H "Content-Type: application/json" \
+                    -H "Authorization: Convex $CONVEX_DEPLOY_KEY" \
+                    -d '{"args":{},"format":"json"}'
