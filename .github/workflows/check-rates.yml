@@ -16,6 +16,6 @@ jobs:
                     body=$(curl -s -X POST "https://confident-dotterel-266.convex.cloud/api/query" \
                       -H "Content-Type: application/json" \
                       -d "{\"path\":\"exchangeRates:pullRates\",\"args\":{\"at\":$at,\"cursor\":$cursor},\"format\":\"json\"}")
-                    rows="$rows$(echo "$body" | jq -r '.value.rows // [] | map(select(.quote=="VES")) | map("\(.rateType) \(.date) \(.rate) \(.source)") | join("; ")')"
+                    rows="$rows [$cursor next=$(echo "$body" | jq -r '.value.nextCursor') n=$(echo "$body" | jq -r '.value.rows | length')] $(echo "$body" | jq -r '.value.rows // [] | map(select(.quote=="VES")) | map("\(.rateType) \(.date) \(.rate) \(.source)") | join("; ")')"
                   done
                   echo "::notice title=VES rates::${rows:-none}"
