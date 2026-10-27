@@ -116,12 +116,13 @@ export async function recoverDeviceReset(deps: DeviceResetRecoveryDependencies):
 export function createDeviceResetGate({
     closeDatabase,
     completeCloudDeletion,
+    eraseDatabase,
 }: DeviceResetGateDependencies): DeviceResetGate {
     const deps: DeviceResetRecoveryDependencies = {
         clearMarker: clearDeviceResetMarker,
         completeCloudDeletion,
         readMarker: readDeviceResetMarker,
-        stores: createNativeDeviceDataStores({ closeDatabase }),
+        stores: createNativeDeviceDataStores({ closeDatabase, eraseDatabase }),
         writeMarker: writeDeviceResetMarker,
     };
     return {

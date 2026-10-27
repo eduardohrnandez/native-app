@@ -66,6 +66,8 @@ export interface DeviceDataStores {
 
 export interface NativeDeviceDataStoreDependencies {
     closeDatabase: () => Promise<void>;
+    // Replaces deleting the file: Android refuses that while any part of the running app still holds a connection.
+    eraseDatabase?: () => Promise<void>;
 }
 
 function deleteDirectoryIfPresent(directory: Directory): void {
@@ -131,7 +133,10 @@ function clearCache(): void {
     Paths.cache.create({ idempotent: true, intermediates: true });
 }
 
-export function createNativeDeviceDataStores({ closeDatabase }: NativeDeviceDataStoreDependencies): DeviceDataStores {
+export function createNativeDeviceDataStores({
+    closeDatabase,
+    eraseDatabase,
+}: NativeDeviceDataStoreDependencies): DeviceDataStores {
     return {
         alternateIcon: async () => {
             if (supportsAlternateIcons) {
@@ -154,7 +159,7 @@ export function createNativeDeviceDataStores({ closeDatabase }: NativeDeviceData
         // it would otherwise write into a photo directory this erase empties.
         sqlite: async () => {
             await cancelLogoBackfill();
-            await clearSqlite(closeDatabase);
+            await (eraseDatabase ? eraseDatabase() : clearSqlite(closeDatabase));
         },
         widget: async () => clearWidgetStorage(),
     };

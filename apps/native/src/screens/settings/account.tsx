@@ -8,9 +8,9 @@ import { LinkRow, SettingsSection } from "@/components/list/list-row";
 import { MonoLabel } from "@/components/mono-label";
 import { SettingsScreen } from "@/components/settings/settings-screen";
 import { Text } from "@/components/text";
-import { useDatabase, useLocalData } from "@/contexts/local-data-context";
+import { useDatabase } from "@/contexts/local-data-context";
 import { clearLocalLedger } from "@/data/adoption-engine-core";
-import { clearAccountDeferred } from "@/data/onboarding-core";
+import { clearAccountDeferred, reopenOnboarding } from "@/data/onboarding-core";
 import { setSyncEnabled } from "@/data/sync-outbox-core";
 import { useSyncStatus } from "@/data/use-sync-status";
 import { closeDatabase } from "@/db/client";
@@ -56,9 +56,12 @@ function openLedger() {
     router.replace("/");
 }
 
+function leaveForSignIn() {
+    router.replace("/onboarding");
+}
+
 function AccountContent({ client, db }: { client: AuthClient; db: Database }) {
     const t = useTranslation();
-    const { retry: reopenLocalData } = useLocalData();
     const { data: session, isPending: restoring } = useAuthClientSession();
     const { accountId } = useAuthSession();
     const [busy, setBusy] = useState<"deleteAll" | "signOut" | null>(null);
@@ -126,11 +129,6 @@ function AccountContent({ client, db }: { client: AuthClient; db: Database }) {
         client.$store.notify("$sessionSignal");
     };
 
-    const leaveForSignIn = () => {
-        reopenLocalData();
-        router.replace("/onboarding");
-    };
-
     // One flow, no local-only copy: the account, its cloud data and this phone's data go together, then the session.
     const deleteAccount = () => {
         if (!activeSession) {
@@ -143,6 +141,11 @@ function AccountContent({ client, db }: { client: AuthClient; db: Database }) {
             closeDatabase: async () => await closeDatabase(db),
             completeCloudDeletion: async () => {
                 await resumePersistedCloudDeletion({ clearOnComplete: false, required: true });
+            },
+            eraseDatabase: async () => {
+                await clearLocalLedger(db);
+                await clearAccountDeferred(db);
+                await reopenOnboarding(db);
             },
         });
         // A session the server no longer knows cannot start a deletion; the phone is still erased and signed out.
@@ -204,9 +207,14 @@ function AccountContent({ client, db }: { client: AuthClient; db: Database }) {
         })
             .then(forgetSession)
             .catch(async (cause: unknown) => {
-                if (failureTrail(cause).includes("Unauthenticated")) {
+                const trail = failureTrail(cause);
+                if (trail.includes("Unauthenticated")) {
                     await eraseAfterExpiredSession();
                     return;
+                }
+                if (trail.includes("during resetDevice")) {
+                    // The account is already gone from the cloud, so the session must not outlive it.
+                    await forgetSession();
                 }
                 throw cause;
             })
