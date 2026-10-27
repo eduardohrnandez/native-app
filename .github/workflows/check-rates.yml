@@ -1,0 +1,21 @@
+name: Check rates
+
+on:
+    workflow_dispatch:
+
+jobs:
+    check:
+        runs-on: ubuntu-latest
+        steps:
+            # Asks Convex for the same rates the app pulls, and prints the Venezuelan ones it holds.
+            - name: List the VES rates Convex serves
+              run: |
+                  at=$(date +%s%3N)
+                  rows=""
+                  for cursor in 0 12 24; do
+                    body=$(curl -s -X POST "https://confident-dotterel-266.convex.cloud/api/query" \
+                      -H "Content-Type: application/json" \
+                      -d "{\"path\":\"exchangeRates:pullRates\",\"args\":{\"at\":$at,\"cursor\":$cursor},\"format\":\"json\"}")
+                    rows="$rows$(echo "$body" | jq -r '.value.rows // [] | map(select(.quote=="VES")) | map("\(.rateType) \(.date) \(.rate) \(.source)") | join("; ")')"
+                  done
+                  echo "::notice title=VES rates::${rows:-none}"
