@@ -392,9 +392,13 @@ export function Section({
     );
 }
 
+// Swipe actions have no pointer gesture on the web, so the row renders and its trailing actions stay out of sight.
 export function SwipeActions({ children }: { children?: ReactNode; [key: string]: unknown }) {
     return <>{children}</>;
 }
+SwipeActions.Actions = function SwipeActionsActions(_props: { children?: ReactNode; edge?: string }) {
+    return null;
+};
 
 export function Divider() {
     return <View style={{ backgroundColor: "rgba(128,128,128,0.3)", height: 1 }} />;
