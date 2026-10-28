@@ -49,6 +49,7 @@ patchedDependencies:
     panelui-native@0.113.1: patches/panelui-native@0.113.1.patch
     react-native-nano-icons@1.0.1: patches/react-native-nano-icons@1.0.1.patch
 overrides:
+    "@tanstack/react-start": ">=1.168.60"
     vite@*: "catalog:"
 peerDependencyRules:
     allowAny:
