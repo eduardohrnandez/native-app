@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Finta</title>
+  </head>
+  <body>
+    <script>
+      // Google returns the id token in the URL fragment; hand it to the window that opened this popup.
+      var params = new URLSearchParams(window.location.hash.slice(1));
+      var message = { type: "finta-google", idToken: params.get("id_token"), state: params.get("state") };
+      if (window.opener) {
+        window.opener.postMessage(message, window.location.origin);
+      }
+      window.close();
+    </script>
+  </body>
+</html>
