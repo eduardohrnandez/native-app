@@ -39,9 +39,10 @@ async function addTransaction(
 }
 
 describe("capitalizeCategoryName", () => {
-    it("trims, collapses whitespace, and title-cases", () => {
+    it("trims, collapses whitespace, and capitalises lowercase words", () => {
         expect(capitalizeCategoryName("  dining   out ")).toBe("Dining Out");
-        expect(capitalizeCategoryName("COFFEE")).toBe("Coffee");
+        expect(capitalizeCategoryName("PSN")).toBe("PSN");
+        expect(capitalizeCategoryName("iPhone repairs")).toBe("iPhone Repairs");
         expect(capitalizeCategoryName("groceries")).toBe("Groceries");
         expect(capitalizeCategoryName("   ")).toBe("");
     });

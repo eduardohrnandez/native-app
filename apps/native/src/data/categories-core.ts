@@ -167,14 +167,19 @@ export interface CategoryValidationResult {
     order: number;
 }
 
-// Close enough to Swift's `.capitalized` to keep name-collision checks stable across the two apps.
+// Lowercase words get an initial capital; a word the user already capitalised ("PSN", "iPhone") stays as typed.
 export function capitalizeCategoryName(raw: string): string {
     return raw
         .trim()
         .split(WHITESPACE_RUN)
         .filter((word) => word.length > 0)
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .map((word) => (word === word.toLowerCase() ? word.charAt(0).toUpperCase() + word.slice(1) : word))
         .join(" ");
+}
+
+// Casing is the user's to choose, so "PSN" and "Psn" are the same name when checking for a clash.
+function categoryNameKey(raw: string): string {
+    return capitalizeCategoryName(raw).toLowerCase();
 }
 
 // U+FE0F is stripped so the text and emoji presentations of one glyph collide.
@@ -209,12 +214,12 @@ function detectCollision(
         siblings
             .map((row) => row.name)
             .filter((name): name is string => name != null)
-            .map(capitalizeCategoryName)
+            .map(categoryNameKey)
     );
 
     const iconTaken = candidate.icon !== "" && iconKeys.has(candidate.icon);
     const emojiTaken = candidate.emoji !== "" && emojiKeys.has(emojiComparisonKey(candidate.emoji));
-    const nameTaken = nameKeys.has(candidate.name);
+    const nameTaken = nameKeys.has(categoryNameKey(candidate.name));
 
     if ((iconTaken || emojiTaken) && nameTaken) {
         return "duplicate";
@@ -367,12 +372,12 @@ export function presetsNotAdded(
         existing
             .map((row) => row.name)
             .filter((name): name is string => name != null)
-            .map(capitalizeCategoryName)
+            .map(categoryNameKey)
     );
     const usedIcons = new Set(
         existing.map((row) => row.icon).filter((icon): icon is string => icon != null && icon !== "")
     );
-    return pool.filter((preset) => !(usedNames.has(capitalizeCategoryName(preset.name)) || usedIcons.has(preset.icon)));
+    return pool.filter((preset) => !(usedNames.has(categoryNameKey(preset.name)) || usedIcons.has(preset.icon)));
 }
 
 export async function suggestedCategoriesNotAdded(db: Database, income: boolean): Promise<SuggestedCategoryPreset[]> {
@@ -595,7 +600,9 @@ export async function ensureCategoryByName(
 ): Promise<string> {
     const cleanName = capitalizeCategoryName(name);
     const siblings = await namespaceSiblings(db, income);
-    const existing = siblings.find((row) => row.name != null && capitalizeCategoryName(row.name) === cleanName);
+    const existing = siblings.find(
+        (row) => row.name != null && categoryNameKey(row.name) === categoryNameKey(cleanName)
+    );
     if (existing != null) {
         return existing.id;
     }
