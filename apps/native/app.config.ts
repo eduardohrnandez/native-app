@@ -219,7 +219,7 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => ({
         es: "./locales/es.json",
     },
     name: "Finta",
-    platforms: ["ios", "android"],
+    platforms: ["ios", "android", "web"],
     plugins: [
         "expo-router",
         ["expo-localization", { supportedLocales: ["en", "es"] }],
@@ -337,6 +337,7 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => ({
     slug: "finta",
     updates: { enabled: false },
     userInterfaceStyle: "automatic",
+    web: { bundler: "metro", favicon: "./assets/favicon.png", output: "single" },
     version: process.env.APP_VERSION ?? "1.0.0",
 });
 

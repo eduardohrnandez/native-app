@@ -20,6 +20,9 @@ if (!config.watchFolders.includes(pnpmStore)) {
 // Drizzle's migrations import `.sql`. Must precede the wrappers, which extend (never reset) the resolver.
 config.resolver.sourceExts.push("sql");
 
+// expo-sqlite on the web ships its engine as a wasm asset.
+config.resolver.assetExts.push("wasm");
+
 // Outermost, so intlayer chains onto the `.sql` extension and both wrappers. The sync variant leaves the
 // dictionaries to `vp run i18n:build`.
 const finalConfig = configMetroIntlayerSync(
