@@ -125,6 +125,12 @@ finalConfig.resolver = {
                     type: "sourceFile",
                 };
             }
+            if (
+                moduleName === "./processHeaderItemsForPlatform" &&
+                context.originModulePath.includes("stack-utils/toolbar")
+            ) {
+                return { filePath: path.resolve(__dirname, "src/web/toolbar-items.tsx"), type: "sourceFile" };
+            }
             if (moduleName === "./WorkerChannel" && context.originModulePath.startsWith(path.join(sqliteDir, "web"))) {
                 return { filePath: path.resolve(__dirname, "src/web/sqlite-worker-channel.ts"), type: "sourceFile" };
             }
