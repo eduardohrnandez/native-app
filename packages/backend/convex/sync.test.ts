@@ -11,7 +11,7 @@ import { api } from "./_generated/api";
 import { DELETION_JOBS_PER_USER } from "./accountDeletion";
 import schema from "./schema";
 import { PUSH_BATCH_LIMIT } from "./sync";
-import { authenticatedAs, grantPro, seedAuthUser, seedProUser } from "./test.helpers";
+import { authenticatedAs, seedAuthUser, seedProUser } from "./test.helpers";
 import type { SeededIdentity } from "./test.helpers";
 
 function harness() {

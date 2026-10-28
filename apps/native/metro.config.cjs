@@ -74,6 +74,62 @@ function claimSimUpgrades(server, sim) {
     });
 }
 
+// The web build has no SwiftUI, Compose or PanelUI. Each name below is routed to a web counterpart in `src/web`.
+const WEB_NATIVE_ONLY = [
+    "expo-core-spotlight",
+    "expo-widgets",
+    "expo-alternate-app-icons",
+    "expo-quick-actions",
+    "expo-glass-effect",
+    "expo-apple-authentication",
+    "expo-store-review",
+    "expo-intent-launcher",
+    "react-native-nitro-google-signin",
+    "react-native-nitro-modules",
+    "expo-symbols",
+    "expo-mesh-gradient",
+    "@shopify/react-native-skia",
+];
+const WEB_ALIASES = [
+    [/^expo-file-system$/, "src/web/file-system.ts"],
+    [/^expo-secure-store$/, "src/web/secure-store.ts"],
+    [/^react-native-web\/dist\/index$/, "src/web/react-native.ts"],
+    [new RegExp(`^(${WEB_NATIVE_ONLY.join("|").replaceAll("/", "\\/")})(/.*)?$`), "src/web/any-stub.cjs"],
+    [/^@expo\/ui\/swift-ui\/modifiers$/, "src/web/swift-modifiers-entry.cjs"],
+    [/^@expo\/ui\/swift-ui$/, "src/web/swift-ui.tsx"],
+    [/^@expo\/ui\/jetpack-compose\/modifiers$/, "src/web/modifiers.cjs"],
+    [/^@expo\/ui\/jetpack-compose$/, "src/web/any-stub.cjs"],
+];
+const webResolve = finalConfig.resolver.resolveRequest;
+finalConfig.resolver = {
+    ...finalConfig.resolver,
+    resolveRequest: (context, moduleName, platform) => {
+        // The shim itself re-exports the real package, so it must not be routed back to itself.
+        if (platform === "web" && !context.originModulePath.endsWith("src/web/react-native.ts")) {
+            for (const [pattern, file] of WEB_ALIASES) {
+                if (pattern.test(moduleName)) {
+                    return { filePath: path.resolve(__dirname, file), type: "sourceFile" };
+                }
+            }
+        }
+        if (platform === "web") {
+            const sqliteDir = path.dirname(require.resolve("expo-sqlite/package.json"));
+            // The engine's synchronous calls spin a fixed 1M times before giving up, which migrations outlast.
+            // A copy with a far higher limit replaces its worker channel and imports back into the package.
+            if (moduleName.startsWith("expo-sqlite/web/")) {
+                return {
+                    filePath: path.join(sqliteDir, "web", `${moduleName.slice("expo-sqlite/web/".length)}.ts`),
+                    type: "sourceFile",
+                };
+            }
+            if (moduleName === "./WorkerChannel" && context.originModulePath.startsWith(path.join(sqliteDir, "web"))) {
+                return { filePath: path.resolve(__dirname, "src/web/sqlite-worker-channel.ts"), type: "sourceFile" };
+            }
+        }
+        return (webResolve ?? context.resolveRequest)(context, moduleName, platform);
+    },
+};
+
 // Assigned after the wrappers because each returns a fresh config object.
 finalConfig.server = {
     ...finalConfig.server,
@@ -83,6 +139,9 @@ finalConfig.server = {
         let claimed = false;
 
         return (req, res, next) => {
+            // expo-sqlite on the web needs SharedArrayBuffer, which browsers only expose to isolated pages.
+            res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+            res.setHeader("Cross-Origin-Embedder-Policy", "credentialless");
             if (!claimed && req.socket?.server) {
                 claimed = true;
                 claimSimUpgrades(req.socket.server, sim);
