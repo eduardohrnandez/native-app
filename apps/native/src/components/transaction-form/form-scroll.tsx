@@ -11,7 +11,7 @@ import {
 } from "@expo/ui/swift-ui/modifiers";
 import type { ReactElement, ReactNode } from "react";
 import { createContext, use, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 
 import { FLY_BACK, FLY_UP, FORM_BLUR_RADIUS, HEADER_HEIGHT } from "@/components/editor-style";
 import { InlineFailure } from "@/components/form/inline-failure";
@@ -33,6 +33,9 @@ export interface FormScrollProps {
 }
 
 type StageScroll = ReturnType<typeof useNativeState<string | null>>;
+
+// iOS insets the scroller under the native sheet header on its own; a browser has no such header to inset under.
+const WEB_HEADER_INSET = Platform.OS === "web" ? HEADER_HEIGHT : 0;
 
 const StageScrollContext = createContext<StageScroll | null>(null);
 
@@ -70,7 +73,7 @@ export function FormScroll({ blurred, bottomInset, children, curtainHues, failur
                             padding({
                                 bottom: bottomInset,
                                 horizontal: 20,
-                                top: failure === null ? 0 : failureHeight,
+                                top: WEB_HEADER_INSET + (failure === null ? 0 : failureHeight),
                             }),
                         ]}
                         spacing={16}
