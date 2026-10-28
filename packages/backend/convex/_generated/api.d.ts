@@ -64,6 +64,7 @@ declare const fullApi: ApiFromModules<{
   cotizave: typeof cotizave;
   crons: typeof crons;
   appUpdates: typeof appUpdates;
+  bcv: typeof bcv;
   csvImport: typeof csvImport;
   enrichment: typeof enrichment;
   enrichmentQueue: typeof enrichmentQueue;
