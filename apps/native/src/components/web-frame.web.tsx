@@ -1,13 +1,17 @@
 import type { ReactNode } from "react";
-import { View } from "react-native";
+import { useWindowDimensions, View } from "react-native";
 
-const MAX_APP_WIDTH = 520;
+const PHONE_MAX_WIDTH = 520;
+const DESKTOP_BREAKPOINT = 900;
+const DESKTOP_MAX_WIDTH = 1200;
 
-// The app is designed for a phone column; on a desktop window it stays that width, centered.
+// A phone-width window fills the screen; a desktop window gets a wider centered canvas with the tab sidebar.
 export function WebFrame({ children }: { children: ReactNode }) {
+    const { width } = useWindowDimensions();
+    const maxWidth = width >= DESKTOP_BREAKPOINT ? DESKTOP_MAX_WIDTH : PHONE_MAX_WIDTH;
     return (
         <View style={{ alignItems: "center", backgroundColor: "#e9e6de", flex: 1 }}>
-            <View style={{ flex: 1, maxWidth: MAX_APP_WIDTH, overflow: "hidden", width: "100%" }}>{children}</View>
+            <View style={{ flex: 1, maxWidth, overflow: "hidden", width: "100%" }}>{children}</View>
         </View>
     );
 }
