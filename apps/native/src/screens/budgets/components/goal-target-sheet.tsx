@@ -132,7 +132,9 @@ function GoalTargetBody({
     const range = useMemo(() => {
         const start = tomorrowLocal(nowMs);
         // A past existing date stays selectable, so re-setting the amount does not move an untouched deadline.
-        return { start: target.existing && target.existing.targetDate < start ? target.existing.targetDate : start };
+        return {
+            start: target.existing && target.existing.targetDate < start ? target.existing.targetDate : start,
+        };
     }, [target.existing, nowMs]);
 
     const inFlight = useRef(false);

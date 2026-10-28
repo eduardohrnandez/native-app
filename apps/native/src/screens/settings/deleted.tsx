@@ -26,7 +26,10 @@ export function RecentlyDeleted() {
     const restore = (id: string) => {
         transactionsRepo.restore(db, id).catch((cause: unknown) => {
             console.error("Restore failed", cause);
-            notifyFailure({ body: t("settings.deleted.failedBody"), title: t("settings.deleted.failedTitle") });
+            notifyFailure({
+                body: t("settings.deleted.failedBody"),
+                title: t("settings.deleted.failedTitle"),
+            });
         });
     };
 

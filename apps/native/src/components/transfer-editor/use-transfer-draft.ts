@@ -356,7 +356,13 @@ function savedState(accounts: readonly Account[], saved: SavedTransfer): Opening
             fromCurrency !== toCurrency &&
             saved.rate !== null &&
             transferGap(
-                { arrived: saved.arrived, fee: saved.fee, feeSide: saved.feeSide, rate: saved.rate, sent: saved.sent },
+                {
+                    arrived: saved.arrived,
+                    fee: saved.fee,
+                    feeSide: saved.feeSide,
+                    rate: saved.rate,
+                    sent: saved.sent,
+                },
                 feeDecimals,
                 minorUnitsFor(toCurrency)
             ) < 0,

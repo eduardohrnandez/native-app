@@ -15,7 +15,7 @@ export function Licenses() {
     return (
         <LegendList
             className="bg-background"
-            contentContainerStyle={{ paddingBottom: 40, paddingHorizontal: 20 }}
+            contentContainerStyle={{ paddingBottom: 40, paddingLeft: 20, paddingRight: 20 }}
             contentInsetAdjustmentBehavior="automatic"
             data={licenses}
             keyExtractor={(license) => license.name}

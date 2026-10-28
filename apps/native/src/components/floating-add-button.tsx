@@ -38,7 +38,11 @@ const TRIGGER_HEIGHT = 64;
 const DIAL_GAP = 12;
 
 const LABEL_WIDTHS = [280, 240, 200] as const;
-const LABEL_MAX_CLASS = { 200: "max-w-[200px]", 240: "max-w-[240px]", 280: "max-w-[280px]" } as const;
+const LABEL_MAX_CLASS = {
+    200: "max-w-[200px]",
+    240: "max-w-[240px]",
+    280: "max-w-[280px]",
+} as const;
 const LABEL_GAP = 12;
 const CHIP_PADDING_X = 10;
 const DIAL_ROW_CHROME = DIAL_EDGE_INSET * 2 + ACTION_HEIGHT + LABEL_GAP + CHIP_PADDING_X * 2;
@@ -105,7 +109,10 @@ function fitDial(actionCount: number, room: number, fontScale: number, width: La
             return { kept: actionCount, lines };
         }
     }
-    return { kept: fittingActionCount(actionCount, room, fontScale, tightest, width), lines: tightest };
+    return {
+        kept: fittingActionCount(actionCount, room, fontScale, tightest, width),
+        lines: tightest,
+    };
 }
 
 interface AddAction {
@@ -196,8 +203,18 @@ export function FloatingAddButton() {
         ...(convex === null
             ? []
             : [
-                  { href: "/transactions/voice" as const, icon: Mic01Icon, key: "voice", label: t("log.add.voice") },
-                  { href: "/transactions/scan" as const, icon: ScanIcon, key: "scan", label: t("log.add.scan") },
+                  {
+                      href: "/transactions/voice" as const,
+                      icon: Mic01Icon,
+                      key: "voice",
+                      label: t("log.add.voice"),
+                  },
+                  {
+                      href: "/transactions/scan" as const,
+                      icon: ScanIcon,
+                      key: "scan",
+                      label: t("log.add.scan"),
+                  },
               ]),
         { href: null, icon: FileImportIcon, key: "import", label: t("log.add.import") },
     ];

@@ -235,7 +235,10 @@ function HeroVerdict({
     // A share under a fifth is not a culprit.
     const blame =
         dominant && dominant.share >= 0.2
-            ? t("budgets.hero.verdictBlame", { name: dominant.name, percent: Math.round(dominant.share * 100) })
+            ? t("budgets.hero.verdictBlame", {
+                  name: dominant.name,
+                  percent: Math.round(dominant.share * 100),
+              })
             : null;
 
     return (

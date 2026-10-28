@@ -54,7 +54,12 @@ const DATA_LINKS = [
     { href: "/settings/restore", icon: "ArchiveRestore", title: "settings.row.restore" },
     { href: "/settings/deleted", icon: "Clock04", title: "settings.row.deleted" },
     { destructive: true, href: "/settings/erase", icon: "Delete02", title: "settings.row.erase" },
-] satisfies readonly { destructive?: boolean; href: Href; icon: SettingsIconName; title: TranslationKey }[];
+] satisfies readonly {
+    destructive?: boolean;
+    href: Href;
+    icon: SettingsIconName;
+    title: TranslationKey;
+}[];
 
 async function toggleAppLock(db: Database, next: boolean): Promise<void> {
     const result = await requestUnlock(translateNow(next ? "settings.lock.promptOn" : "settings.lock.promptOff"));

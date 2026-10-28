@@ -73,7 +73,11 @@ export function useInstallmentsSheetForm({
     const paidBefore = schedule ? paidBeforeCount(draft, schedule, new Date(nowMs)) : 0;
     const total = schedule?.reduce((sum, row) => sum + row.amount, 0) ?? 0;
     const over = schedule && price !== null ? overPrice(schedule, price, currency) : 0;
-    const summary = planPhrase(t, { count: draft.count, interval: EVERY_OPTIONS[draft.every], upfront: upfront > 0 });
+    const summary = planPhrase(t, {
+        count: draft.count,
+        interval: EVERY_OPTIONS[draft.every],
+        upfront: upfront > 0,
+    });
     const shares = [
         ...UPFRONT_SHARES.map((share) => ({
             label: `${Math.round(share * PERCENT)}%`,
@@ -112,7 +116,10 @@ export function useInstallmentsSheetForm({
 
     const editDate = (sequence: number, dueDate: Date) => {
         setOpen(null);
-        onChange({ ...draft, edits: { ...draft.edits, [sequence]: { ...draft.edits[sequence], dueDate } } });
+        onChange({
+            ...draft,
+            edits: { ...draft.edits, [sequence]: { ...draft.edits[sequence], dueDate } },
+        });
     };
 
     // Payments apply oldest first, so checking a cuota checks every one before it.

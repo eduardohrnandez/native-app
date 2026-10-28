@@ -50,7 +50,10 @@ export function ArrivalMark({ onSettled }: { onSettled: () => void }) {
         );
     }, [drawn, focused, onSettled, opacity, reduced]);
 
-    const style = useAnimatedStyle(() => ({ opacity: opacity.get(), transform: [{ scaleY: drawn.get() }] }));
+    const style = useAnimatedStyle(() => ({
+        opacity: opacity.get(),
+        transform: [{ scaleY: drawn.get() }],
+    }));
 
     return (
         <Animated.View

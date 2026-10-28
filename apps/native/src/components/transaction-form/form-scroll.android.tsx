@@ -44,7 +44,10 @@ function useKeyboardOverlap(
                     const visibleBottom = offset.current + height - covered;
                     const fieldBottom = top + inputHeight + KEYBOARD_GAP;
                     if (fieldBottom > visibleBottom) {
-                        scroll.current?.scrollTo({ animated: true, y: offset.current + fieldBottom - visibleBottom });
+                        scroll.current?.scrollTo({
+                            animated: true,
+                            y: offset.current + fieldBottom - visibleBottom,
+                        });
                     }
                 });
             });

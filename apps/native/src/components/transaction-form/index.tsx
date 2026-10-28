@@ -1518,7 +1518,9 @@ export function TransactionForm({
         if ((forced && !touched.has("tags")) || (tagsSource !== "user" && !savedTagsStand)) {
             if (suggestion.tagIds.length > 0 || suggestion.pendingTagNames.length > 0) {
                 form.setFieldValue("tagIds", [...suggestion.tagIds], { dontUpdateMeta: true });
-                form.setFieldValue("pendingTagNames", [...suggestion.pendingTagNames], { dontUpdateMeta: true });
+                form.setFieldValue("pendingTagNames", [...suggestion.pendingTagNames], {
+                    dontUpdateMeta: true,
+                });
                 setTagsSource("suggested");
             } else if (tagsSource === "suggested") {
                 form.setFieldValue("tagIds", [], { dontUpdateMeta: true });
@@ -1902,9 +1904,18 @@ export function TransactionForm({
             blank: t(accountDeclined ? "transaction.sentence.noAccount" : "transaction.sentence.blank.account"),
             field: t("transaction.field.account"),
         },
-        amount: { blank: formatAmount(0, currency, true, language), field: t("transaction.field.amount") },
-        category: { blank: t("transaction.sentence.blank.category"), field: t("transaction.field.category") },
-        currency: { code: symbolIsShared(currency) ? currency : null, field: t("transaction.sentence.currency") },
+        amount: {
+            blank: formatAmount(0, currency, true, language),
+            field: t("transaction.field.amount"),
+        },
+        category: {
+            blank: t("transaction.sentence.blank.category"),
+            field: t("transaction.field.category"),
+        },
+        currency: {
+            code: symbolIsShared(currency) ? currency : null,
+            field: t("transaction.sentence.currency"),
+        },
         fee: { field: feeTitle },
         kind: {
             switchLabel: t("transaction.sentence.kind.switch"),
@@ -2250,7 +2261,9 @@ export function TransactionForm({
             const derivedNote =
                 usd > 0 && rateInForce !== null
                     ? [
-                          t("transaction.rate.derived", { rate: `${rateFigure(rateInForce)} ${rateUnitLabel}` }),
+                          t("transaction.rate.derived", {
+                              rate: `${rateFigure(rateInForce)} ${rateUnitLabel}`,
+                          }),
                           rateDeltaNote(rateInForce, 0),
                       ]
                           .filter((line) => line !== null)

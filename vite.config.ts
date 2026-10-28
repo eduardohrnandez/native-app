@@ -27,6 +27,8 @@ const projectIgnores = [
     "**/.playwright-mcp",
     "**/.claude",
     "skills-lock.json",
+    // Web stand-ins for SwiftUI, expo-file-system and expo-sqlite keep those libraries' loose shapes.
+    "apps/native/src/web",
 ];
 
 const formatOnlyIgnores = ["**/*.html", "**/*.md"];

@@ -313,7 +313,7 @@ export function Log() {
                     // A scroll view for the automatic inset: flat content starts under the transparent large title.
                     <ScrollView
                         className="bg-background"
-                        contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 20 }}
+                        contentContainerStyle={{ flexGrow: 1, paddingLeft: 20, paddingRight: 20 }}
                         contentInsetAdjustmentBehavior="automatic"
                     >
                         <AccountsBlock {...accountsProps} trailing={<AmountsEyeButton />} />
@@ -348,7 +348,9 @@ export function Log() {
                     flexGrow: 1,
                     // Clears the floating add button.
                     paddingBottom: 100,
-                    paddingHorizontal: 20,
+                    // Side keys, not paddingHorizontal: LegendList passes this style to a DOM div on web.
+                    paddingLeft: 20,
+                    paddingRight: 20,
                 }}
                 ListHeaderComponent={
                     <>

@@ -14,7 +14,11 @@ const PRESSED_ALPHA = 0.12;
 export function FeeSuggestion({ accountId, currency, row, visible }: FeeSuggestionProps) {
     const t = useTranslation();
     const m3 = useMaterialColors();
-    const { commit, minorUnits, open, padRef, padText, setPadText } = useFeeEditor({ accountId, currency, row });
+    const { commit, minorUnits, open, padRef, padText, setPadText } = useFeeEditor({
+        accountId,
+        currency,
+        row,
+    });
     return (
         <>
             {visible ? (

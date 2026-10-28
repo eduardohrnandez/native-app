@@ -285,7 +285,11 @@ function SearchField({ query, onChange }: { query: string; onChange: (next: stri
                 <Pressable
                     accessibilityLabel={t("common.clearSearch")}
                     accessibilityRole="button"
-                    android_ripple={{ borderless: true, color: withAlpha(m3.onSurface, PRESSED_ALPHA), radius: 20 }}
+                    android_ripple={{
+                        borderless: true,
+                        color: withAlpha(m3.onSurface, PRESSED_ALPHA),
+                        radius: 20,
+                    }}
                     className="size-12 items-center justify-center"
                     onPress={() => onChange("")}
                 >

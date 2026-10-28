@@ -149,7 +149,7 @@ export function TagPickerSheet({
                     ))}
 
                     <BottomSheetFlatList
-                        contentContainerStyle={{ paddingBottom: 32, paddingHorizontal: 20 }}
+                        contentContainerStyle={{ paddingBottom: 32, paddingLeft: 20, paddingRight: 20 }}
                         data={results}
                         keyboardDismissMode="on-drag"
                         keyboardShouldPersistTaps="handled"

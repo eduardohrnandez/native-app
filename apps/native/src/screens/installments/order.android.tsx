@@ -164,7 +164,11 @@ interface ScheduleRowProps {
 function ScheduleRow({ count, isNext, money, nowMs, onPress, row }: ScheduleRowProps) {
     const t = useTranslation();
     const { language } = useLanguage();
-    const { breakdown, status, when } = scheduleRowWording(t, language, row, { isNext, money, nowMs });
+    const { breakdown, status, when } = scheduleRowWording(t, language, row, {
+        isNext,
+        money,
+        nowMs,
+    });
     const title = installmentTitle(t, row.row, count);
     const amount = money(row.owed);
     return (

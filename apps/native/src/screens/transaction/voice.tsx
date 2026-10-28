@@ -550,7 +550,10 @@ function failedActions(
 ) {
     if (reason === "notEntitled") {
         return entitled
-            ? { primary: { label: t("voice.action.retry"), onPress: handlers.listenAgain }, secondary: null }
+            ? {
+                  primary: { label: t("voice.action.retry"), onPress: handlers.listenAgain },
+                  secondary: null,
+              }
             : { primary: { label: t("pro.action.see"), onPress: handlers.seePro }, secondary: null };
     }
     if (NO_RETRY_REASONS.has(reason)) {
@@ -616,7 +619,11 @@ function VoiceThreadScreen() {
         () =>
             [...expenseCategories, ...incomeCategories].flatMap((parent) => [
                 { id: parent.id, income: parent.income, name: parent.name },
-                ...parent.children.map((child) => ({ id: child.id, income: child.income, name: child.name })),
+                ...parent.children.map((child) => ({
+                    id: child.id,
+                    income: child.income,
+                    name: child.name,
+                })),
             ]),
         [expenseCategories, incomeCategories]
     );
@@ -650,7 +657,10 @@ function VoiceThreadScreen() {
         [accounts, bounded.accountsOmitted, bounded.categoriesOmitted, candidates, currency]
     );
 
-    const { cancel, finish, heard, level, listenAgain, phase, spoke, turns } = useVoiceEntry({ context, request });
+    const { cancel, finish, heard, level, listenAgain, phase, spoke, turns } = useVoiceEntry({
+        context,
+        request,
+    });
     const hint = useVoiceHint();
     const refusal = phase.kind === "failed" && isLimitRefusal(phase.reason) ? phase.reason : null;
     const limit = useLimitNotice("voiceEntry", refusal);

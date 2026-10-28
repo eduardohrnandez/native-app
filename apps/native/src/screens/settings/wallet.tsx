@@ -64,9 +64,21 @@ const IOS27_AUTOMATION_STEPS: readonly Step[] = [
 
 const IOS27_MANUAL_STEPS: readonly Step[] = [
     { frame: newShortcutFrame, title: "settings.wallet.v27Manual1" },
-    { detail: "settings.wallet.v27Manual2Detail", frame: triggersFrame, title: "settings.wallet.v27Manual2" },
-    { detail: "settings.wallet.manualStep2Detail", frame: pickerFrame, title: "settings.wallet.manualStep2" },
-    { detail: "settings.wallet.manualStep3Detail27", frame: boundFrame, title: "settings.wallet.manualStep3" },
+    {
+        detail: "settings.wallet.v27Manual2Detail",
+        frame: triggersFrame,
+        title: "settings.wallet.v27Manual2",
+    },
+    {
+        detail: "settings.wallet.manualStep2Detail",
+        frame: pickerFrame,
+        title: "settings.wallet.manualStep2",
+    },
+    {
+        detail: "settings.wallet.manualStep3Detail27",
+        frame: boundFrame,
+        title: "settings.wallet.manualStep3",
+    },
     { title: "settings.wallet.step5" },
 ];
 

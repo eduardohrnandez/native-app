@@ -59,7 +59,10 @@ const UNIT_NOUN_KEY = new Map<number, PluralKeys>([
     [RECURRING_TYPE.yearly, { many: "transaction.unit.years", one: "transaction.unit.year" }],
 ]);
 
-const MONTHLY_INTERVAL: PluralKeys = { many: "transaction.interval.months", one: "transaction.interval.month" };
+const MONTHLY_INTERVAL: PluralKeys = {
+    many: "transaction.interval.months",
+    one: "transaction.interval.month",
+};
 
 const INTERVAL_KEY = new Map<number, PluralKeys>([
     [RECURRING_TYPE.daily, { many: "transaction.interval.days", one: "transaction.interval.day" }],

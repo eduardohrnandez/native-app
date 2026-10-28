@@ -37,7 +37,11 @@ export function LogUpcoming({ transactions, schedules, currency, rates, onPress,
     const headerRow = cn("flex-row items-baseline justify-between gap-2", largeText && "flex-wrap");
     // Valued at the coming charge: a renewal's saved date can predate every held rate.
     const charges = useMemo(
-        () => transactions.map((transaction) => ({ ...transaction, date: landingDate(transaction, new Date(nowMs)) })),
+        () =>
+            transactions.map((transaction) => ({
+                ...transaction,
+                date: landingDate(transaction, new Date(nowMs)),
+            })),
         [transactions, nowMs]
     );
     const totals = useMemo(() => currencyTotals(charges, currency, rates), [charges, currency, rates]);
@@ -45,7 +49,10 @@ export function LogUpcoming({ transactions, schedules, currency, rates, onPress,
     const rows = useMemo(() => {
         const valued = valueRows(charges, currency, rates);
         return foldFees(
-            transactions.map((transaction, index) => ({ ...transaction, valued: valued[index]?.valued ?? null }))
+            transactions.map((transaction, index) => ({
+                ...transaction,
+                valued: valued[index]?.valued ?? null,
+            }))
         );
     }, [transactions, charges, currency, rates]);
     const perMonth = useMemo(

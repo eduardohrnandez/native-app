@@ -104,7 +104,9 @@ export const TransactionStage: typeof TransactionStageBase = ({
     const ready = (footer?.tone ?? "primary") === "primary";
     // The part that draws the back button owns the press: at large text the pinned part is only the footer.
     useStageBack(buttonOnly ? undefined : onBack);
-    const bottomPad = { paddingBottom: keyboardShown ? KEYBOARD_BOTTOM_PAD : BOTTOM_PAD + insets.bottom };
+    const bottomPad = {
+        paddingBottom: keyboardShown ? KEYBOARD_BOTTOM_PAD : BOTTOM_PAD + insets.bottom,
+    };
 
     const button =
         footer && !keyboardShown ? (
@@ -117,13 +119,17 @@ export const TransactionStage: typeof TransactionStageBase = ({
                     buttonOnly ? null : "mt-4"
                 )}
                 onPress={footer.onPress}
-                style={{ backgroundColor: ready ? m3.primary : withAlpha(m3.onSurface, DISABLED_CONTAINER_ALPHA) }}
+                style={{
+                    backgroundColor: ready ? m3.primary : withAlpha(m3.onSurface, DISABLED_CONTAINER_ALPHA),
+                }}
                 testID="stage-footer"
             >
                 <Animated.View entering={FOOTER_LABEL_ENTERING} key={footer.label}>
                     <Text
                         className="font-sans-medium text-body text-center"
-                        style={{ color: ready ? m3.onPrimary : withAlpha(m3.onSurface, DISABLED_CONTENT_ALPHA) }}
+                        style={{
+                            color: ready ? m3.onPrimary : withAlpha(m3.onSurface, DISABLED_CONTENT_ALPHA),
+                        }}
                     >
                         {footer.label}
                     </Text>

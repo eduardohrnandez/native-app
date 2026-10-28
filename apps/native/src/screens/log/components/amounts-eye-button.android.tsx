@@ -29,7 +29,11 @@ export const AmountsEyeButton: typeof AmountsEyeButtonBase = () => {
         <Pressable
             accessibilityLabel={t(hidden ? "log.amounts.show" : "log.amounts.hide")}
             accessibilityRole="button"
-            android_ripple={{ borderless: true, color: withAlpha(m3.onSecondaryContainer, PRESSED_ALPHA), radius: 20 }}
+            android_ripple={{
+                borderless: true,
+                color: withAlpha(m3.onSecondaryContainer, PRESSED_ALPHA),
+                radius: 20,
+            }}
             className="-m-1 size-12 items-center justify-center"
             onPress={() => {
                 setBoolSetting(db, "hideAmounts", !hidden);

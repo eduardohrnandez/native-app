@@ -21,7 +21,11 @@ export const ModalClose: typeof ModalCloseBase = ({ accessibilityLabel, disabled
                 accessibilityLabel={accessibilityLabel}
                 accessibilityRole="button"
                 accessibilityState={{ disabled }}
-                android_ripple={{ borderless: true, color: withAlpha(m3.onSurface, PRESSED_ALPHA), radius: 20 }}
+                android_ripple={{
+                    borderless: true,
+                    color: withAlpha(m3.onSurface, PRESSED_ALPHA),
+                    radius: 20,
+                }}
                 className="size-12 items-center justify-center"
                 disabled={disabled}
                 onPress={onPress}

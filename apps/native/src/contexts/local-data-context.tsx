@@ -6,6 +6,7 @@ import { bootstrapLocalData } from "@/data/bootstrap";
 import { settleLegacyOnboarding } from "@/data/onboarding-core";
 import { openDatabase } from "@/db/client";
 import type { Database } from "@/db/client";
+import { warmDatabase } from "@/db/warm";
 
 import migrationsBundle from "../../drizzle/migrations";
 
@@ -48,6 +49,7 @@ export function useDatabase(): Database {
 
 async function openLocalData(cancelled: () => boolean): Promise<LocalDataState | null> {
     try {
+        await warmDatabase();
         const database = openDatabase();
         if (cancelled()) {
             return null;

@@ -150,7 +150,11 @@ function ComingUpRow({
     const title =
         row.sequence === 0
             ? `${orderName(t, item.purchase)} · ${t("installments.upfront")}`
-            : t("installments.forOrder", { count, index: row.sequence, order: orderName(t, item.purchase) });
+            : t("installments.forOrder", {
+                  count,
+                  index: row.sequence,
+                  order: orderName(t, item.purchase),
+              });
     const when = overdue
         ? `${formatSentenceDate(row.dueDate, language)} · ${t("installments.overdue")}`
         : [formatSentenceDate(row.dueDate, language), dueIn(t, row.dueDate, nowMs)].filter(Boolean).join(" · ");

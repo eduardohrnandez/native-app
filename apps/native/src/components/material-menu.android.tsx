@@ -26,7 +26,11 @@ const SYMBOL_ICONS = new Map<MenuAction["image"], ImageSourcePropType>([
     ["chevron.right", { uri: "nano_later" }],
 ]);
 
-const LABEL_STYLE = { fontFamily: "GoogleSansFlex_500Medium", fontSize: 14, lineHeight: 20 } as const;
+const LABEL_STYLE = {
+    fontFamily: "GoogleSansFlex_500Medium",
+    fontSize: 14,
+    lineHeight: 20,
+} as const;
 
 const ICON_SIZE = 24;
 const PRESSED_ALPHA = 0.1;

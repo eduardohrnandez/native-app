@@ -401,7 +401,10 @@ function CategoryEditorReady(props: CategoryEditorProps & { db: Database }) {
             >
                 <View
                     className="items-center"
-                    style={{ paddingBottom: HERO_BOTTOM + (symbolEmpty ? CAPTION_CLEARANCE : 0), paddingTop: HERO_TOP }}
+                    style={{
+                        paddingBottom: HERO_BOTTOM + (symbolEmpty ? CAPTION_CLEARANCE : 0),
+                        paddingTop: HERO_TOP,
+                    }}
                 >
                     <IdentityHero
                         color={tint}

@@ -197,7 +197,8 @@ function DetailBody({
                 contentContainerStyle={{
                     flexGrow: 1,
                     paddingBottom: 40,
-                    paddingHorizontal: 20,
+                    paddingLeft: 20,
+                    paddingRight: 20,
                 }}
                 contentInsetAdjustmentBehavior="automatic"
                 keyExtractor={(item) => item.id}

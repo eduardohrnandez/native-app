@@ -8,7 +8,11 @@ import type { CaptureFeature, LimitNotice } from "@/hooks/use-usage-limits";
 import { useLanguage, useTranslation } from "@/i18n/context";
 
 const COPY = {
-    receiptScan: { last: "receipt.limit.last", next: "receipt.limit.next", paused: "receipt.limit.paused" },
+    receiptScan: {
+        last: "receipt.limit.last",
+        next: "receipt.limit.next",
+        paused: "receipt.limit.paused",
+    },
     voiceEntry: { last: "voice.limit.last", next: "voice.limit.next", paused: "voice.limit.paused" },
 } as const;
 
@@ -64,7 +68,9 @@ export function LimitToast({
                 body={description ?? undefined}
                 onAction={() => router.push(toPro ? "/paywall" : "/settings/usage")}
                 title={title}
-                tone={{ kind: notice.kind === "paused" || notice.kind === "capturesEmpty" ? "failure" : "warning" }}
+                tone={{
+                    kind: notice.kind === "paused" || notice.kind === "capturesEmpty" ? "failure" : "warning",
+                }}
             />
         </Animated.View>
     );

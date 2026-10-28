@@ -285,7 +285,12 @@ export function BudgetBurndownChart({
     const axis = useChartPath(geometry.axis, animatedCharts, pointCount);
     const zeroY = useChartDraw(animatedCharts, plot.zeroY, plot.zeroY, pointCount);
     const aboveZero = useDerivedValue(() => ({ height: zeroY.get(), width, x: 0, y: 0 }));
-    const belowZero = useDerivedValue(() => ({ height: height - zeroY.get(), width, x: 0, y: zeroY.get() }));
+    const belowZero = useDerivedValue(() => ({
+        height: height - zeroY.get(),
+        width,
+        x: 0,
+        y: zeroY.get(),
+    }));
 
     const scrubbed = scrubDay == null ? null : burndown.points[scrubDay - 1];
     const marker = scrubbed ?? last;

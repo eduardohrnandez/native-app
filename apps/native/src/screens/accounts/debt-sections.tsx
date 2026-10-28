@@ -106,7 +106,12 @@ export function DebtSections({ currency, debts }: SectionsProps) {
     );
 
     const wording = { currency, language, showCents, t };
-    const tones = { due: colors.tint, income: colors.income, muted: colors.muted, overdue: colors.expense };
+    const tones = {
+        due: colors.tint,
+        income: colors.income,
+        muted: colors.muted,
+        overdue: colors.expense,
+    };
     const row = (item: DebtListRow) => {
         const subtitle = debtSubtitle(item, debts, wording);
         const line = debts.payoff.get(item.id);

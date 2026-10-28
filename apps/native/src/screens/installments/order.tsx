@@ -129,7 +129,11 @@ function OrderLoaded({ entry, leave, nowMs }: { entry: PlanWithStanding; leave: 
     );
 }
 
-const STATUS_TONE = { overdue: "text-expense", paid: "text-income", partial: "text-muted" } as const;
+const STATUS_TONE = {
+    overdue: "text-expense",
+    paid: "text-income",
+    partial: "text-muted",
+} as const;
 
 interface ScheduleRowProps {
     count: number;
@@ -143,7 +147,11 @@ interface ScheduleRowProps {
 function ScheduleRow({ count, isNext, money, nowMs, onPress, row }: ScheduleRowProps) {
     const t = useTranslation();
     const { language } = useLanguage();
-    const { breakdown, status, when } = scheduleRowWording(t, language, row, { isNext, money, nowMs });
+    const { breakdown, status, when } = scheduleRowWording(t, language, row, {
+        isNext,
+        money,
+        nowMs,
+    });
     return (
         <Pressable
             accessibilityRole={onPress ? "button" : undefined}

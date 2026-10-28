@@ -1,0 +1,17 @@
+{
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "buildCommand": "cd apps/native && npx intlayer build && EXPO_PUBLIC_CONVEX_URL=https://confident-dotterel-266.convex.cloud EXPO_PUBLIC_CONVEX_SITE_URL=https://confident-dotterel-266.convex.site EXPO_PUBLIC_LOGO_DEV_TOKEN=pk_ds1RNpJiTl6tzoNqlO7qRg npx expo export -p web",
+    "framework": null,
+    "headers": [
+        {
+            "headers": [
+                { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
+                { "key": "Cross-Origin-Embedder-Policy", "value": "credentialless" }
+            ],
+            "source": "/(.*)"
+        }
+    ],
+    "installCommand": "pnpm install --frozen-lockfile",
+    "outputDirectory": "apps/native/dist",
+    "rewrites": [{ "destination": "/index.html", "source": "/((?!_expo/|assets/).*)" }]
+}

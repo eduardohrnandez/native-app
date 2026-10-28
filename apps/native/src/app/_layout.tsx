@@ -1,5 +1,6 @@
-import "../../global.css";
 import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
+
+import "../../global.css";
 import { GeistMono_400Regular } from "@expo-google-fonts/geist-mono/400Regular";
 import { GeistMono_500Medium } from "@expo-google-fonts/geist-mono/500Medium";
 import { InstrumentSerif_400Regular } from "@expo-google-fonts/instrument-serif/400Regular";
@@ -25,6 +26,7 @@ import { CelebrationConfetti } from "@/components/confetti";
 import { LocalDataError } from "@/components/local-data-error";
 import { Text } from "@/components/text";
 import { UpdateSheet } from "@/components/update-sheet";
+import { WebFrame } from "@/components/web-frame";
 import { AppSettingsProvider } from "@/contexts/display-settings-context";
 import { IdentityDraftProvider } from "@/contexts/identity-draft-context";
 import { LocalDataProvider, useDatabase, useLocalData } from "@/contexts/local-data-context";
@@ -325,7 +327,9 @@ export default function RootLayout() {
                                 <DeferredDeleteProvider>
                                     <AppSettingsProvider>
                                         <IdentityDraftProvider>
-                                            <RootNavigator fontsLoaded={fontsLoaded} />
+                                            <WebFrame>
+                                                <RootNavigator fontsLoaded={fontsLoaded} />
+                                            </WebFrame>
                                         </IdentityDraftProvider>
                                     </AppSettingsProvider>
                                 </DeferredDeleteProvider>

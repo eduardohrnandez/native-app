@@ -1,5 +1,5 @@
 import { expoClient } from "@better-auth/expo/client";
-import { convexClient } from "@convex-dev/better-auth/client/plugins";
+import { convexClient, crossDomainClient } from "@convex-dev/better-auth/client/plugins";
 import { cloudConfiguration, env } from "@outlayr/env/native";
 import type { BetterAuthClientPlugin } from "better-auth/client";
 import type { emailOTP } from "better-auth/plugins/email-otp";
@@ -7,6 +7,7 @@ import { createAuthClient } from "better-auth/react";
 import { ConvexReactClient } from "convex/react";
 import Constants from "expo-constants";
 import { AFTER_FIRST_UNLOCK, getItem, setItem } from "expo-secure-store";
+import { Platform } from "react-native";
 
 const keychain = { keychainAccessible: AFTER_FIRST_UNLOCK };
 
@@ -51,14 +52,21 @@ function createCloudRuntime() {
             plugins: [
                 convexClient(),
                 emailCodes,
-                expoClient({
-                    scheme,
-                    storage: {
-                        getItem: readKeychain,
-                        setItem: (key, value) => setItem(key, value, keychain),
-                    },
-                    storagePrefix: scheme,
-                }),
+                // A browser cannot set the Cookie header expoClient relies on, so the web hands the session over
+                // through the cross-domain plugin the server already runs.
+                Platform.OS === "web"
+                    ? crossDomainClient({
+                          storage: { getItem: readKeychain, setItem: (key, value) => setItem(key, value, keychain) },
+                          storagePrefix: scheme,
+                      })
+                    : expoClient({
+                          scheme,
+                          storage: {
+                              getItem: readKeychain,
+                              setItem: (key, value) => setItem(key, value, keychain),
+                          },
+                          storagePrefix: scheme,
+                      }),
             ],
         }),
         convex: new ConvexReactClient(convexUrl, {

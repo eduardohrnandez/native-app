@@ -64,7 +64,10 @@ export function Sync() {
             next && accountId ? runAdoption(db, adoptionEngine(db), RESUME, accountId) : setSyncEnabled(db, false);
         work.catch((cause: unknown) => {
             console.error("Sync switch failed", cause);
-            notifyFailure({ body: t("settings.sync.failedBody"), title: t("settings.sync.failedTitle") });
+            notifyFailure({
+                body: t("settings.sync.failedBody"),
+                title: t("settings.sync.failedTitle"),
+            });
         }).finally(() => setBusy(false));
     };
 

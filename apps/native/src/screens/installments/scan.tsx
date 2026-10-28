@@ -107,7 +107,11 @@ function ScanFlow({ account, photo }: { account: Account; photo: ScanPhoto | nul
     }, [account, order, router]);
 
     const close = () => router.back();
-    const choose: BarAction = { icon: Image01Icon, label: t("installments.scan.choose"), onPress: chooseFromLibrary };
+    const choose: BarAction = {
+        icon: Image01Icon,
+        label: t("installments.scan.choose"),
+        onPress: chooseFromLibrary,
+    };
     const shown = phase.kind === "idle" || phase.kind === "picking" ? null : phase.photo;
 
     if (phase.kind === "scanning" || order !== null) {

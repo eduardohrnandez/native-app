@@ -32,7 +32,10 @@ export function LiabilityToolbar({ account, plan }: { account: Account; plan: Pa
                 <Stack.Toolbar.MenuAction
                     icon="pencil"
                     onPress={() =>
-                        router.push({ params: { accountId: account.id }, pathname: "/accounts/[accountId]/edit" })
+                        router.push({
+                            params: { accountId: account.id },
+                            pathname: "/accounts/[accountId]/edit",
+                        })
                     }
                 >
                     {t("common.edit")}

@@ -2,7 +2,13 @@ import { describe, expect, it } from "@jest/globals";
 
 import { logEntriesEqual } from "./entries-equal";
 
-const VIEW = { currency: "USD", language: "en", showCents: true, swapTimeLabel: false, use24Hour: false };
+const VIEW = {
+    currency: "USD",
+    language: "en",
+    showCents: true,
+    swapTimeLabel: false,
+    use24Hour: false,
+};
 
 /** A row as a write rebuilds it: equal content, every object and date fresh. */
 const row = () => ({

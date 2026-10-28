@@ -1,15 +1,12 @@
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { openDatabaseSync } from "expo-sqlite";
 
+import { DATABASE_NAME, DATABASE_OPTIONS } from "./client-options";
 import * as schema from "./schema";
 
-const DATABASE_NAME = "outlayr.db";
-
-/** `enableChangeListener` powers `useLiveQuery`. Migrations run in `LocalDataProvider`, not here. */
+/** Migrations run in `LocalDataProvider`, not here. */
 export function openDatabase() {
-    const sqlite = openDatabaseSync(DATABASE_NAME, {
-        enableChangeListener: true,
-    });
+    const sqlite = openDatabaseSync(DATABASE_NAME, DATABASE_OPTIONS);
 
     // WAL, so the `useLiveQuery` SELECTs a write wakes are not serialised against it.
     sqlite.execSync("PRAGMA journal_mode = WAL");

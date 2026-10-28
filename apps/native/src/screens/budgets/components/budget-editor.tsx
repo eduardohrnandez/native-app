@@ -93,7 +93,10 @@ export function BudgetEditor({
     const anchorRange = useMemo(() => {
         const now = new Date(nowMs);
         const periodStart = startOfPeriod(now, type, calendar);
-        return { end: now, start: startDate.getTime() < periodStart.getTime() ? startDate : periodStart };
+        return {
+            end: now,
+            start: startDate.getTime() < periodStart.getTime() ? startDate : periodStart,
+        };
     }, [nowMs, type, calendar, startDate]);
 
     const preview = (next: number) => {

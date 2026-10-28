@@ -115,7 +115,11 @@ export function FlowAmount({
         <FlowFigure
             className={className}
             fontFamily={fontFamily}
-            format={{ maximumFractionDigits: minorUnits, minimumFractionDigits: minorUnits, useGrouping: true }}
+            format={{
+                maximumFractionDigits: minorUnits,
+                minimumFractionDigits: minorUnits,
+                useGrouping: true,
+            }}
             locale={locale}
             prefix={prefix}
             size={size}

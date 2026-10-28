@@ -89,7 +89,7 @@ export function CurrencyPickerSheet({ selected, onSelect, ref }: CurrencyPickerS
                     </View>
 
                     <CurrencyPickerList
-                        contentContainerStyle={{ paddingBottom: 32, paddingHorizontal: 20 }}
+                        contentContainerStyle={{ paddingBottom: 32, paddingLeft: 20, paddingRight: 20 }}
                         favourites={favourites}
                         onSelect={onSelect}
                         onToggleFavourite={db === null ? null : onToggleFavourite}

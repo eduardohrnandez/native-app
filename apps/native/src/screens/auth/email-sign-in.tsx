@@ -89,7 +89,11 @@ function unwrap<T>({ data, error }: { data: T | null; error: { message?: string 
 }
 
 async function bindPassword(user: { email: string; id: string }) {
-    await persistProviderBinding({ betterAuthUserId: user.id, provider: "password", providerSubject: user.email });
+    await persistProviderBinding({
+        betterAuthUserId: user.id,
+        provider: "password",
+        providerSubject: user.email,
+    });
 }
 
 function SignInStep({ client, email: givenEmail, route }: Flow) {
@@ -112,7 +116,11 @@ function SignInStep({ client, email: givenEmail, route }: Flow) {
 
     return (
         <FirstRun
-            action={{ disabled: busy || !email || !password, label: t("auth.email.signIn.action"), onPress: submit }}
+            action={{
+                disabled: busy || !email || !password,
+                label: t("auth.email.signIn.action"),
+                onPress: submit,
+            }}
             error={error}
             eyebrow={t("auth.email.email")}
             footnote={
@@ -188,7 +196,13 @@ function VerifyStep({ client, email }: Flow) {
     const resend = () =>
         run(async () => {
             setResent(false);
-            unwrap(await client.emailOtp.sendVerificationOtp({ email, fetchOptions, type: "email-verification" }));
+            unwrap(
+                await client.emailOtp.sendVerificationOtp({
+                    email,
+                    fetchOptions,
+                    type: "email-verification",
+                })
+            );
             setResent(true);
         });
 

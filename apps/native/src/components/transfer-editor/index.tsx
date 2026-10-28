@@ -409,7 +409,9 @@ export default function TransferEditor({
             touch();
             draft.setOutside(false);
             AccessibilityInfo.announceForAccessibility(
-                t("transfers.gap.more", { amount: formatAmount(draft.outside, draft.feeCurrency, true, language) })
+                t("transfers.gap.more", {
+                    amount: formatAmount(draft.outside, draft.feeCurrency, true, language),
+                })
             );
             return;
         }
