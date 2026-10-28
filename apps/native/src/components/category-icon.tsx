@@ -380,7 +380,10 @@ const REGISTRY = new Map<string, IconPair>([
     ["Yoga01", { solid: Yoga01Solid, stroke: Yoga01Solid }],
 ]);
 
-const FALLBACK: IconPair = { solid: MoreHorizontalCircle01Solid, stroke: MoreHorizontalCircle01Solid };
+const FALLBACK: IconPair = {
+    solid: MoreHorizontalCircle01Solid,
+    stroke: MoreHorizontalCircle01Solid,
+};
 
 function resolve(name: string | null | undefined): IconPair {
     return (name ? REGISTRY.get(name) : undefined) ?? FALLBACK;

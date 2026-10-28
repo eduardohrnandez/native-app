@@ -29,9 +29,14 @@ describe("what a blocked transfer says", () => {
 
 function gapped(draft: Partial<Parameters<typeof gapPrompt>[0]>) {
     return gapPrompt(
-        { crossCurrency: true, feeCurrency: "USD", gapFee: null, gapOnTop: false, outside: 0, ...draft } as Parameters<
-            typeof gapPrompt
-        >[0],
+        {
+            crossCurrency: true,
+            feeCurrency: "USD",
+            gapFee: null,
+            gapOnTop: false,
+            outside: 0,
+            ...draft,
+        } as Parameters<typeof gapPrompt>[0],
         t,
         "en"
     );
@@ -67,7 +72,10 @@ describe("what an unexplained remainder offers", () => {
     });
 
     it("offers no outside account between two accounts in one currency", () => {
-        expect(gapped({ crossCurrency: false, gapAmount: -5 })).toMatchObject({ onOutside: null, outsideLabel: null });
+        expect(gapped({ crossCurrency: false, gapAmount: -5 })).toMatchObject({
+            onOutside: null,
+            outsideLabel: null,
+        });
     });
 
     it("goes quiet once the surplus is confirmed, because the sentence states it", () => {

@@ -63,8 +63,17 @@ async function writeDebt(db: Database, draft: DebtDraft): Promise<string> {
     const { account, amount, category, currency, person } = draft;
     const note = draft.note === "" ? undefined : draft.note;
     if (category !== null) {
-        const buyer = person ?? { currency, id: await createPerson(db, { currency, name: draft.newName }) };
-        await recordSoldOnCredit(db, { amount, categoryId: category.id, date: draft.date, note, person: buyer });
+        const buyer = person ?? {
+            currency,
+            id: await createPerson(db, { currency, name: draft.newName }),
+        };
+        await recordSoldOnCredit(db, {
+            amount,
+            categoryId: category.id,
+            date: draft.date,
+            note,
+            person: buyer,
+        });
         return buyer.id;
     }
     if (account === null && person !== null) {
@@ -78,13 +87,20 @@ async function writeDebt(db: Database, draft: DebtDraft): Promise<string> {
             openingBalance: comesFromPerson(draft.verb) ? -amount : amount,
         });
     }
-    const target = person ?? { currency, id: await createPerson(db, { currency, name: draft.newName }) };
+    const target = person ?? {
+        currency,
+        id: await createPerson(db, { currency, name: draft.newName }),
+    };
     const crossCurrency = target.currency !== account.currency;
     await recordDebtMovement(db, {
         account: { accountId: account.id, amount, currency: account.currency },
         date: draft.date,
         note,
-        person: { accountId: target.id, amount: crossCurrency ? draft.theirAmount : amount, currency: target.currency },
+        person: {
+            accountId: target.id,
+            amount: crossCurrency ? draft.theirAmount : amount,
+            currency: target.currency,
+        },
         rateType: crossCurrency ? "custom" : null,
         verb: draft.verb,
     });
@@ -184,7 +200,16 @@ export function useNewDebtForm({ onDirtyChange, onDone, personId, verb: initialV
     const incoming = !soldOnCredit && comesFromPerson(verb);
     const choice = choices.find((option) => comesFromPerson(option.verb) === incoming) ?? choices[0];
 
-    const draft = readDraft({ account, amountText, category, name, newCurrency, person, soldOnCredit, theirText });
+    const draft = readDraft({
+        account,
+        amountText,
+        category,
+        name,
+        newCurrency,
+        person,
+        soldOnCredit,
+        theirText,
+    });
 
     useEffect(() => {
         onDirtyChange(amountText !== "" || name.trim() !== "" || note.trim() !== "" || payBackBy !== null);

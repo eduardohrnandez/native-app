@@ -23,7 +23,13 @@ jest.mock<Partial<typeof import("@/theme/glow")>>("@/theme/glow", () => ({
     glowFromImage: (uri: string) => mockGlow(uri),
 }));
 
-const EMPTY: IdentitySelection = { color: null, emoji: null, icon: null, photoColor: null, photoUri: null };
+const EMPTY: IdentitySelection = {
+    color: null,
+    emoji: null,
+    icon: null,
+    photoColor: null,
+    photoUri: null,
+};
 const PHOTO: IdentitySelection = {
     color: "#123456",
     emoji: null,
@@ -50,13 +56,20 @@ describe("picks", () => {
     });
 
     it("an icon with no colour yet takes the palette's first", () => {
-        expect(withIcon(EMPTY, "wallet")).toStrictEqual({ ...EMPTY, color: CATEGORY_PALETTE[0], icon: "wallet" });
+        expect(withIcon(EMPTY, "wallet")).toStrictEqual({
+            ...EMPTY,
+            color: CATEGORY_PALETTE[0],
+            icon: "wallet",
+        });
     });
 });
 
 describe("pickedPhotoUri", () => {
     it("reads the first asset of a finished pick", () => {
-        const result = { assets: [{ height: 1, uri: "file:///b.jpg", width: 1 }], canceled: false as const };
+        const result = {
+            assets: [{ height: 1, uri: "file:///b.jpg", width: 1 }],
+            canceled: false as const,
+        };
         expect(pickedPhotoUri(result)).toBe("file:///b.jpg");
     });
 
@@ -79,7 +92,12 @@ describe("adoptPickedPhoto", () => {
 
         await expect(
             adoptPickedPhoto({ ...EMPTY, color: "#123456", icon: "wallet" }, "file:///cache.jpg")
-        ).resolves.toStrictEqual({ ...EMPTY, color: "#123456", photoColor: "#ff0000", photoUri: "file:///stored.jpg" });
+        ).resolves.toStrictEqual({
+            ...EMPTY,
+            color: "#123456",
+            photoColor: "#ff0000",
+            photoUri: "file:///stored.jpg",
+        });
         expect(mockGlow).toHaveBeenCalledWith("file:///stored.jpg");
     });
 

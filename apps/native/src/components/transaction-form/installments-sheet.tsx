@@ -46,7 +46,12 @@ export function InstallmentsSheet(props: InstallmentsSheetProps) {
         >
             <SheetGestureRoot style={{}}>
                 <BottomSheetScrollView
-                    contentContainerStyle={{ paddingBottom: 36, paddingHorizontal: 20, paddingTop: 8 }}
+                    contentContainerStyle={{
+                        paddingBottom: 36,
+                        paddingLeft: 20,
+                        paddingRight: 20,
+                        paddingTop: 8,
+                    }}
                     showsVerticalScrollIndicator={false}
                     // The sheet fits its content, so a long schedule would outgrow the screen; capped, it scrolls.
                     style={{

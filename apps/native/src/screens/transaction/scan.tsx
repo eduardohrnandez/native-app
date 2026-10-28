@@ -425,7 +425,12 @@ function ReviewSheet({
     if (receipt.tip !== null) {
         summary.push({ key: "tip", label: t("receipt.review.tip"), value: receipt.tip });
     }
-    summary.push({ emphasis: true, key: "total", label: t("receipt.review.total"), value: receipt.amount });
+    summary.push({
+        emphasis: true,
+        key: "total",
+        label: t("receipt.review.total"),
+        value: receipt.amount,
+    });
     const summaryDelay = Math.min(LINE_STAGGER_MAX_MS, 80 + receipt.items.length * LINE_STAGGER_MS) + 40;
 
     return (
@@ -609,7 +614,11 @@ function ScanFlowScreen() {
         () =>
             [...expenseCategories, ...incomeCategories].flatMap((parent) => [
                 { id: parent.id, income: parent.income, name: parent.name },
-                ...parent.children.map((child) => ({ id: child.id, income: child.income, name: child.name })),
+                ...parent.children.map((child) => ({
+                    id: child.id,
+                    income: child.income,
+                    name: child.name,
+                })),
             ]),
         [expenseCategories, incomeCategories]
     );
@@ -644,7 +653,10 @@ function ScanFlowScreen() {
         [accounts, bounded.accountsOmitted, bounded.categoriesOmitted, candidates, currency]
     );
 
-    const { phase, takePhoto, chooseFromLibrary, retry, reset } = useReceiptScan({ context, request });
+    const { phase, takePhoto, chooseFromLibrary, retry, reset } = useReceiptScan({
+        context,
+        request,
+    });
     const limit = useLimitNotice(
         "receiptScan",
         phase.kind === "failed" && isLimitRefusal(phase.reason) ? phase.reason : null
@@ -750,7 +762,11 @@ function ScanFlowScreen() {
 
     const stageBox = useStageBox();
 
-    const cameraAction: BarAction = { icon: Camera01Icon, label: t("receipt.action.camera"), onPress: takePhoto };
+    const cameraAction: BarAction = {
+        icon: Camera01Icon,
+        label: t("receipt.action.camera"),
+        onPress: takePhoto,
+    };
     const libraryAction: BarAction = {
         icon: Image01Icon,
         label: t("receipt.action.library"),
@@ -766,7 +782,10 @@ function ScanFlowScreen() {
                         primary={
                             savableCategoryId === null
                                 ? { label: t("receipt.action.finish"), onPress: () => openForm(receipt) }
-                                : { label: t("receipt.action.save"), onPress: () => save(receipt, savableCategoryId) }
+                                : {
+                                      label: t("receipt.action.save"),
+                                      onPress: () => save(receipt, savableCategoryId),
+                                  }
                         }
                         secondary={{ label: t("receipt.action.edit"), onPress: () => openForm(receipt) }}
                         tertiary={{ label: t("receipt.action.another"), onPress: reset }}

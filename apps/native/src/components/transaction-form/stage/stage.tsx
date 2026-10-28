@@ -129,7 +129,9 @@ export function TransactionStage({
     const buttonOnly = part === "pinned" && largeText;
     const inline = part === "inline";
     const tone = footer?.tone ?? "primary";
-    const bottomPad = { paddingBottom: keyboardShown ? KEYBOARD_BOTTOM_PAD : Math.max(BOTTOM_PAD, insets.bottom) };
+    const bottomPad = {
+        paddingBottom: keyboardShown ? KEYBOARD_BOTTOM_PAD : Math.max(BOTTOM_PAD, insets.bottom),
+    };
 
     const button =
         footer && !keyboardShown ? (

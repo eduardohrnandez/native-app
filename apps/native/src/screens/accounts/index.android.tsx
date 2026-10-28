@@ -195,7 +195,12 @@ const AccountRow = memo(({ account, colors, db, onDelete, onEdit, onOpen }: Acco
 
     const menuItems: ActionMenuItem[] = [
         { id: "edit", label: t("accounts.a11y.edit"), onPress: () => onEdit(account.id) },
-        { destructive: true, id: "delete", label: t("common.delete"), onPress: () => onDelete(account) },
+        {
+            destructive: true,
+            id: "delete",
+            label: t("common.delete"),
+            onPress: () => onDelete(account),
+        },
     ];
 
     return (

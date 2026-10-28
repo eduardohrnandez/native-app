@@ -68,7 +68,12 @@ function calendarDays(entries: readonly SpendingCalendarEntry[], start: Date, en
     const days: CalendarDay[] = [];
     for (let date = start; date <= end; date = addDays(date, 1)) {
         const entry = entryByDate.get(localDateKey(date));
-        days.push({ date, exact: entry?.exact ?? true, hasEntry: entry !== undefined, value: entry?.value ?? 0 });
+        days.push({
+            date,
+            exact: entry?.exact ?? true,
+            hasEntry: entry !== undefined,
+            value: entry?.value ?? 0,
+        });
     }
     return days;
 }

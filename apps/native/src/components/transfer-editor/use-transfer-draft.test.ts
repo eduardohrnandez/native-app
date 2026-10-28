@@ -27,7 +27,9 @@ const mockLastTransfer = jest.fn<() => SavedTransfer | null>(() => null);
 const mockNowMs = Date.UTC(2026, 9, 1);
 
 jest.mock("@/data/accounts", () => ({
-    useAccountBalance: (_db: unknown, account: { id: string }) => ({ total: mockBalances.get(account.id) ?? 0 }),
+    useAccountBalance: (_db: unknown, account: { id: string }) => ({
+        total: mockBalances.get(account.id) ?? 0,
+    }),
     useAccounts: () => mockAccounts,
     useBankAccounts: () => mockAccounts,
 }));
@@ -394,27 +396,45 @@ describe("a transfer between two currencies quoted the same way", () => {
             result.current.setDate(new Date(Date.UTC(2026, 0, 1)));
         });
         expect(result.current.rateInverse).toBe(true);
-        expect(result.current).toMatchObject({ legs: { fromAmount: 1_250_000, toAmount: 100 }, quotedRate: 0.00008 });
+        expect(result.current).toMatchObject({
+            legs: { fromAmount: 1_250_000, toAmount: 100 },
+            quotedRate: 0.00008,
+        });
     });
 });
 
 describe("useTransferDraft seed", () => {
     it("lands the amount on the leg whose currency it was spoken in, and nowhere when neither matches", async () => {
         const seededSent = await renderHook(() =>
-            useTransferDraft({} as Database, { amount: 100, currency: "EUR", fromAccountId: "eur", toAccountId: "usd" })
+            useTransferDraft({} as Database, {
+                amount: 100,
+                currency: "EUR",
+                fromAccountId: "eur",
+                toAccountId: "usd",
+            })
         );
         expect(seededSent.result.current.sentText).toBe("100");
         expect(seededSent.result.current.arrivedText).toBe("");
 
         const seededArrival = await renderHook(() =>
-            useTransferDraft({} as Database, { amount: 100, currency: "USD", fromAccountId: "eur", toAccountId: "usd" })
+            useTransferDraft({} as Database, {
+                amount: 100,
+                currency: "USD",
+                fromAccountId: "eur",
+                toAccountId: "usd",
+            })
         );
         expect(seededArrival.result.current.sentText).toBe("");
         expect(seededArrival.result.current.arrivedText).toBe("100");
         expect(seededArrival.result.current.arrived).toBe(100);
 
         const seededNeither = await renderHook(() =>
-            useTransferDraft({} as Database, { amount: 100, currency: "GBP", fromAccountId: "eur", toAccountId: "usd" })
+            useTransferDraft({} as Database, {
+                amount: 100,
+                currency: "GBP",
+                fromAccountId: "eur",
+                toAccountId: "usd",
+            })
         );
         expect(seededNeither.result.current.sentText).toBe("");
         expect(seededNeither.result.current.arrivedText).toBe("");
@@ -432,7 +452,12 @@ describe("useTransferDraft seed", () => {
 
     it("keeps a pinned arrival when the source is chosen afterwards, and drops it when the destination changes", async () => {
         const { result } = await renderHook(() =>
-            useTransferDraft({} as Database, { amount: 100, currency: "USD", fromUnresolved: true, toAccountId: "usd" })
+            useTransferDraft({} as Database, {
+                amount: 100,
+                currency: "USD",
+                fromUnresolved: true,
+                toAccountId: "usd",
+            })
         );
         expect(result.current.from).toBeNull();
         expect(result.current.arrivedText).toBe("100");
@@ -455,7 +480,12 @@ describe("useTransferDraft seed", () => {
 
     it("fills the sent side from a pinned arrival when the chosen source shares the destination's currency", async () => {
         const { result } = await renderHook(() =>
-            useTransferDraft({} as Database, { amount: 100, currency: "USD", fromUnresolved: true, toAccountId: "usd" })
+            useTransferDraft({} as Database, {
+                amount: 100,
+                currency: "USD",
+                fromUnresolved: true,
+                toAccountId: "usd",
+            })
         );
         expect(result.current.canSave).toBeFalsy();
         await act(async () => {
@@ -523,7 +553,11 @@ describe("a new transfer after the last one", () => {
     it("leaves a custom rate behind and opens on the day's Binance rate", async () => {
         mockLastTransfer.mockReturnValue({ ...last, rateType: "custom" });
         const result = await draft();
-        expect(result.current).toMatchObject({ from: { id: "usd-2" }, quotedRate: 1031.52, rateType: "binance" });
+        expect(result.current).toMatchObject({
+            from: { id: "usd-2" },
+            quotedRate: 1031.52,
+            rateType: "binance",
+        });
     });
 
     it("drops its rate source once a leg leaves its pair", async () => {
@@ -533,7 +567,11 @@ describe("a new transfer after the last one", () => {
         await act(async () => {
             result.current.chooseTo(mockAccounts[1] ?? null);
         });
-        expect(result.current).toMatchObject({ quotedRate: 1031.52, rateType: "binance", to: { id: "ves" } });
+        expect(result.current).toMatchObject({
+            quotedRate: 1031.52,
+            rateType: "binance",
+            to: { id: "ves" },
+        });
     });
 
     it.each([
@@ -553,7 +591,11 @@ describe("a new transfer after the last one", () => {
     it("gives way to a seeded leg and keeps the other", async () => {
         mockLastTransfer.mockReturnValue(last);
         const { result } = await renderHook(() => useTransferDraft({} as Database, { fromAccountId: "eur" }));
-        expect(result.current).toMatchObject({ feeSide: "source", from: { id: "eur" }, to: { id: "ves" } });
+        expect(result.current).toMatchObject({
+            feeSide: "source",
+            from: { id: "eur" },
+            to: { id: "ves" },
+        });
 
         const missed = await renderHook(() => useTransferDraft({} as Database, { fromUnresolved: true }));
         expect(missed.result.current.from).toBeNull();
@@ -696,14 +738,24 @@ describe("reopening a saved transfer", () => {
             result.current.setRateType("eur_reference");
         });
 
-        expect(result.current).toMatchObject({ block: { kind: "rate" }, canSave: false, quotedRate: null });
+        expect(result.current).toMatchObject({
+            block: { kind: "rate" },
+            canSave: false,
+            quotedRate: null,
+        });
     });
 
     it("asks for the amounts again when an account's currency changed since", async () => {
         mockBalances.set("usd", 500);
         const result = await reopened({ ...saved, fromCurrency: "EUR" });
 
-        expect(result.current).toMatchObject({ canSave: false, fee: 0, fromBalanceAfter: 500, sent: 0, sentText: "" });
+        expect(result.current).toMatchObject({
+            canSave: false,
+            fee: 0,
+            fromBalanceAfter: 500,
+            sent: 0,
+            sentText: "",
+        });
     });
 
     it("leaves a leg empty rather than moving it to another account when its account is gone", async () => {
@@ -818,7 +870,12 @@ describe("dollars from Payoneer that arrive as bolívares through Binance", () =
 
     it("reads USDT already in Binance as a surplus no fee explains", async () => {
         const result = await binanceP2p();
-        expect(result.current).toMatchObject({ canSave: false, gapAmount: -4.53, gapFee: null, quotedRate: 957.1 });
+        expect(result.current).toMatchObject({
+            canSave: false,
+            gapAmount: -4.53,
+            gapFee: null,
+            quotedRate: 957.1,
+        });
     });
 
     it("grows what came from Binance as the fee Payoneer took is typed", async () => {
@@ -965,7 +1022,11 @@ describe("a gap measured on the side that carries the fee", () => {
         await act(async () => {
             result.current.resolveAsFee();
         });
-        expect(result.current).toMatchObject({ fee: 1443, gapAmount: 0, legs: { fromAmount: 23_557, toAmount: 160 } });
+        expect(result.current).toMatchObject({
+            fee: 1443,
+            gapAmount: 0,
+            legs: { fromAmount: 23_557, toAmount: 160 },
+        });
     });
 
     it("counts dinars to the fils and closes on a three-decimal fee", async () => {

@@ -52,7 +52,10 @@ export function useOrderActions({ plan, standing }: PlanWithStanding, leave: () 
     }, [editing]);
 
     const pay = (all: boolean) =>
-        router.push({ params: { all: all ? "1" : "0", planId: plan.id }, pathname: "/installments/pay" });
+        router.push({
+            params: { all: all ? "1" : "0", planId: plan.id },
+            pathname: "/installments/pay",
+        });
 
     const deletePending = () =>
         Alert.alert(t("installments.deletePending"), t("installments.deletePending.body"), [
@@ -66,7 +69,10 @@ export function useOrderActions({ plan, standing }: PlanWithStanding, leave: () 
                         leave();
                     } catch (error) {
                         console.error("Failed to delete the order", error);
-                        notifyFailure({ body: t("installments.failedBody"), title: t("installments.failedTitle") });
+                        notifyFailure({
+                            body: t("installments.failedBody"),
+                            title: t("installments.failedTitle"),
+                        });
                     }
                 },
                 style: "destructive",

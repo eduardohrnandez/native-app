@@ -80,7 +80,11 @@ export function Owe(props: OweProps) {
 
     const part = (slot: OweSlot) => {
         const value = values[slot];
-        const shared = { accessibilityLabel: labels[slot], active: active === slot, onPress: () => press(slot) };
+        const shared = {
+            accessibilityLabel: labels[slot],
+            active: active === slot,
+            onPress: () => press(slot),
+        };
         return value === null ? (
             <SentenceBlank
                 {...shared}

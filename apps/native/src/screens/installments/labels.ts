@@ -49,5 +49,8 @@ export function lateFeeSuggestion(
     if (!last) {
         return null;
     }
-    return { row: last.row, visible: open.some((row) => row.overdue) && !open.some((row) => row.row.fee > 0) };
+    return {
+        row: last.row,
+        visible: open.some((row) => row.overdue) && !open.some((row) => row.row.fee > 0),
+    };
 }

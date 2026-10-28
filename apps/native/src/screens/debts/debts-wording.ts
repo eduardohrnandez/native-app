@@ -56,7 +56,10 @@ export function debtSubtitle(
                   paid: only.standing.installmentsPaid,
                   total: only.standing.installmentsTotal,
               })
-            : t(overdue ? "debts.overdue.orders" : "debts.next.orders", { ...next, count: orders.open.length });
+            : t(overdue ? "debts.overdue.orders" : "debts.next.orders", {
+                  ...next,
+                  count: orders.open.length,
+              });
     return { text, tone: overdue ? "overdue" : tone };
 }
 
@@ -128,12 +131,17 @@ export function payoffRowWording(
             return null;
         }
         const date = formatDayMonth(line.endedOn, language);
-        return { paidOff: t(isPerson(item.account) ? "debts.plan.paidBack" : "debts.plan.paidOff", { date }) };
+        return {
+            paidOff: t(isPerson(item.account) ? "debts.plan.paidBack" : "debts.plan.paidOff", { date }),
+        };
     }
     const date = formatSentenceDate(line.targetDate, language);
     const a11y =
         line.behind === null
             ? t("debts.plan.row", { date })
-            : t("debts.plan.rowBehind", { amount: planMoney(line.behind, currency, hidden, language), date });
+            : t("debts.plan.rowBehind", {
+                  amount: planMoney(line.behind, currency, hidden, language),
+                  date,
+              });
     return { a11y, date };
 }

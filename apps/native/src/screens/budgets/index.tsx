@@ -168,7 +168,10 @@ export function Budgets() {
             console.error("Failed to save the goal", error);
             notifyFailure(
                 error instanceof GoalValuationError
-                    ? { body: t("goals.unvalued.body", { account: target.name }), title: t("goals.unvalued.title") }
+                    ? {
+                          body: t("goals.unvalued.body", { account: target.name }),
+                          title: t("goals.unvalued.title"),
+                      }
                     : { body: t("goals.failedBody"), title: t("goals.failedTitle") }
             );
         }

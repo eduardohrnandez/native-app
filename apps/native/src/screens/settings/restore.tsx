@@ -35,7 +35,10 @@ export function RestoreData() {
             .finally(() => armLogoBackfill(db))
             .then(() => router.back())
             .catch(() => {
-                notifyFailure({ body: t("settings.restore.failedBody"), title: t("settings.restore.failedTitle") });
+                notifyFailure({
+                    body: t("settings.restore.failedBody"),
+                    title: t("settings.restore.failedTitle"),
+                });
             })
             .finally(() => setRestoring(null));
     };

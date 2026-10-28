@@ -16,7 +16,11 @@ export interface FeeSuggestionProps {
 
 export function FeeSuggestion({ accountId, currency, row, visible }: FeeSuggestionProps) {
     const t = useTranslation();
-    const { commit, minorUnits, open, padRef, padText, setPadText } = useFeeEditor({ accountId, currency, row });
+    const { commit, minorUnits, open, padRef, padText, setPadText } = useFeeEditor({
+        accountId,
+        currency,
+        row,
+    });
     return (
         <>
             {visible ? (

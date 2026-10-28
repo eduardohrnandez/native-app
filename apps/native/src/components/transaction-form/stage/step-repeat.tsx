@@ -81,7 +81,10 @@ export function StepRepeat({
         id: String(type),
         label: cadenceLabel(t, type),
     }));
-    cadences.push({ id: CUSTOM_OPTION, label: customLabel ?? t("transaction.schedule.customOption") });
+    cadences.push({
+        id: CUSTOM_OPTION,
+        label: customLabel ?? t("transaction.schedule.customOption"),
+    });
 
     const pickCadence = (id: string) => {
         if (id === CUSTOM_OPTION) {

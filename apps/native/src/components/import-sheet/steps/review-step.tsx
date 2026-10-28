@@ -376,7 +376,7 @@ export function ReviewStep({ review }: ReviewStepProps) {
 
             <View style={{ maxHeight: listMaxHeight }} testID="review-list">
                 <SectionList
-                    contentContainerStyle={{ paddingBottom: 16, paddingHorizontal: 20 }}
+                    contentContainerStyle={{ paddingBottom: 16, paddingLeft: 20, paddingRight: 20 }}
                     estimatedItemSize={ESTIMATED_ROW_HEIGHT}
                     extraData={{ enrichment, excluded: review.excluded, showSkipped }}
                     keyExtractor={keyOf}

@@ -277,7 +277,12 @@ function TreeConnector({ last = false }: { last?: boolean }) {
         <>
             <View
                 className="absolute top-0"
-                style={{ backgroundColor: ink, left: STEM_X, width: 1, ...(last ? { height: "50%" } : { bottom: 0 }) }}
+                style={{
+                    backgroundColor: ink,
+                    left: STEM_X,
+                    width: 1,
+                    ...(last ? { height: "50%" } : { bottom: 0 }),
+                }}
             />
             <View
                 className="absolute"

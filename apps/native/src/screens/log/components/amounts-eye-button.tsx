@@ -12,7 +12,10 @@ import { useTranslation } from "@/i18n/context";
 import { useColors } from "@/theme/use-colors";
 
 export const LOG_CONTROL_SIZE = "h-9.5 rounded-full";
-export const LOG_CONTROL_SHADOW = { borderRadius: 19, boxShadow: "0 3px 10px rgba(23, 21, 15, 0.1)" } as const;
+export const LOG_CONTROL_SHADOW = {
+    borderRadius: 19,
+    boxShadow: "0 3px 10px rgba(23, 21, 15, 0.1)",
+} as const;
 
 export function AmountsEyeButton() {
     const db = useDatabase();

@@ -81,7 +81,9 @@ function UnderAmount({ fee, future, moved, original, sentCurrency, showCents }: 
                 )}
                 {fee === undefined ? null : (
                     <Text className={className} numberOfLines={1}>
-                        {t("log.row.fee", { amount: formatAmount(fee.amount, fee.currency, showCents, language) })}
+                        {t("log.row.fee", {
+                            amount: formatAmount(fee.amount, fee.currency, showCents, language),
+                        })}
                     </Text>
                 )}
             </>
@@ -200,14 +202,24 @@ function rowFigure(transaction: TransactionRowProps["transaction"], currency: st
     const fee = transaction.fee && inListCurrency(transaction.fee, currency);
     if (isTransfer) {
         const sent = transaction.moved?.sent ?? transaction.amount;
-        return { amount: sent, apart: fee, currency: transaction.currency ?? currency, feeIn: false, total: sent };
+        return {
+            amount: sent,
+            apart: fee,
+            currency: transaction.currency ?? currency,
+            feeIn: false,
+            total: sent,
+        };
     }
     const shown = inListCurrency(transaction, currency);
     if (fee?.currency !== shown.currency) {
         return { ...shown, apart: fee, feeIn: false, total: shown.amount };
     }
     // Taken in, so a day's rows add up to its header.
-    return { ...shown, feeIn: true, total: shown.amount + (transaction.income ? -fee.amount : fee.amount) };
+    return {
+        ...shown,
+        feeIn: true,
+        total: shown.amount + (transaction.income ? -fee.amount : fee.amount),
+    };
 }
 
 interface TransactionRowProps {

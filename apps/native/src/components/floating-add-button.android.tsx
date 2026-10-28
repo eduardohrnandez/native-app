@@ -130,7 +130,12 @@ export function FloatingAddButton() {
 
     // Ranked by how often each is reached for, since the fit drops from the end.
     const ranked: AddAction[] = [
-        { href: "/transactions/create", icon: ReceiptDollarIcon, key: "transaction", label: t("log.add.transaction") },
+        {
+            href: "/transactions/create",
+            icon: ReceiptDollarIcon,
+            key: "transaction",
+            label: t("log.add.transaction"),
+        },
         ...(canTransfer
             ? [
                   {
@@ -145,8 +150,18 @@ export function FloatingAddButton() {
         ...(convex === null
             ? []
             : [
-                  { href: "/transactions/voice" as const, icon: Mic01Icon, key: "voice", label: t("log.add.voice") },
-                  { href: "/transactions/scan" as const, icon: ScanIcon, key: "scan", label: t("log.add.scan") },
+                  {
+                      href: "/transactions/voice" as const,
+                      icon: Mic01Icon,
+                      key: "voice",
+                      label: t("log.add.voice"),
+                  },
+                  {
+                      href: "/transactions/scan" as const,
+                      icon: ScanIcon,
+                      key: "scan",
+                      label: t("log.add.scan"),
+                  },
               ]),
         { href: null, icon: FileImportIcon, key: "import", label: t("log.add.import") },
     ];

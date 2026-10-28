@@ -185,7 +185,11 @@ export function useInstallmentOrder({
                         return;
                     }
                     const charged = new Date(Math.min(cuota.dueDate.getTime(), Date.now()));
-                    await installmentsRepo.addFee(db, { amount: fee.amount, date: charged, installmentId: cuota.id });
+                    await installmentsRepo.addFee(db, {
+                        amount: fee.amount,
+                        date: charged,
+                        installmentId: cuota.id,
+                    });
                     if (fee.sequence <= paidOutside) {
                         await installmentsRepo.recordPayment(db, {
                             amount: fee.amount,

@@ -37,7 +37,9 @@ export function SavingsGoalsSection({ goals, currency, onPress, onAdd }: Savings
                 <MonoLabel>{t("goals.heading")}</MonoLabel>
                 {outstanding > 0 ? (
                     <MonoLabel>
-                        {t("goals.summary.toGo", { amount: formatAmount(outstanding, currency, false, language) })}
+                        {t("goals.summary.toGo", {
+                            amount: formatAmount(outstanding, currency, false, language),
+                        })}
                     </MonoLabel>
                 ) : null}
             </View>

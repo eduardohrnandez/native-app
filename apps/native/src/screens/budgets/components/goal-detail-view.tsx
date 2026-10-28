@@ -55,7 +55,9 @@ export function GoalDetailView({ currency, editor, entry, nowMs }: GoalDetailVie
             return null;
         }
         if (standing.onPace) {
-            return t("goals.detail.verdictOnPace", { date: formatTargetMonth(goal.targetDate, language) });
+            return t("goals.detail.verdictOnPace", {
+                date: formatTargetMonth(goal.targetDate, language),
+            });
         }
         return t(ahead ? "goals.detail.verdictAhead" : "goals.detail.verdictBehind", {
             amount: display(Math.abs(standing.against)),
