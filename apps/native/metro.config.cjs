@@ -91,6 +91,7 @@ const WEB_NATIVE_ONLY = [
     "@shopify/react-native-skia",
 ];
 const WEB_ALIASES = [
+    [/^expo-notifications$/, "src/web/notifications.ts"],
     [/^expo-file-system$/, "src/web/file-system.ts"],
     [/^expo-secure-store$/, "src/web/secure-store.ts"],
     [/^react-native-web\/dist\/index$/, "src/web/react-native.ts"],

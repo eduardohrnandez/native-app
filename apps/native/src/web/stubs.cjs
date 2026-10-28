@@ -18,6 +18,9 @@ function createStub(modifiers) {
             if (key === "__esModule") {
                 return true;
             }
+            if (key === "prototype" || key === "$$typeof" || key === "isReactComponent" || key === "childContextTypes" || key === "contextTypes" || key === "getDerivedStateFromProps" || key === "contextType" || key === "defaultProps" || key === "propTypes" || key === "displayName") {
+                return undefined;
+            }
             if (key === "then" || key === Symbol.toPrimitive) {
                 return undefined;
             }
