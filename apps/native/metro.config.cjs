@@ -95,6 +95,8 @@ const WEB_ALIASES = [
     [/^react-native-reanimated$/, "src/web/reanimated.tsx"],
     [/^expo-notifications$/, "src/web/notifications.ts"],
     [/^@expo\/ui\/community\/menu$/, "src/web/menu-view.tsx"],
+    [/^expo-image-picker$/, "src/web/image-picker.ts"],
+    [/^expo-image$/, "src/web/expo-image.tsx"],
     [/^number-flow-react-native$/, "src/web/number-flow.tsx"],
     [/^expo-file-system$/, "src/web/file-system.ts"],
     [/^expo-secure-store$/, "src/web/secure-store.ts"],
@@ -110,7 +112,12 @@ finalConfig.resolver = {
     ...finalConfig.resolver,
     resolveRequest: (context, moduleName, platform) => {
         // The shim itself re-exports the real package, so it must not be routed back to itself.
-        if (platform === "web" && !context.originModulePath.endsWith("src/web/react-native.ts")) {
+        if (
+            platform === "web" &&
+            !context.originModulePath.endsWith("src/web/react-native.ts") &&
+            !context.originModulePath.endsWith("src/web/expo-image.tsx") &&
+            !context.originModulePath.endsWith("src/web/image-picker.ts")
+        ) {
             for (const [pattern, file] of WEB_ALIASES) {
                 if (pattern.test(moduleName)) {
                     return { filePath: path.resolve(__dirname, file), type: "sourceFile" };

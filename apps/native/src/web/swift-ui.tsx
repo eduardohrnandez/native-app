@@ -93,6 +93,8 @@ function resolve(modifiers: Modifiers): Resolved {
             case "frame": {
                 out.style.width = sizeOf(record.width) ?? sizeOf(record.maxWidth);
                 out.style.height = sizeOf(record.height) ?? sizeOf(record.maxHeight);
+                out.style.minHeight = sizeOf(record.minHeight);
+                out.style.minWidth = sizeOf(record.minWidth);
                 if (record.alignment === "leading") {
                     out.style.alignItems = "flex-start";
                 }
@@ -261,7 +263,7 @@ export function Button({
     const resolved = resolve(modifiers);
     return (
         <Pressable accessibilityRole="button" onPress={onPress ?? resolved.onPress} style={boxStyle(resolved, {})}>
-            {children ?? <RNText>{label}</RNText>}
+            {children ?? <RNText style={{ color: "var(--foreground)" }}>{label}</RNText>}
         </Pressable>
     );
 }

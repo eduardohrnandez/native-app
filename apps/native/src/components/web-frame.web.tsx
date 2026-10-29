@@ -21,7 +21,9 @@ export function WebFrame({ children }: { children: ReactNode }) {
         sheet.textContent =
             '[style*="ui-rounded"] { font-family: system-ui, "Segoe UI", sans-serif !important; }' +
             // react-native-web paints an enabled switch thumb Material teal, clashing with the accent track.
-            ' div[style*="rgb(0, 150, 136)"] { background-color: #ffffff !important; }';
+            ' div[style*="rgb(0, 150, 136)"] { background-color: #ffffff !important; }' +
+            // Scrollbars take the theme instead of the browser's bright default.
+            " * { scrollbar-color: rgba(128, 128, 128, 0.45) transparent; scrollbar-width: thin; }";
         document.head.append(sheet);
         return () => sheet.remove();
     }, []);

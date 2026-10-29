@@ -14,6 +14,8 @@ import SparkleIcon from "@app/icons/sparkle-icon";
 import StarIcon from "@app/icons/star-icon";
 import Tick02Icon from "@app/icons/tick02-icon";
 import { HugeiconsIcon } from "@hugeicons/react-native";
+import { View } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
 
 // SF Symbols have no browser equivalent, so each name the app uses maps to the closest Hugeicons glyph.
 const ICONS = {
@@ -42,15 +44,19 @@ function isKnown(name: string): name is keyof typeof ICONS {
 export function SymbolView({
     name,
     size = 20,
+    style,
     tintColor,
 }: {
     name: string;
     size?: number;
+    style?: StyleProp<ViewStyle>;
     tintColor?: unknown;
     [key: string]: unknown;
 }) {
     const icon = isKnown(name) ? ICONS[name] : Search01Icon;
-    return (
+    const glyph = (
         <HugeiconsIcon color={typeof tintColor === "string" ? tintColor : "var(--foreground)"} icon={icon} size={size} />
     );
+    // Absolutely positioned symbols (the identity tile's sparkles) carry their offsets in `style`.
+    return style === undefined ? glyph : <View style={style}>{glyph}</View>;
 }

@@ -3,6 +3,7 @@ import { useMemo } from "react";
 
 import type { MaterialRoleColors } from "@/theme/material-roles";
 import { useColors } from "@/theme/use-colors";
+import { CONTENT_STYLE, HEADER_INSETS } from "@/web/layout";
 
 import type { StackChrome } from "./stack-chrome";
 
@@ -13,8 +14,10 @@ type Options = NativeStackNavigationOptions;
 function webChrome(background: string, foreground: string): StackChrome {
     const bar: Options = {
         headerShadowVisible: false,
+        contentStyle: CONTENT_STYLE,
         headerShown: true,
         headerStyle: { backgroundColor: background },
+        ...HEADER_INSETS,
         headerTintColor: foreground,
         headerTitleAlign: "left",
         headerTransparent: false,
