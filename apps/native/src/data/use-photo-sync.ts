@@ -24,6 +24,7 @@ const PHOTO_DEBOUNCE_MS = 5000;
 export function usePhotoSync(db: Database | null, paused: boolean): void {
     useEffect(() => {
         if (db == null || paused) {
+            console.warn("[finta] photo sync idle", db == null ? "no database" : "paused: no Pro or no session");
             return;
         }
         const transport = photoTransport();
@@ -33,9 +34,12 @@ export function usePhotoSync(db: Database | null, paused: boolean): void {
         const syncPhotos = async () => {
             try {
                 if (!(await isSyncEnabled(db))) {
+                    console.warn("[finta] photo sync skipped: sync is off");
                     return;
                 }
-                const { downloaded } = await runPhotoSync(db, photoFiles, transport);
+                const result = await runPhotoSync(db, photoFiles, transport);
+                console.warn("[finta] photo sync pass", JSON.stringify(result));
+                const { downloaded } = result;
                 if (downloaded > 0) {
                     // Only a download changes what a screen can draw.
                     invalidateAll(PHOTO_TABLE_NAMES);
