@@ -114,6 +114,7 @@ import { useTransactionEnrichment } from "@/hooks/use-transaction-enrichment";
 import type { EnrichmentSuggestion, PendingCategory } from "@/hooks/use-transaction-enrichment";
 import { useLanguage, useTranslation } from "@/i18n/context";
 import { celebration } from "@/lib/celebration";
+import { columnWidth } from "@/lib/column-width";
 import { sendEnrichmentQueue } from "@/lib/enrichment-queue";
 import { freshEntries } from "@/lib/fresh-entries";
 import { fetchMerchantImage } from "@/lib/logo-fetch";
@@ -546,7 +547,7 @@ export function TransactionForm({
     const { use24Hour } = useDisplaySettings().state;
     const { width: windowWidth, height: windowHeight } = useWindowDimensions();
     // Swift's `.padding(.horizontal, 20)` content box.
-    const contentWidth = windowWidth - 40;
+    const contentWidth = columnWidth(windowWidth) - 40;
     const currencyListHeight = Math.round(windowHeight * CURRENCY_LIST_FRACTION);
     const globalCurrency = useGlobalCurrency(db);
 
