@@ -16,7 +16,7 @@ import { useSentenceShake } from "./use-sentence-shake";
 
 // Measured against SF Pro Rounded, not derived: clears the 26pt face's descenders inside the 38pt line box.
 const RULE_BOTTOM = 7;
-// A long name must shrink to the line and end in an ellipsis; unshrinkable, it wrapped into a clipped second line.
+// A long name must shrink to the line and wrap onto the next one; unshrinkable, its second line was clipped.
 const SHRINKABLE = { flexShrink: 1 } as const;
 
 export interface SentenceFigure {
@@ -109,9 +109,7 @@ export function SentenceValue({
                             still
                         />
                     ) : (
-                        <Text className={cn(textClassName, "shrink", tone())} numberOfLines={1}>
-                            {value}
-                        </Text>
+                        <Text className={cn(textClassName, "shrink", tone())}>{value}</Text>
                     )}
                 </Animated.View>
                 <Animated.View
