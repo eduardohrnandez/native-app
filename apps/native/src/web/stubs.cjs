@@ -11,7 +11,9 @@ function createStub(modifiers) {
             return {};
         }
         const isProps = typeof props === "object" && props !== null && "children" in props;
-        return isProps ? createElement(View, { style: props.style }, props.children) : null;
+        // Skia's `style` is a paint mode such as "stroke", which a view would read as a list of style objects.
+        const style = typeof props.style === "object" ? props.style : undefined;
+        return isProps ? createElement(View, { style }, props.children) : null;
     };
     return new Proxy(target, {
         get: (_, key) => {
