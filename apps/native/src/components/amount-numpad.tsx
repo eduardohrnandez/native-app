@@ -8,6 +8,7 @@ import { useSettingNumber } from "@/contexts/display-settings-context";
 import { currencySymbol, formatFixed, numberLocale } from "@/domain/money";
 import { applyNumpadKey, numpadMode, numpadToNumber } from "@/domain/numpad";
 import type { NumpadKey, NumpadMode, NumpadTileKey } from "@/domain/numpad";
+import { useNumpadKeyboard } from "@/hooks/use-numpad-keyboard";
 import { useLanguage, useTranslation } from "@/i18n/context";
 import { useHaptics } from "@/lib/use-haptics";
 import { SANS_BY_WEIGHT } from "@/theme/body-fonts";
@@ -81,6 +82,7 @@ export function AmountNumpad({
         },
         [haptics]
     );
+    useNumpadKeyboard(press);
 
     return (
         // No horizontal inset: the caller owns it, so the keys line up with whatever sits under them.

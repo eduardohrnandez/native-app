@@ -37,6 +37,8 @@ const ICONS = {
     "xmark.circle.fill": CancelCircleIcon,
 } as const;
 
+const RELATIVE = { position: "relative" } as const;
+
 function isKnown(name: string): name is keyof typeof ICONS {
     return name in ICONS;
 }
@@ -58,5 +60,6 @@ export function SymbolView({
         <HugeiconsIcon color={typeof tintColor === "string" ? tintColor : "var(--foreground)"} icon={icon} size={size} />
     );
     // Absolutely positioned symbols (the identity tile's sparkles) carry their offsets in `style`.
-    return style === undefined ? glyph : <View style={style}>{glyph}</View>;
+    // Positioned either way, so a sibling's absolute background cannot paint over the icon.
+    return <View style={[RELATIVE, style]}>{glyph}</View>;
 }
