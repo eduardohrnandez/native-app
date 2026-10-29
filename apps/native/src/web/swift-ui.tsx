@@ -351,8 +351,15 @@ export function ScrollView({ children, modifiers }: { children?: ReactNode; modi
     return <RNScrollView style={resolve(modifiers).style}>{children}</RNScrollView>;
 }
 
+// SwiftUI insets grouped rows from the screen edge; a plain scroller needs that spelled out.
+const LIST_INSET = { paddingBottom: 24, paddingHorizontal: 20, paddingTop: 8 } as const;
+
 export function List({ children, modifiers }: { children?: ReactNode; modifiers?: Modifiers }) {
-    return <RNScrollView style={resolve(modifiers).style}>{children}</RNScrollView>;
+    return (
+        <RNScrollView contentContainerStyle={LIST_INSET} style={resolve(modifiers).style}>
+            {children}
+        </RNScrollView>
+    );
 }
 List.ForEach = function ForEach<Item>({
     children,

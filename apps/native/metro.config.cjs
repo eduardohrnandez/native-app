@@ -125,6 +125,14 @@ finalConfig.resolver = {
                     type: "sourceFile",
                 };
             }
+            if (moduleName.startsWith("expo-router-internal/")) {
+                const routerDir = path.dirname(require.resolve("expo-router/package.json"));
+                const target = moduleName.slice("expo-router-internal/".length);
+                return { filePath: path.join(routerDir, "build", target, "index.js"), type: "sourceFile" };
+            }
+            if (moduleName === "./StackHeaderComponent" && context.originModulePath.includes("stack-utils")) {
+                return { filePath: path.resolve(__dirname, "src/web/stack-header.tsx"), type: "sourceFile" };
+            }
             if (
                 moduleName === "./processHeaderItemsForPlatform" &&
                 context.originModulePath.includes("stack-utils/toolbar")
