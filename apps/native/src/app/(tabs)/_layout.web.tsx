@@ -40,7 +40,12 @@ export default function TabLayout() {
                 sceneStyle: { backgroundColor: background },
                 tabBarActiveBackgroundColor: ACTIVE_BACKGROUND,
                 tabBarActiveTintColor: tint,
-                tabBarStyle: { backgroundColor: background, borderColor: "var(--separator)" },
+                tabBarStyle: {
+                    backgroundColor: background,
+                    borderColor: "var(--separator)",
+                    height: width >= SIDEBAR_MIN_WIDTH ? undefined : 64,
+                },
+                tabBarLabelStyle: { paddingBottom: 4 },
                 tabBarPosition: width >= SIDEBAR_MIN_WIDTH ? "left" : "bottom",
             }}
         >
