@@ -362,6 +362,11 @@ export function voiceThreadTransport(): VoiceThreadTransport {
 /** Convex file storage answers the PUT with the id it allocated; R2 sends nothing. */
 const uploadReceipt = z.object({ storageId: z.string().optional() });
 
+/** Convex file storage takes its upload url with a POST; an R2 presigned url is a PUT. */
+function uploadMethod(url: string): "POST" | "PUT" {
+    return new URL(url).pathname.startsWith("/api/storage/upload") ? "POST" : "PUT";
+}
+
 export function photoTransport(): PhotoTransport {
     return {
         confirmUpload: async (key, storageId) => {
@@ -383,7 +388,7 @@ export function photoTransport(): PhotoTransport {
                 // SAFETY: React Native sends a typed array as raw bytes, but its `BodyInit` type omits typed arrays.
                 body: bytes as unknown as BodyInit,
                 headers: { "Content-Type": "image/jpeg" },
-                method: "PUT",
+                method: uploadMethod(url),
             });
             if (!response.ok) {
                 throw new Error(`Photo upload failed: ${response.status}`);
