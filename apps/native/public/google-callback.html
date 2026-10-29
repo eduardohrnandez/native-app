@@ -7,13 +7,25 @@
   </head>
   <body>
     <script>
-      // Google returns the id token in the URL fragment; hand it to the window that opened this popup.
+      // The page's COOP header cuts the popup off from its opener once it visits Google, so the token travels
+      // over a same-origin channel instead of window.opener.
       var params = new URLSearchParams(window.location.hash.slice(1));
       var message = { type: "finta-google", idToken: params.get("id_token"), state: params.get("state") };
-      if (window.opener) {
-        window.opener.postMessage(message, window.location.origin);
+      try {
+        var channel = new BroadcastChannel("finta-google");
+        channel.postMessage(message);
+        channel.close();
+      } catch (error) {
+        // Falls through to the storage event below.
       }
-      window.close();
+      try {
+        window.localStorage.setItem("finta-google-result", JSON.stringify(message));
+      } catch (error) {
+        // Private modes can refuse storage; the broadcast above already went out.
+      }
+      window.setTimeout(function () {
+        window.close();
+      }, 300);
     </script>
   </body>
 </html>
