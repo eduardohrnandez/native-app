@@ -16,6 +16,8 @@ import { useSentenceShake } from "./use-sentence-shake";
 
 // Measured against SF Pro Rounded, not derived: clears the 26pt face's descenders inside the 38pt line box.
 const RULE_BOTTOM = 7;
+// A long name must shrink to the line and end in an ellipsis; unshrinkable, it wrapped into a clipped second line.
+const SHRINKABLE = { flexShrink: 1 } as const;
 
 export interface SentenceFigure {
     amount: number;
@@ -81,16 +83,21 @@ export function SentenceValue({
     };
 
     return (
-        <Animated.View style={shakeStyle}>
+        <Animated.View className="shrink" style={shakeStyle}>
             <Pressable
                 accessibilityLabel={accessibilityLabel}
                 accessibilityRole="button"
                 accessibilityState={{ busy: pending }}
                 accessibilityValue={{ text: value }}
                 onPress={onPress}
+                style={SHRINKABLE}
             >
                 <SentenceWash active={active} />
-                <Animated.View className="flex-row items-baseline gap-1.5" entering={valueEntering()} key={identity}>
+                <Animated.View
+                    className="shrink flex-row items-baseline gap-1.5"
+                    entering={valueEntering()}
+                    key={identity}
+                >
                     {children}
                     {figure ? (
                         <FlowAmount
@@ -102,7 +109,9 @@ export function SentenceValue({
                             still
                         />
                     ) : (
-                        <Text className={cn(textClassName, tone())}>{value}</Text>
+                        <Text className={cn(textClassName, "shrink", tone())} numberOfLines={1}>
+                            {value}
+                        </Text>
                     )}
                 </Animated.View>
                 <Animated.View
