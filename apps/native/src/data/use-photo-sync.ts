@@ -1,4 +1,4 @@
-import { getTableName } from "drizzle-orm";
+import { getTableName, isNotNull } from "drizzle-orm";
 import { addDatabaseChangeListener } from "expo-sqlite";
 import { useEffect } from "react";
 import { AppState } from "react-native";
@@ -39,6 +39,24 @@ export function usePhotoSync(db: Database | null, paused: boolean): void {
                 }
                 const result = await runPhotoSync(db, photoFiles, transport);
                 console.warn("[finta] photo sync pass", JSON.stringify(result));
+                for (const photoTable of PHOTO_TABLES) {
+                    // oxlint-disable-next-line no-await-in-loop -- diagnostics only, one table at a time
+                    const keyed = await db
+                        .select({ id: photoTable.id })
+                        .from(photoTable.table)
+                        .where(isNotNull(photoTable.imageKey));
+                    // oxlint-disable-next-line no-await-in-loop -- diagnostics only
+                    const local = await db
+                        .select({ id: photoTable.id })
+                        .from(photoTable.table)
+                        .where(isNotNull(photoTable.imageUri));
+                    console.warn(
+                        "[finta] photo rows",
+                        getTableName(photoTable.table),
+                        `keyed=${keyed.length}`,
+                        `local=${local.length}`
+                    );
+                }
                 const { downloaded } = result;
                 if (downloaded > 0) {
                     // Only a download changes what a screen can draw.
