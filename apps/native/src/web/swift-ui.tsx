@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import type { StyleProp, TextStyle, ViewStyle } from "react-native";
 
+import { useColors } from "@/theme/use-colors";
+
 import type { WebModifier } from "./swift-modifiers";
 
 type Modifiers = readonly (WebModifier | false | null | undefined)[] | undefined;
@@ -276,10 +278,15 @@ export function Toggle({
     value?: boolean;
     [key: string]: unknown;
 }) {
+    const { tint } = useColors();
     return (
         <RNSwitch
             accessibilityLabel={label}
             onValueChange={(next) => (onIsOnChange ?? onCheckedChange)?.(next)}
+            thumbColor="#ffffff"
+            activeThumbColor="#ffffff"
+            activeTrackColor={tint}
+            trackColor={{ false: "rgba(128, 128, 128, 0.4)", true: tint }}
             value={isOn ?? value ?? false}
         />
     );
@@ -326,7 +333,17 @@ const PickerContext = createContext<{ onSelect?: (value: string) => void; select
 export function Picker({ children, onSelectionChange, selection }: PickerProps) {
     return (
         <PickerContext value={{ onSelect: onSelectionChange, selected: selection }}>
-            <View style={{ flexDirection: "row", gap: 6 }}>{children}</View>
+            <View
+                style={{
+                    backgroundColor: "rgba(128, 128, 128, 0.18)",
+                    borderRadius: 10,
+                    flexDirection: "row",
+                    gap: 2,
+                    padding: 2,
+                }}
+            >
+                {children}
+            </View>
         </PickerContext>
     );
 }
@@ -340,9 +357,14 @@ export function PickerOption({ children, modifiers }: { children?: ReactNode; mo
     return (
         <Pressable
             onPress={() => value !== undefined && context?.onSelect?.(value)}
-            style={{ opacity: selected ? 1 : 0.55 }}
+            style={{
+                backgroundColor: selected ? "var(--surface-secondary)" : "transparent",
+                borderRadius: 8,
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+            }}
         >
-            <RNText style={{ fontWeight: selected ? "700" : "400" }}>{children}</RNText>
+            <RNText style={{ color: "var(--foreground)", fontWeight: selected ? "700" : "400" }}>{children}</RNText>
         </Pressable>
     );
 }

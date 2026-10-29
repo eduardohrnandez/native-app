@@ -1,21 +1,37 @@
+import ArrowDataTransferVerticalIcon from "@app/icons/arrow-data-transfer-vertical-icon";
+import ArrowDown01Icon from "@app/icons/arrow-down01-icon";
+import Cancel01Icon from "@app/icons/cancel01-icon";
+import Delete02Icon from "@app/icons/delete02-icon";
+import MoreHorizontalCircle01Icon from "@app/icons/more-horizontal-circle01-icon";
+import PlusSignIcon from "@app/icons/plus-sign-icon";
+import Search01Icon from "@app/icons/search01-icon";
+import Tick02Icon from "@app/icons/tick02-icon";
+import { HugeiconsIcon } from "@hugeicons/react-native";
 import { Stack } from "expo-router";
 import { Children, Fragment, isValidElement, useState } from "react";
 import type { ReactElement, ReactNode } from "react";
 import { Pressable, Text, View } from "react-native";
 
 // Stack.Toolbar items are native header buttons; a browser header gets plain buttons and a dropdown for menus.
-const GLYPHS: Record<string, string> = {
-    add: "+",
-    close: "✕",
-    delete: "🗑",
-    done: "✓",
-    filter: "⚲",
-    more: "⋯",
-    period: "▾",
-    reorder: "↕",
-    search: "⌕",
-};
-const FALLBACK_GLYPH = "•";
+const ICONS = {
+    add: PlusSignIcon,
+    close: Cancel01Icon,
+    delete: Delete02Icon,
+    done: Tick02Icon,
+    filter: MoreHorizontalCircle01Icon,
+    more: MoreHorizontalCircle01Icon,
+    period: ArrowDown01Icon,
+    reorder: ArrowDataTransferVerticalIcon,
+    search: Search01Icon,
+} as const;
+type IconName = keyof typeof ICONS;
+const FALLBACK_ICON: IconName = "more";
+const ICON_SIZE = 22;
+const ICON_COLOR = "var(--foreground)";
+
+function isIconName(name: string): name is IconName {
+    return name in ICONS;
+}
 const MENU_WIDTH = 240;
 
 type Props = Record<string, unknown> & { children?: ReactNode };
@@ -47,19 +63,20 @@ function label(children: ReactNode): string {
     return texts.join("");
 }
 
-function glyph(children: ReactNode, icon: unknown): string | null {
+function iconName(children: ReactNode, icon: unknown): IconName | null {
     const iconElement = flatten(children).find((child) => child.type === Stack.Toolbar.Icon);
     const xcasset = iconElement?.props.xcasset;
     if (typeof xcasset === "string") {
-        return GLYPHS[xcasset.replace("nano.", "")] ?? FALLBACK_GLYPH;
+        const name = xcasset.replace("nano.", "");
+        return isIconName(name) ? name : FALLBACK_ICON;
     }
-    return iconElement !== undefined || typeof icon === "string" ? FALLBACK_GLYPH : null;
+    return iconElement !== undefined || typeof icon === "string" ? FALLBACK_ICON : null;
 }
 
 function ToolbarButton({ element }: { element: ReactElement<Props> }) {
     const { accessibilityLabel, children, disabled, icon, onPress } = element.props;
     const text = label(children);
-    const mark = glyph(children, icon);
+    const mark = iconName(children, icon);
     return (
         <Pressable
             accessibilityLabel={typeof accessibilityLabel === "string" ? accessibilityLabel : text}
@@ -68,7 +85,11 @@ function ToolbarButton({ element }: { element: ReactElement<Props> }) {
             onPress={typeof onPress === "function" ? (onPress as () => void) : undefined}
             style={{ opacity: disabled === true ? 0.4 : 1, paddingHorizontal: 10, paddingVertical: 6 }}
         >
-            <Text style={{ fontSize: mark !== null && text === "" ? 20 : 15 }}>{text === "" ? mark : text}</Text>
+            {mark !== null && text === "" ? (
+                <HugeiconsIcon color={ICON_COLOR} icon={ICONS[mark]} size={ICON_SIZE} />
+            ) : (
+                <Text style={{ color: "var(--tint)", fontSize: 15 }}>{text}</Text>
+            )}
         </Pressable>
     );
 }
@@ -77,7 +98,7 @@ function ToolbarMenu({ element }: { element: ReactElement<Props> }) {
     const [open, setOpen] = useState(false);
     const { accessibilityLabel, children, title } = element.props;
     const actions = flatten(children).filter((child) => child.type === Stack.Toolbar.MenuAction);
-    const mark = glyph(children, undefined) ?? "⋯";
+    const mark = iconName(children, undefined) ?? FALLBACK_ICON;
     return (
         <View style={{ position: "relative" }}>
             <Pressable
@@ -86,12 +107,12 @@ function ToolbarMenu({ element }: { element: ReactElement<Props> }) {
                 onPress={() => setOpen((value) => !value)}
                 style={{ paddingHorizontal: 10, paddingVertical: 6 }}
             >
-                <Text style={{ fontSize: 20 }}>{mark}</Text>
+                <HugeiconsIcon color={ICON_COLOR} icon={ICONS[mark]} size={ICON_SIZE} />
             </Pressable>
             {open ? (
                 <View
                     style={{
-                        backgroundColor: "#ffffff",
+                        backgroundColor: "var(--surface-secondary)",
                         borderRadius: 12,
                         boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
                         position: "absolute",
@@ -112,7 +133,7 @@ function ToolbarMenu({ element }: { element: ReactElement<Props> }) {
                             }}
                             style={{ padding: 12 }}
                         >
-                            <Text style={{ fontSize: 15 }}>{label(action.props.children)}</Text>
+                            <Text style={{ color: "var(--foreground)", fontSize: 15 }}>{label(action.props.children)}</Text>
                         </Pressable>
                     ))}
                 </View>

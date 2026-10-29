@@ -17,6 +17,14 @@
         --font-sans-semibold: "ui-rounded";
         --font-sans-bold: "ui-rounded";
 
+        /* Browsers other than Safari have no ui-rounded and would fall back to a serif. */
+        @variant web {
+            --font-sans: ui-rounded, system-ui, "Segoe UI", sans-serif;
+            --font-sans-medium: ui-rounded, system-ui, "Segoe UI", sans-serif;
+            --font-sans-semibold: ui-rounded, system-ui, "Segoe UI", sans-serif;
+            --font-sans-bold: ui-rounded, system-ui, "Segoe UI", sans-serif;
+        }
+
         @variant android {
             --font-sans: "GoogleSansFlex_400Regular";
             --font-sans-medium: "GoogleSansFlex_500Medium";
