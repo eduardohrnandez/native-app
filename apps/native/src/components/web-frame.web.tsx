@@ -1,15 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import { useWindowDimensions, View } from "react-native";
+import { View } from "react-native";
 
-const PHONE_MAX_WIDTH = 520;
-const DESKTOP_BREAKPOINT = 900;
-const DESKTOP_MAX_WIDTH = 1200;
+import { fileSystemReady } from "@/web/file-system";
 
-// A phone-width window fills the screen; a desktop window gets a wider centered canvas with the tab sidebar.
+// The app fills the whole window; the tab bar becomes a sidebar on wide screens.
 export function WebFrame({ children }: { children: ReactNode }) {
-    const { width } = useWindowDimensions();
-    const maxWidth = width >= DESKTOP_BREAKPOINT ? DESKTOP_MAX_WIDTH : PHONE_MAX_WIDTH;
+    const [filesLoaded, setFilesLoaded] = useState(false);
+
+    useEffect(() => {
+        fileSystemReady.catch(() => undefined).then(() => setFilesLoaded(true));
+    }, []);
 
     useEffect(() => {
         // Unstyled text inherits from body, which would stay black on the dark theme.
@@ -26,20 +27,6 @@ export function WebFrame({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <View style={{ alignItems: "center", backgroundColor: "var(--grouped-background)", flex: 1 }}>
-            <View
-                style={{
-                    borderColor: "var(--separator)",
-                    borderLeftWidth: maxWidth === DESKTOP_MAX_WIDTH ? 1 : 0,
-                    borderRightWidth: maxWidth === DESKTOP_MAX_WIDTH ? 1 : 0,
-                    flex: 1,
-                    maxWidth,
-                    overflow: "hidden",
-                    width: "100%",
-                }}
-            >
-                {children}
-            </View>
-        </View>
+        <View style={{ backgroundColor: "var(--grouped-background)", flex: 1 }}>{filesLoaded ? children : null}</View>
     );
 }

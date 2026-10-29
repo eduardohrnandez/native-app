@@ -14,6 +14,7 @@ import type { StyleProp, TextStyle, ViewStyle } from "react-native";
 import { useColors } from "@/theme/use-colors";
 
 import type { WebModifier } from "./swift-modifiers";
+import { SymbolView } from "./symbols";
 
 type Modifiers = readonly (WebModifier | false | null | undefined)[] | undefined;
 
@@ -189,16 +190,17 @@ export function VStack({ alignment, children, modifiers, spacing = 8 }: StackPro
 
 export function HStack({ alignment, children, modifiers, spacing = 8 }: StackProps) {
     const resolved = resolve(modifiers);
+    const style = boxStyle(resolved, {
+        alignItems: crossAxis(alignment) ?? "center",
+        flexDirection: "row",
+        gap: spacing,
+    });
+    // A disabled Pressable would also disable any field inside the row.
+    if (resolved.onPress === undefined) {
+        return <View style={style}>{children}</View>;
+    }
     return (
-        <Pressable
-            disabled={resolved.onPress === undefined}
-            onPress={resolved.onPress}
-            style={boxStyle(resolved, {
-                alignItems: crossAxis(alignment) ?? "center",
-                flexDirection: "row",
-                gap: spacing,
-            })}
-        >
+        <Pressable onPress={resolved.onPress} style={style}>
             {children}
         </Pressable>
     );
@@ -238,7 +240,7 @@ export function Text({ children, modifiers }: { children?: ReactNode; modifiers?
         return <PickerOption modifiers={modifiers}>{children}</PickerOption>;
     }
     return (
-        <RNText numberOfLines={resolved.lines} style={resolved.style}>
+        <RNText numberOfLines={resolved.lines} style={[{ color: "var(--foreground)" }, resolved.style]}>
             {children}
         </RNText>
     );
@@ -297,25 +299,35 @@ export function TextField({
     defaultValue,
     modifiers,
     onChangeText,
+    onTextChange,
     placeholder,
     text,
 }: {
     defaultValue?: string;
     modifiers?: Modifiers;
     onChangeText?: (value: string) => void;
+    onTextChange?: (value: string) => void;
     placeholder?: string;
     text?: { value?: string } | string;
     [key: string]: unknown;
 }) {
     const resolved = resolve(modifiers);
-    const controlled = typeof text === "string" ? text : text?.value;
+    const initial = (typeof text === "string" ? text : text?.value) ?? defaultValue ?? "";
+    const [value, setValue] = useState(initial);
+    // The native state object is not reactive in a browser, so the field keeps its own copy and mirrors it back.
     return (
         <TextInput
-            defaultValue={controlled === undefined ? defaultValue : undefined}
-            onChangeText={onChangeText}
+            onChangeText={(next) => {
+                setValue(next);
+                if (typeof text === "object" && text !== null) {
+                    text.value = next;
+                }
+                (onTextChange ?? onChangeText)?.(next);
+            }}
             placeholder={placeholder}
-            style={resolved.style}
-            value={controlled}
+            placeholderTextColor="rgba(128, 128, 128, 0.7)"
+            style={[{ color: "var(--foreground)" }, resolved.style]}
+            value={value}
         />
     );
 }
@@ -462,11 +474,7 @@ export function Image({
         return <RNImage source={source} style={style as object} />;
     }
     const resolved = resolve(modifiers);
-    return (
-        <RNText style={{ color, fontSize: resolved.style.fontSize }}>
-            {systemName === "chevron.right" ? "›" : "•"}
-        </RNText>
-    );
+    return <SymbolView name={systemName ?? ""} size={resolved.style.fontSize ?? 17} tintColor={color} />;
 }
 
 export function ProgressView({ value }: { value?: number; [key: string]: unknown }) {

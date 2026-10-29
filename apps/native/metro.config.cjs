@@ -94,6 +94,7 @@ const WEB_ALIASES = [
     [/^expo-symbols$/, "src/web/symbols.tsx"],
     [/^react-native-reanimated$/, "src/web/reanimated.tsx"],
     [/^expo-notifications$/, "src/web/notifications.ts"],
+    [/^@expo\/ui\/community\/menu$/, "src/web/menu-view.tsx"],
     [/^number-flow-react-native$/, "src/web/number-flow.tsx"],
     [/^expo-file-system$/, "src/web/file-system.ts"],
     [/^expo-secure-store$/, "src/web/secure-store.ts"],

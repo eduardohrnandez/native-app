@@ -1,5 +1,66 @@
-// The browser has no app sandbox, so files live in memory for the session. Photos persist through the cloud sync.
+// The browser has no app sandbox. Reads are synchronous, so files live in a map that is loaded from IndexedDB at
+// startup and written back on every change.
 const entries = new Map<string, Uint8Array | "dir">();
+const DB_NAME = "finta-files";
+const STORE = "entries";
+
+function openDb(): Promise<IDBDatabase> {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
+        request.onupgradeneeded = () => request.result.createObjectStore(STORE);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error ?? new Error("IndexedDB unavailable"));
+    });
+}
+
+const dbPromise: Promise<IDBDatabase | null> =
+    typeof indexedDB === "undefined" ? Promise.resolve(null) : openDb().catch(() => null);
+
+function persist(run: (store: IDBObjectStore) => void): void {
+    dbPromise
+        .then((db) => {
+            if (db !== null) {
+                run(db.transaction(STORE, "readwrite").objectStore(STORE));
+            }
+        })
+        .catch(() => undefined);
+}
+
+function put(uri: string, value: Uint8Array | "dir"): void {
+    entries.set(uri, value);
+    persist((store) => store.put(value, uri));
+}
+
+function drop(uri: string): void {
+    entries.delete(uri);
+    persist((store) => store.delete(uri));
+}
+
+async function load(): Promise<void> {
+    const db = await dbPromise;
+    if (db === null) {
+        return;
+    }
+    await new Promise<void>((resolve) => {
+        const request = db.transaction(STORE, "readonly").objectStore(STORE).openCursor();
+        request.onsuccess = () => {
+            const cursor = request.result;
+            if (cursor === null) {
+                resolve();
+                return;
+            }
+            const { key, value } = cursor;
+            if (typeof key === "string" && (value === "dir" || value instanceof Uint8Array)) {
+                entries.set(key, value);
+            }
+            cursor.continue();
+        };
+        request.onerror = () => resolve();
+    });
+}
+
+// The app renders only after this settles, so the first read already sees the saved files.
+export const fileSystemReady: Promise<void> = load();
 
 type Part = string | { uri: string };
 
@@ -50,16 +111,16 @@ export class File {
 
     create(): void {
         if (!this.exists) {
-            entries.set(this.uri, new Uint8Array());
+            put(this.uri, new Uint8Array());
         }
     }
 
     write(data: string | Uint8Array | ArrayBuffer): void {
-        entries.set(this.uri, toBytes(data));
+        put(this.uri, toBytes(data));
     }
 
     delete(): void {
-        entries.delete(this.uri);
+        drop(this.uri);
     }
 
     bytesSync(): Uint8Array {
@@ -83,7 +144,7 @@ export class File {
     }
 
     copy(destination: { uri: string }): void {
-        entries.set(destination.uri, this.bytesSync());
+        put(destination.uri, this.bytesSync());
     }
 
     move(destination: { uri: string }): void {
@@ -110,13 +171,13 @@ export class Directory {
     }
 
     create(): void {
-        entries.set(this.uri, "dir");
+        put(this.uri, "dir");
     }
 
     delete(): void {
         for (const key of [...entries.keys()]) {
             if (key.startsWith(this.uri)) {
-                entries.delete(key);
+                drop(key);
             }
         }
     }
