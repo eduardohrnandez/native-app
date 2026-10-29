@@ -268,15 +268,27 @@ export function Log() {
     const emptyResult = sections.length === 0 && (filter !== "upcoming" || upcomingRows.length === 0);
     // LegendList's SectionList keeps `extraData` to itself, so what rows read rides on each section.
     const today = startOfDay(new Date(nowMs)).getTime();
+    const [collapsedDays, setCollapsedDays] = useState<ReadonlySet<string>>(() => new Set());
+    const toggleDay = (key: string) => {
+        setCollapsedDays((current) => {
+            const next = new Set(current);
+            if (!next.delete(key)) {
+                next.add(key);
+            }
+            return next;
+        });
+    };
     const listSections = useMemo(() => {
         const view = { ...cardOptions, language };
         return sections.map((section, index) => ({
             ...section,
+            collapsed: collapsedDays.has(section.key),
+            data: collapsedDays.has(section.key) ? [] : section.data,
             first: index === 0 && upcomingRows.length === 0,
             today,
             view,
         }));
-    }, [sections, upcomingRows.length, cardOptions, language, today]);
+    }, [sections, collapsedDays, upcomingRows.length, cardOptions, language, today]);
 
     // One setting behind both headers, so a filter never changes the promoted figure.
     const onMeasure = (next: LogMeasure) => {
@@ -408,7 +420,13 @@ export function Log() {
                     </>
                 }
                 renderSectionHeader={({ section }) => (
-                    <DaySectionHeader section={section} first={section.first} onShare={() => shareDay(section)} />
+                    <DaySectionHeader
+                        collapsed={section.collapsed}
+                        first={section.first}
+                        onShare={() => shareDay(section)}
+                        onToggle={() => toggleDay(section.key)}
+                        section={section}
+                    />
                 )}
                 renderItem={({ item }) => (
                     <SwipeableTransactionRow

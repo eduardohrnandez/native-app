@@ -22,7 +22,6 @@ import { useColors } from "@/theme/use-colors";
 
 const TILE_SIZE = 36;
 const TILE_RADIUS = 9;
-const MAX_ROWS = 4;
 
 interface AccountsBlockProps {
     accounts: readonly Account[];
@@ -70,35 +69,28 @@ export function AccountsBlock({
     const total = hidden ? maskedAmount(currency) : formatSignedAmount(overview.total, currency, showCents, language);
 
     const byId = new Map(accounts.map((account) => [account.id, account]));
-    const overflow = overview.rows.length > MAX_ROWS;
-    const shown = overflow ? overview.rows.slice(0, MAX_ROWS - 1) : overview.rows;
 
     return (
         <View className="gap-1.25 pt-2.5 pb-4.5">
             <View className="flex-row items-center gap-2">
-                <Pressable
-                    accessibilityHint={t("accounts.overview.openHint")}
+                <View
                     accessibilityLabel={`${t("accounts.overview.heading")} · ${overview.count}`}
-                    accessibilityRole="button"
                     accessibilityValue={{ text: hidden ? t("log.amounts.hidden") : total }}
-                    className={cn(
-                        "flex-1 active:opacity-70",
-                        stacked ? "gap-0.75" : "flex-row items-baseline justify-between gap-2"
-                    )}
-                    onPress={onOpenAll}
+                    accessible
+                    className={cn("flex-1", stacked ? "gap-0.75" : "flex-row items-baseline justify-between gap-2")}
                     testID="accounts-overview-card"
                 >
-                    <MonoLabel>{`${t("accounts.overview.heading")} · ${overview.count}  ›`}</MonoLabel>
+                    <MonoLabel>{`${t("accounts.overview.heading")} · ${overview.count}`}</MonoLabel>
                     <View className="flex-row items-baseline gap-1.5">
                         {overview.exact ? null : <MonoLabel className="text-subtle">{`${currency}?`}</MonoLabel>}
                         <Text className="font-sans-semibold text-body text-muted tabular-nums" numberOfLines={1}>
                             {total}
                         </Text>
                     </View>
-                </Pressable>
+                </View>
                 {trailing}
             </View>
-            {shown.map((row) => {
+            {overview.rows.map((row) => {
                 const account = byId.get(row.id);
                 return account ? (
                     <AccountRow
@@ -112,13 +104,6 @@ export function AccountsBlock({
                     />
                 ) : null;
             })}
-            {overflow ? (
-                <Pressable accessibilityRole="button" className="py-2 active:opacity-70" onPress={onOpenAll}>
-                    <MonoLabel className="text-tint">
-                        {t("accounts.overview.more", { count: overview.rows.length - shown.length })}
-                    </MonoLabel>
-                </Pressable>
-            ) : null}
             {debtsRow}
             <View className="bg-border" style={{ borderRadius: 0.65, height: 1.3 }} />
         </View>
