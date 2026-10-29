@@ -30,11 +30,15 @@ function cells(text: string): Cell[] {
 }
 
 function Digit({ digit, settled }: { digit: number; settled: boolean }) {
+    // The hidden in-flow digit gives the box the text's own baseline and width; the rolling column sits over it.
     return (
-        <span aria-hidden="true" style={{ display: "inline-block", height: LINE, overflow: "hidden", verticalAlign: "top" }}>
+        <span aria-hidden="true" style={{ clipPath: "inset(0)", display: "inline-block", position: "relative" }}>
+            <span style={{ visibility: "hidden" }}>{digit}</span>
             <span
                 style={{
-                    display: "block",
+                    left: 0,
+                    position: "absolute",
+                    top: 0,
                     transform: `translateY(calc(${settled ? -digit : 0} * ${LINE}))`,
                     transition: `transform ${ROLL_MS}ms ${ROLL_EASING}`,
                 }}

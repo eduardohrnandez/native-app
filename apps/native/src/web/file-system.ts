@@ -117,7 +117,8 @@ const MIME_BY_EXTENSION: Record<string, string> = {
 const objectUrls = new Map<string, { bytes: Uint8Array; url: string }>();
 
 // An image tag cannot read the virtual file system, so a stored file is shown through a blob URL.
-export function objectUrlFor(uri: string): string | null {
+export function objectUrlFor(address: string): string | null {
+    const uri = join([address]);
     const bytes = entries.get(uri);
     if (!(bytes instanceof Uint8Array)) {
         return null;
