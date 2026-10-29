@@ -94,6 +94,7 @@ const WEB_ALIASES = [
     [/^expo-symbols$/, "src/web/symbols.tsx"],
     [/^react-native-reanimated$/, "src/web/reanimated.tsx"],
     [/^expo-notifications$/, "src/web/notifications.ts"],
+    [/^@expo\/ui$/, "src/web/expo-ui.ts"],
     [/^@expo\/ui\/community\/menu$/, "src/web/menu-view.tsx"],
     [/^expo-image-picker$/, "src/web/image-picker.ts"],
     [/^expo-image$/, "src/web/expo-image.tsx"],
