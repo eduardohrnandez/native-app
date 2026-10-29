@@ -100,7 +100,7 @@ const WEB_ALIASES = [
     [/^number-flow-react-native$/, "src/web/number-flow.tsx"],
     [/^expo-file-system$/, "src/web/file-system.ts"],
     [/^expo-secure-store$/, "src/web/secure-store.ts"],
-    [/^react-native-web\/dist\/index$/, "src/web/react-native.ts"],
+    [/^react-native-web\/dist\/index$/, "src/web/react-native.cjs"],
     [new RegExp(`^(${WEB_NATIVE_ONLY.join("|").replaceAll("/", "\\/")})(/.*)?$`), "src/web/any-stub.cjs"],
     [/^@expo\/ui\/swift-ui\/modifiers$/, "src/web/swift-modifiers-entry.cjs"],
     [/^@expo\/ui\/swift-ui$/, "src/web/swift-ui.tsx"],
@@ -114,7 +114,7 @@ finalConfig.resolver = {
         // The shim itself re-exports the real package, so it must not be routed back to itself.
         if (
             platform === "web" &&
-            !context.originModulePath.endsWith("src/web/react-native.ts") &&
+            !context.originModulePath.endsWith("src/web/react-native.cjs") &&
             !context.originModulePath.endsWith("src/web/expo-image.tsx") &&
             !context.originModulePath.endsWith("src/web/image-picker.ts")
         ) {

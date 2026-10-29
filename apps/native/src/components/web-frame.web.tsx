@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { View } from "react-native";
 
 import { fileSystemReady } from "@/web/file-system";
+import "@/web/patch-image";
 
 // The app fills the whole window; the tab bar becomes a sidebar on wide screens.
 export function WebFrame({ children }: { children: ReactNode }) {
