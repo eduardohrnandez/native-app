@@ -335,6 +335,18 @@ const transaction = {
             en: "Finta could not open your data. This is often temporary — try again first. Your ledger is still on this device.",
             es: "Finta no pudo abrir tus datos. Suele ser algo temporal, así que inténtalo de nuevo. Tu registro sigue en este dispositivo.",
         }),
+        "transaction.localData.reset": t({
+            en: "Reset this browser's copy",
+            es: "Restablecer la copia de este navegador",
+        }),
+        "transaction.localData.resetFailed": t({
+            en: "Could not reset. Close every other Finta tab and try again.",
+            es: "No se pudo restablecer. Cierra las demás pestañas de Finta e inténtalo de nuevo.",
+        }),
+        "transaction.localData.resetHint": t({
+            en: "Still stuck? This clears the copy kept in this browser and downloads your data again from your account.",
+            es: "¿Sigue igual? Esto borra la copia guardada en este navegador y vuelve a bajar tus datos desde tu cuenta.",
+        }),
         "transaction.localData.retrying": t({
             en: "Trying…",
             es: "Intentando…",

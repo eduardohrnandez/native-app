@@ -3,6 +3,7 @@ import { Pressable, View } from "react-native";
 import { useLocalData } from "@/contexts/local-data-context";
 import { useTranslation } from "@/i18n/context";
 
+import { LocalDataReset } from "./local-data-reset";
 import { Text } from "./text";
 
 /** Replaces the navigator: with no usable database no screen can render, and the splash must not hang. */
@@ -31,6 +32,7 @@ export function LocalDataError() {
             </Pressable>
 
             {error ? <Text className="text-label text-muted pt-6 text-center">{error.message}</Text> : null}
+            <LocalDataReset />
         </View>
     );
 }
